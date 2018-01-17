@@ -12,24 +12,9 @@ MonoBehaviour:
   m_Name: CutsceneA
   m_EditorClassIdentifier: 
   tokens:
-  - TokenType: Shiroi.Cutscenes.Tokens.SetParentToken, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    TokenData: 6533303d
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken1, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    TokenData: 65794a4259324e6c624756795958527062323548636d46776143493665794a7a5a584a7059577870656d566b566d567963326c7662694936496a49694c434a7458304e31636e5a6c496a70625853776962563951636d564a626d5a70626d6c30655349364d6977696256395162334e305357356d6157357064486b694f6a4973496d3166556d39305958527062323550636d526c636949364e483073496b4e6f59584a685933526c636b4e7662473979496a7037496e49694f6a41754d4377695a7949364d4334774c434a69496a6f774c6a4173496d45694f6a41754d483139
   - TokenType: Shiroi.Cutscenes.Tokens.DebugTextToken, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     TokenData: 65794a555a586830496a6f694969776956486c775a5349364d48303d
-  - TokenType: Shiroi.Cutscenes.Tokens.SpawnGameObjectToken, Assembly-CSharp, Version=0.0.0.0,
+  - TokenType: Shiroi.Cutscenes.Tokens.ExecuteCutsceneToken, Assembly-CSharp, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-    TokenData: 65794a50596d6f694f6e73696157357a644746755932564a524349364d483073496c427663326c3061573975496a7037496e67694f6a41754d437769655349364d4334774c434a36496a6f774c6a42394c434a536233526864476c766269493665794a34496a6f774c6a4173496e6b694f6a41754d437769656949364d4334774c434a33496a6f784c6a423966513d3d
-  - TokenType: Shiroi.Cutscenes.Tokens.WaitForSecondsToken, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    TokenData: 65794a4564584a6864476c76626949364d4334774c434a535a57467364476c745a5349365a6d467363325639
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken3, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    TokenData: 6533303d
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken2, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    TokenData: 65794a536233526864476c766269493665794a34496a6f774c6a4173496e6b694f6a41754d437769656949364d4334774c434a33496a6f784c6a423966513d3d
+    TokenData: 65794a446458527a593256755a53493665794a70626e4e305957356a5a556c45496a6f776658303d
