@@ -17,6 +17,8 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
 
         private static void RegisterUnityDrawers() {
+            RegisterDrawer(new ObjectDrawer());
+            RegisterDrawer(new QuaternionDrawer());
             RegisterDrawer(new Vector2Drawer());
             RegisterDrawer(new Vector3Drawer());
             RegisterDrawer(new Vector4Drawer());
@@ -52,9 +54,8 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
 
         public static TypeDrawer GetDrawerFor(Type type) {
-            var t = typeof(TypeDrawer<>).MakeGenericType(type);
             foreach (var knownDrawer in knownDrawers) {
-                if (t.IsInstanceOfType(knownDrawer)) {
+                if (knownDrawer.Supports(type)) {
                     return knownDrawer;
                 }
             }

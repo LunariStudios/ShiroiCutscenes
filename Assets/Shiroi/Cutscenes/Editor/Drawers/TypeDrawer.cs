@@ -19,7 +19,6 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
 
         protected TypeDrawer() {
             supportedType = typeof(T);
-
         }
 
         public override bool Supports(Type type) {

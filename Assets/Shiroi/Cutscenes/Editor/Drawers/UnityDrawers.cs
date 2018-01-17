@@ -1,8 +1,21 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Editor.Drawers {
+    public class ObjectDrawer : TypeDrawer<Object> {
+        public override void Draw(Rect rect, string name, Object value, Type valueType, Setter setter) {
+            setter(EditorGUI.ObjectField(rect, name, value, valueType, false));
+        }
+    }
+
+    public class QuaternionDrawer : TypeDrawer<Quaternion> {
+        public override void Draw(Rect rect, string name, Quaternion value, Type valueType, Setter setter) {
+            setter(Quaternion.Euler(EditorGUI.Vector3Field(rect, name, value.eulerAngles)));
+        }
+    }
+
     public class Vector2Drawer : TypeDrawer<Vector2> {
         public override void Draw(Rect rect, string name, Vector2 value, Type valueType, Setter setter) {
             setter(EditorGUI.Vector2Field(rect, name, value));
