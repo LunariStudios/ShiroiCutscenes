@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
+    [UsedImplicitly]
     public class DebugTextToken : IToken {
         public enum DebugType {
             Info,
