@@ -10,53 +10,26 @@ using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Editor {
     public class MappedToken {
-        private static Dictionary<Type, MappedToken> cache = new Dictionary<Type, MappedToken>();
-        private static Dictionary<Type, Setter> setterCache = new Dictionary<Type, Setter>();
-        public GUIStyle style;
-        public GUIStyle selectedStyle;
+        private const float SaturationValue = 0.5F;
+        private const float BrightnessValue = 0.7F;
+        private const float SelectedBrightnessValue = BrightnessValue + 0.2F;
+
+        private static readonly Dictionary<Type, MappedToken> Cache = new Dictionary<Type, MappedToken>();
+        private static readonly Dictionary<Type, Setter> SetterCache = new Dictionary<Type, Setter>();
 
         public static MappedToken For(IToken token) {
+            return For(token.GetType());
+        }
+
+        public static MappedToken For(Type type) {
             MappedToken t;
-            var type = token.GetType();
-            if (cache.TryGetValue(type, out t)) {
+            if (Cache.TryGetValue(type, out t)) {
                 return t;
             }
-            return cache[type] = new MappedToken(token);
+            return Cache[type] = new MappedToken(type);
         }
 
-        public FieldInfo[] SerializedFields { get; private set; }
-
-        public float Height {
-            get { return (TotalElements + 1) * EditorGUIUtility.singleLineHeight; }
-        }
-
-        public uint TotalElements { private set; get; }
-
-        public MappedToken(IToken token) {
-            SerializedFields = SerializationUtil.GetSerializedMembers(token);
-            TotalElements = (uint) SerializedFields.Length;
-            //Calculate color
-            var name = token.GetType().Name;
-            var totalLetters = name.Length;
-            var increment = totalLetters / 6;
-            float r, g, b;
-            r = LoadColor(name, 0, increment);
-            g = LoadColor(name, 1, increment);
-            b = LoadColor(name, 2, increment);
-            var normalColor = new Color(r, g, b);
-            float h, s, v;
-            Color.RGBToHSV(normalColor, out h, out s, out v);
-            normalColor = Color.HSVToRGB(h, 0.7F, 0.7F);
-            var selectedColor = Color.HSVToRGB(h, 0.7F, 0.9F);
-            style = CreateGUIStyle(normalColor);
-            selectedStyle = CreateGUIStyle(selectedColor);
-        }
-
-        private GUIStyle CreateGUIStyle(Color color) {
-            return new GUIStyle(GUI.skin.box) {normal = {background = CreateTexture(2, 2, color)}};
-        }
-
-        public static Texture2D CreateTexture(int width, int height, Color color) {
+        private static Texture2D CreateTexture(int width, int height, Color color) {
             var pixels = new Color[width * height];
             for (var i = 0; i < pixels.Length; ++i) {
                 pixels[i] = color;
@@ -67,19 +40,72 @@ namespace Shiroi.Cutscenes.Editor {
             return result;
         }
 
-        private static float LoadColor(string str, int offset, int increment) {
-            return(float) LoadByte(str, offset, increment) / byte.MaxValue;
+        private static float LoadColor(string str, int offset, float increment) {
+            return (float) LoadByte(str, offset, increment) / byte.MaxValue;
         }
 
-        private static byte LoadByte(string str, int offset, int increment) {
-            var first = (byte) (str[offset * increment] % 16);
-            var second = (byte) (str[(offset + 1) * increment] % 16);
+        private static byte LoadByte(string str, int offset, float increment) {
+            var indexA = (int) (offset * increment);
+            var indexB = (int) ((offset + 1) * increment);
+            Debug.Log("Pos a = " + indexA + " / " + str.Length);
+            Debug.Log("Pos b = " + indexB + " / " + str.Length);
+            var first = (byte) (str[indexA] % 16);
+            var second = (byte) (str[indexB] % 16);
             var ff = (char) (first <= 9 ? '0' + first : 'A' + (first - 10));
             var fs = (char) (second <= 9 ? '0' + second : 'A' + (second - 10));
-
             var r = string.Format("{0}{1}", ff, fs);
             return byte.Parse(r, System.Globalization.NumberStyles.HexNumber);
         }
+
+        private static Setter GetSetterFor(Type fieldType, IToken token, FieldInfo info) {
+            if (SetterCache.ContainsKey(fieldType)) {
+                return SetterCache[fieldType];
+            }
+            Setter s = value => info.SetValue(token, value);
+            SetterCache[fieldType] = s;
+            return s;
+        }
+
+        public readonly GUIStyle Style;
+        public readonly GUIStyle SelectedStyle;
+        public Color Color;
+        public Color SelectedColor;
+
+        public MappedToken(Type type) {
+            SerializedFields = SerializationUtil.GetSerializedMembers(type);
+            TotalElements = (uint) SerializedFields.Length;
+            //Calculate color
+            var name = type.Name;
+            var totalLetters = name.Length;
+            var increment = (float) (totalLetters - 1) / 5;
+            Debug.Log("Creating mapped token for " + name);
+            float r, g, b;
+            //load colors from string
+            r = LoadColor(name, 0, increment);
+            g = LoadColor(name, 2, increment);
+            b = LoadColor(name, 4, increment);
+            Color = new Color(r, g, b);
+            float h, s, v;
+            Color.RGBToHSV(Color, out h, out s, out v);
+            Color = Color.HSVToRGB(h, SaturationValue, BrightnessValue);
+            SelectedColor = Color.HSVToRGB(h, SaturationValue, SelectedBrightnessValue);
+            Style = CreateGUIStyle(Color);
+            SelectedStyle = CreateGUIStyle(SelectedColor);
+        }
+
+        public FieldInfo[] SerializedFields { get; private set; }
+
+        public float Height {
+            get { return (TotalElements + 1) * EditorGUIUtility.singleLineHeight; }
+        }
+
+        public uint TotalElements { private set; get; }
+
+
+        private GUIStyle CreateGUIStyle(Color color) {
+            return new GUIStyle(GUI.skin.box) {normal = {background = CreateTexture(2, 2, color)}};
+        }
+
 
         public void DrawFields(Rect rect, IToken token, Cutscene cutscene) {
             for (var index = 0; index < SerializedFields.Length; index++) {
@@ -101,15 +127,6 @@ namespace Shiroi.Cutscenes.Editor {
                     EditorUtility.SetDirty(cutscene);
                 }
             }
-        }
-
-        private static Setter GetSetterFor(Type fieldType, IToken token, FieldInfo info) {
-            if (setterCache.ContainsKey(fieldType)) {
-                return setterCache[fieldType];
-            }
-            Setter s = value => info.SetValue(token, value);
-            setterCache[fieldType] = s;
-            return s;
         }
     }
 }

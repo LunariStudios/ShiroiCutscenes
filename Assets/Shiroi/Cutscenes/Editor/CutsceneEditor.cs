@@ -20,6 +20,7 @@ namespace Shiroi.Cutscenes.Editor {
         private const int KaomojiFontSize = 100;
         private static RectOffset kaomojiOffset;
         private static int currentKaomoji;
+        public TokenSelectorWindow TokenSelector;
 
         private static readonly GUIContent ClearCutscene =
             new GUIContent("Clear cutscene", "Removes all tokens");
@@ -79,6 +80,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void OnEnable() {
             LoadStyles();
+            TokenSelector = new TokenSelectorWindow(this);
             cutscene = (Cutscene) target;
             tokenList = new ReorderableList(cutscene.Tokens, typeof(IToken), true, true, false, true) {
                 drawHeaderCallback = DrawTokensHeader,
@@ -102,20 +104,14 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void DrawCutsceneHeader(int totalLines) {
             var isEmpty = totalLines == 0;
-            //Selecting
-            EditorGUILayout.BeginHorizontal();
-            GUI.enabled = true;
+            //No token in cutscene
             if (isEmpty) {
                 EditorGUILayout.LabelField(NoTokenContent, errorStyle);
             }
-            EditorGUILayout.EndHorizontal();
             //Add button
-            GUI.enabled = true;
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button(AddTokenContent)) {
-                var window = EditorWindow.GetWindow<TokenSelectorWindow>();
-                window.CurrentEditor = this;
-                window.ShowUtility();
+                PopupWindow.Show(GUILayoutUtility.GetLastRect(), TokenSelector);
             }
             if (!isEmpty) {
                 if (GUILayout.Button(ClearCutscene)) {
@@ -123,7 +119,6 @@ namespace Shiroi.Cutscenes.Editor {
                 }
             }
             EditorGUILayout.EndHorizontal();
-
             if (isEmpty) {
                 GUI.enabled = false;
                 EditorGUILayout.LabelField(GetKaomoji(), kaomojiStyle, GUILayout.ExpandHeight(true));
@@ -138,7 +133,7 @@ namespace Shiroi.Cutscenes.Editor {
                 return;
             }
             var m = MappedToken.For(cutscene[index]);
-            var style = isfocused ? m.selectedStyle : m.style;
+            var style = isfocused ? m.SelectedStyle : m.Style;
             GUI.Box(rect, GUIContent.none, style);
         }
 

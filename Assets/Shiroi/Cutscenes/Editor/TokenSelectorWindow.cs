@@ -2,13 +2,23 @@
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Editor {
-    public class TokenSelectorWindow : EditorWindow {
+    public class TokenSelectorWindow : PopupWindowContent {
+        public TokenSelectorWindow(CutsceneEditor currentEditor) {
+            CurrentEditor = currentEditor;
+        }
+
         public CutsceneEditor CurrentEditor { get; set; }
 
-        private void OnGUI() {
-            EditorGUILayout.LabelField("Select a token to add");
-            foreach (var type in TokenLoader.knownTokenTypes) {
-                if (GUILayout.Button(type.Name)) {
+        public override Vector2 GetWindowSize() {
+            return new Vector2(200, (TokenLoader.knownTokenTypes.Count + 1) * EditorGUIUtility.singleLineHeight);
+        }
+
+        public override void OnGUI(Rect rect) {
+            EditorGUI.LabelField(CutsceneEditor.GetRect(rect, 0), "Select a token to add");
+            for (var i = 0; i < TokenLoader.knownTokenTypes.Count; i++) {
+                var type = TokenLoader.knownTokenTypes[i];
+                GUI.color = MappedToken.For(type).Color;
+                if (GUI.Button(CutsceneEditor.GetRect(rect, i + 1), type.Name)) {
                     CurrentEditor.AddToken(type);
                 }
             }
