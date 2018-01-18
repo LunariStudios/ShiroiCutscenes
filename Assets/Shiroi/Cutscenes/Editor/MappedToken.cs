@@ -81,7 +81,7 @@ namespace Shiroi.Cutscenes.Editor {
             return byte.Parse(r, System.Globalization.NumberStyles.HexNumber);
         }
 
-        public void DrawFields(Rect rect, IToken token) {
+        public void DrawFields(Rect rect, IToken token, Cutscene cutscene) {
             for (var index = 0; index < SerializedFields.Length; index++) {
                 var field = SerializedFields[index];
                 var fieldType = field.FieldType;
@@ -95,7 +95,11 @@ namespace Shiroi.Cutscenes.Editor {
                         string.Format("Couldn't find drawer for field '{0}' of type '{1}'", fieldName, typeName));
                     continue;
                 }
+                EditorGUI.BeginChangeCheck();
                 drawer.Draw(r, fieldName, field.GetValue(token), fieldType, setter);
+                if (EditorGUI.EndChangeCheck()) {
+                    EditorUtility.SetDirty(cutscene);
+                }
             }
         }
 

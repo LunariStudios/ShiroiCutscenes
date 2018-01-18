@@ -26,6 +26,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private static readonly GUIContent AddTokenContent =
             new GUIContent("Choose your flavour", "Adds a token to the cutscene");
+
         private static readonly GUIContent NoTokenContent =
             new GUIContent("There aren't any tokens defined!", "There are no tokens in the cutscene for you to edit.");
 
@@ -153,7 +154,7 @@ namespace Shiroi.Cutscenes.Editor {
         private void DrawToken(Rect rect, int index, bool isactive, bool isfocused) {
             var token = cutscene[index];
             EditorGUI.LabelField(GetRect(rect, 0), token.GetType().Name, boldStyle);
-            MappedToken.For(token).DrawFields(rect, token);
+            MappedToken.For(token).DrawFields(rect, token, cutscene);
         }
 
 
