@@ -119,7 +119,8 @@ namespace Shiroi.Cutscenes.Editor {
                     continue;
                 }
                 EditorGUI.BeginChangeCheck();
-                drawer.Draw(player, r, ObjectNames.NicifyVariableName(fieldName), field.GetValue(token), fieldType, setter);
+                drawer.Draw(player, cutscene, r, ObjectNames.NicifyVariableName(fieldName), field.GetValue(token),
+                    fieldType, setter);
                 if (EditorGUI.EndChangeCheck()) {
                     EditorUtility.SetDirty(cutscene);
                 }

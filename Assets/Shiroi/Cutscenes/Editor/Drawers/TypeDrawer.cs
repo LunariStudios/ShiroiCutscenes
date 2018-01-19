@@ -8,8 +8,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
     public abstract class TypeDrawer : IComparable<TypeDrawer> {
         public abstract bool Supports(Type type);
 
-        public abstract void Draw(CutscenePlayer player, Rect rect, string name, object value, Type valueType,
-            Setter setter);
+        public abstract void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, object value, Type valueType, Setter setter);
 
         public virtual byte GetPriority() {
             return 0;
@@ -23,8 +22,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
     public abstract class TypeDrawer<T> : TypeDrawer {
         private readonly Type supportedType;
 
-        public override void Draw(CutscenePlayer player, Rect rect, string name, object value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, object value, Type valueType, Setter setter) {
             T finalV;
             if (value == null || value is T) {
                 finalV = (T) value;
@@ -34,7 +32,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
                 Debug.LogWarning(msg);
                 finalV = default(T);
             }
-            Draw(player, rect, name, finalV, valueType, setter);
+            Draw(player, cutscene, rect, name, finalV, valueType, setter);
         }
 
         protected TypeDrawer() {
@@ -45,7 +43,6 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             return supportedType.IsAssignableFrom(type);
         }
 
-        public abstract void Draw(CutscenePlayer player, Rect rect, string name, T value, Type valueType,
-            Setter setter);
+        public abstract void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, T value, Type valueType, Setter setter);
     }
 }

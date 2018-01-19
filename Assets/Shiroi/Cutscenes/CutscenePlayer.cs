@@ -2,12 +2,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Util;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes {
     public class CutscenePlayer : MonoBehaviour, IExposedPropertyTable {
+        //Futures
+        private Dictionary<int, Object> providedFutures = new Dictionary<int, Object>();
+
+
+        public void ProvideFuture<T>(T future, int id) where T : Object {
+            providedFutures[id] = future;
+        }
+
+        public T Request<T>(FutureReference reference) where T : Object {
+            Object future;
+            if (TryGetFuture(reference, out future)) {
+                return (T) future;
+            }
+            return null;
+        }
+
+        private bool TryGetFuture(FutureReference reference, out Object future) {
+            var id = reference.Id;
+            if (providedFutures.ContainsKey(id)) {
+                future = providedFutures[id];
+                return true;
+            }
+            future = null;
+            return false;
+        }
+
+        //
         private static CutscenePlayer instance;
 
         public static CutscenePlayer Instance {

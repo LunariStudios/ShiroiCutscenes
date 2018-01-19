@@ -9,8 +9,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
     public class ExposedReferenceDrawer<T> : TypeDrawer<ExposedReference<T>> where T : Object {
         private readonly Type referenceType = typeof(T);
 
-        public override void Draw(CutscenePlayer player, Rect rect, string name, ExposedReference<T> value,
-            Type valueType, Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, ExposedReference<T> value, Type valueType, Setter setter) {
             GUI.enabled = player != null;
             var chosen = EditorGUI.ObjectField(rect, name, value.Resolve(player), referenceType, true);
             GUI.enabled = true;
@@ -26,78 +25,67 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
     }
 
     public class ObjectDrawer : TypeDrawer<Object> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, Object value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, Object value, Type valueType, Setter setter) {
             setter(EditorGUI.ObjectField(rect, name, value, valueType, false));
         }
     }
 
     public class QuaternionDrawer : TypeDrawer<Quaternion> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, Quaternion value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, Quaternion value, Type valueType, Setter setter) {
             setter(Quaternion.Euler(EditorGUI.Vector3Field(rect, name, value.eulerAngles)));
         }
     }
 
     public class Vector2Drawer : TypeDrawer<Vector2> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, Vector2 value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, Vector2 value, Type valueType, Setter setter) {
             setter(EditorGUI.Vector2Field(rect, name, value));
         }
     }
 
     public class Vector3Drawer : TypeDrawer<Vector3> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, Vector3 value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, Vector3 value, Type valueType, Setter setter) {
             setter(EditorGUI.Vector3Field(rect, name, value));
         }
     }
 
     public class Vector4Drawer : TypeDrawer<Vector4> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, Vector4 value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, Vector4 value, Type valueType, Setter setter) {
             setter(EditorGUI.Vector4Field(rect, name, value));
         }
     }
 
     public class Vector2IntDrawer : TypeDrawer<Vector2Int> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, Vector2Int value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, Vector2Int value, Type valueType, Setter setter) {
             setter(EditorGUI.Vector2IntField(rect, name, value));
         }
     }
 
     public class Vector3IntDrawer : TypeDrawer<Vector3Int> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, Vector3Int value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, Vector3Int value, Type valueType, Setter setter) {
             setter(EditorGUI.Vector3IntField(rect, name, value));
         }
     }
 
     public class BoundsDrawer : TypeDrawer<Bounds> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, Bounds value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, Bounds value, Type valueType, Setter setter) {
             setter(EditorGUI.BoundsField(rect, name, value));
         }
     }
 
     public class BoundsIntDrawer : TypeDrawer<BoundsInt> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, BoundsInt value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, BoundsInt value, Type valueType, Setter setter) {
             setter(EditorGUI.BoundsIntField(rect, name, value));
         }
     }
 
     public class ColorDrawer : TypeDrawer<Color> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, Color value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, Color value, Type valueType, Setter setter) {
             setter(EditorGUI.ColorField(rect, name, value));
         }
     }
 
     public class AnimationCurveDrawer : TypeDrawer<AnimationCurve> {
-        public override void Draw(CutscenePlayer player, Rect rect, string name, AnimationCurve value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, AnimationCurve value, Type valueType, Setter setter) {
             setter(EditorGUI.CurveField(rect, name, value));
         }
     }
@@ -108,8 +96,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             return 1;
         }
 
-        public override void Draw(CutscenePlayer player, Rect rect, string name, LayerMask value, Type valueType,
-            Setter setter) {
+        public override void Draw(CutscenePlayer player, Cutscene cutscene, Rect rect, string name, LayerMask value, Type valueType, Setter setter) {
             setter((LayerMask) EditorGUI.LayerField(rect, name, value));
         }
     }
