@@ -4,8 +4,8 @@ An Unity framework that provide tools to create, edit, and execute various cutsc
 
 What can you do with it?  
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=IK1GH0TbAoI
-" target="_blank"><img src="http://img.youtube.com/vi/IK1GH0TbAoI/0.jpg" 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=3N4gq3PsrZk
+" target="_blank"><img src="http://img.youtube.com/vi/3N4gq3PsrZk/0.jpg" 
 alt="Shiroi Cutscenes used in Datenshi" width="240" height="180" border="10" /></a>
 ### Installing
 
