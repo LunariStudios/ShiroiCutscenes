@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0439e1c9b6f54debb8acbb620a3a83c, type: 3}
+  m_Name: Cutscene
+  m_EditorClassIdentifier: 
+  futures:
+  - type: UnityEngine.UI.Text, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+    name: shiroi_label
+    id: -811036714
+    provider: 1
+  tokens:
+  - TokenType: Shiroi.Cutscenes.Examples.WaitForInputToken, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    TokenData: 65794a4a626e42316445746c65534936496c4e31596d317064434a39
+  - TokenType: Shiroi.Cutscenes.Examples.CreateTextToken, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    TokenData: 65794a5159584a6c626e51694f6e73695a58687762334e6c5a453568625755694f6949744e4455794f545532496977695a47566d5958567364465a686248566c496a7037496d6c7563335268626d4e6c535551694f6a4239665377695647563464453568625755694f694a7a61476c7962326c66624746695a5777694c434a305a586830535751694f6930344d5445774d7a59334d545239
+  - TokenType: Shiroi.Cutscenes.Examples.WaitForInputToken, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    TokenData: 65794a4a626e42316445746c65534936496c4e31596d317064434a39
+  - TokenType: Shiroi.Cutscenes.Examples.SetFutureTextToken, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    TokenData: 65794a555a586830496a7037496b6c6b496a6f744f4445784d444d324e7a453066537769526d39756443493665794a70626e4e305957356a5a556c45496a6f324d5452394c434a44623235305a573530496a6f6953475673624738675a6e4a766253425461476c7962326c446458527a593256755a584d68496977695547397a61585270623234694f6e7369654349364d7a41774c6a4173496e6b694f6a41754d483073496c4e70656d55694f6e7369654349364e5441774c6a4173496e6b694f6a4d774d4334776658303d
+  - TokenType: Shiroi.Cutscenes.Examples.WaitForInputToken, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    TokenData: 65794a4a626e42316445746c65534936496c4e31596d317064434a39
+  - TokenType: Shiroi.Cutscenes.Examples.SetExposedTextToken, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    TokenData: 65794a555a586830496a7037496d56346347397a5a57524f5957316c496a6f694c5451334e6a51304e694973496d526c5a6d463162485257595778315a53493665794a70626e4e305957356a5a556c45496a6f7766583073496b5a76626e51694f6e73696157357a644746755932564a524349364e6a453066537769513239756447567564434936496b686c655377675353423362334a7249485276627945694c434a5162334e7064476c766269493665794a34496a6f7a4d4441754d437769655349364d7a41774c6a42394c434a546158706c496a7037496e67694f6a4d774d4334774c434a35496a6f784e5441754d483139

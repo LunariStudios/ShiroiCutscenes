@@ -14,11 +14,10 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             if (attribute != null) {
                 futures.RemoveAll(future => !attribute.Type.IsAssignableFrom(future.Type));
             }
-            var currentlySelected = cutscene.IndexOfFuture(value.Id);
             var optionNames = futures.Select(future => future.Name).ToArray();
             var possibleOptions = futures.Select(future => future.Id).ToArray();
 
-            value.Id = EditorGUI.IntPopup(rect, name, currentlySelected, optionNames, possibleOptions);
+            value.Id = EditorGUI.IntPopup(rect, name, value.Id, optionNames, possibleOptions);
             setter(value);
         }
     }

@@ -96,8 +96,6 @@ namespace Shiroi.Cutscenes.Editor {
 
         private ReorderableList tokenList;
 
-        //Can't use uint because Unity and List indexing uses int:( REEEEEE
-
         private Cutscene cutscene;
         private int lastSelected;
 
