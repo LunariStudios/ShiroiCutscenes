@@ -4,6 +4,7 @@ using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Shiroi.Cutscenes.Editor {
@@ -21,9 +22,24 @@ namespace Shiroi.Cutscenes.Editor {
         private static RectOffset kaomojiOffset;
         private static int currentKaomoji;
         public TokenSelectorWindow TokenSelector;
+        public CutscenePlayer Player { get; private set; }
 
         private static readonly GUIContent ClearCutscene =
             new GUIContent("Clear cutscene", "Removes all tokens");
+
+        private static readonly GUIContent NoSelectedPlayer =
+            new GUIContent("You don't have any CutscenePlayer bound!");
+
+        private static readonly GUIContent MultiplePlayersFound =
+            new GUIContent("Found multiple CutscenePlayers within the current scene!");
+        private static readonly GUIContent MultiplePlayersFoundWarning =
+            new GUIContent("Please select one in order to assign ExposedReferences.");
+
+        private static readonly GUIContent NoSelectedPlayerWarning =
+            new GUIContent("You won't be able to assign ExposedReferences until you do so.");
+
+        private static readonly GUIContent PlayerContent =
+            new GUIContent("Bound player", "The player that will store the references to the cutscene's scene objects");
 
         private static readonly GUIContent AddTokenContent =
             new GUIContent("Choose your flavour", "Adds a token to the cutscene");
@@ -95,6 +111,19 @@ namespace Shiroi.Cutscenes.Editor {
 
         public override void OnInspectorGUI() {
             var totalTokens = cutscene.Tokens.Count;
+            if (Player == null) {
+                var found = FindObjectsOfType<CutscenePlayer>();
+                if (found.Length > 1) {
+                    EditorGUILayout.LabelField(NoSelectedPlayer, errorStyle);
+                }
+                if (found.Length == 1) {
+                    Player = found[0];
+                } else {
+                    EditorGUILayout.LabelField(NoSelectedPlayer, errorStyle);
+                    EditorGUILayout.LabelField(NoSelectedPlayerWarning, errorStyle);
+                }
+            }
+            Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
             DrawCutsceneHeader(totalTokens);
             if (totalTokens <= 0) {
                 return;
@@ -149,7 +178,7 @@ namespace Shiroi.Cutscenes.Editor {
         private void DrawToken(Rect rect, int index, bool isactive, bool isfocused) {
             var token = cutscene[index];
             EditorGUI.LabelField(GetRect(rect, 0), token.GetType().Name, boldStyle);
-            MappedToken.For(token).DrawFields(rect, token, cutscene);
+            MappedToken.For(token).DrawFields(rect, token, cutscene, Player);
         }
 
 

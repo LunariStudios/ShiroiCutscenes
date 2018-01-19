@@ -1,17 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 
 namespace Shiroi.Cutscenes.Editor.Drawers {
     [InitializeOnLoad]
     public static class TypeDrawers {
-        private static List<TypeDrawer> knownDrawers = new List<TypeDrawer>();
+        private static readonly List<TypeDrawer> KnownDrawers = new List<TypeDrawer>();
+        private static readonly List<TypeDrawerProvider> KnownProviders = new List<TypeDrawerProvider>();
 
         static TypeDrawers() {
             RegisterBuiltIn();
         }
 
         private static void RegisterBuiltIn() {
+            RegisterDrawers();
+            RegisterDrawerProviders();
+        }
+
+        private static void RegisterDrawerProviders() {
+            RegisterDrawerProvider(new ExposedReferenceDrawerProvider());
+        }
+
+        private static void RegisterDrawers() {
             RegisterPrimitivesDrawers();
             RegisterUnityDrawers();
         }
@@ -50,16 +61,31 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
 
         public static void RegisterDrawer(TypeDrawer drawer) {
-            knownDrawers.Add(drawer);
+            KnownDrawers.Add(drawer);
+        }
+
+        public static void RegisterDrawerProvider(TypeDrawerProvider provider) {
+            KnownProviders.Add(provider);
         }
 
         public static TypeDrawer GetDrawerFor(Type type) {
-            foreach (var knownDrawer in knownDrawers) {
+            foreach (var knownDrawer in KnownDrawers) {
                 if (knownDrawer.Supports(type)) {
                     return knownDrawer;
                 }
             }
+            foreach (var provider in KnownProviders) {
+                if (provider.Supports(type)) {
+                    return CreateAndRegisterDrawer(type, provider);
+                }
+            }
             return null;
+        }
+
+        private static TypeDrawer CreateAndRegisterDrawer(Type type, TypeDrawerProvider provider) {
+            var drawer = provider.Provide(type);
+            RegisterDrawer(drawer);
+            return drawer;
         }
     }
 }

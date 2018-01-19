@@ -47,8 +47,6 @@ namespace Shiroi.Cutscenes.Editor {
         private static byte LoadByte(string str, int offset, float increment) {
             var indexA = (int) (offset * increment);
             var indexB = (int) ((offset + 1) * increment);
-            Debug.Log("Pos a = " + indexA + " / " + str.Length);
-            Debug.Log("Pos b = " + indexB + " / " + str.Length);
             var first = (byte) (str[indexA] % 16);
             var second = (byte) (str[indexB] % 16);
             var ff = (char) (first <= 9 ? '0' + first : 'A' + (first - 10));
@@ -78,7 +76,6 @@ namespace Shiroi.Cutscenes.Editor {
             var name = type.Name;
             var totalLetters = name.Length;
             var increment = (float) (totalLetters - 1) / 5;
-            Debug.Log("Creating mapped token for " + name);
             float r, g, b;
             //load colors from string
             r = LoadColor(name, 0, increment);
@@ -107,7 +104,7 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
 
-        public void DrawFields(Rect rect, IToken token, Cutscene cutscene) {
+        public void DrawFields(Rect rect, IToken token, Cutscene cutscene, CutscenePlayer player) {
             for (var index = 0; index < SerializedFields.Length; index++) {
                 var field = SerializedFields[index];
                 var fieldType = field.FieldType;
@@ -122,7 +119,7 @@ namespace Shiroi.Cutscenes.Editor {
                     continue;
                 }
                 EditorGUI.BeginChangeCheck();
-                drawer.Draw(r, fieldName, field.GetValue(token), fieldType, setter);
+                drawer.Draw(player, r, ObjectNames.NicifyVariableName(fieldName), field.GetValue(token), fieldType, setter);
                 if (EditorGUI.EndChangeCheck()) {
                     EditorUtility.SetDirty(cutscene);
                 }

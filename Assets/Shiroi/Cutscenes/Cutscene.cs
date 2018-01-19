@@ -14,7 +14,6 @@ namespace Shiroi.Cutscenes {
 
         [SerializeField, HideInInspector]
         private SerializedToken[] tokens;
-
         public List<IToken> Tokens {
             get { return loadedTokens; }
         }

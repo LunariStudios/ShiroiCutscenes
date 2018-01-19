@@ -9,7 +9,7 @@ using Debug = UnityEngine.Debug;
 namespace Shiroi.Cutscenes.Editor {
     [InitializeOnLoad]
     public static class TokenLoader {
-        public static readonly Type tokenType = typeof(IToken);
+        public static readonly Type TokenType = typeof(IToken);
         public static List<Type> knownTokenTypes;
 
         private static void Reload() {
@@ -31,7 +31,7 @@ namespace Shiroi.Cutscenes.Editor {
         private static void RegisterAssembly(Assembly assembly) {
             ushort total = 0;
             foreach (var type in assembly.GetTypes()) {
-                if (type == tokenType || !tokenType.IsAssignableFrom(type)) {
+                if (type == TokenType || !TokenType.IsAssignableFrom(type)) {
                     continue;
                 }
                 if (knownTokenTypes.Contains(type)) {
