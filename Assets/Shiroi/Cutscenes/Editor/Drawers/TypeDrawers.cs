@@ -16,7 +16,6 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
 
         private static void RegisterBuiltIn() {
             RegisterDrawers();
-            
             RegisterDrawerProviders();
         }
 
@@ -27,6 +26,11 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         private static void RegisterDrawers() {
             RegisterPrimitivesDrawers();
             RegisterUnityDrawers();
+            RegisterShiroiDrawers();
+        }
+
+        private static void RegisterShiroiDrawers() {
+            RegisterDrawer(new FutureDrawer());
         }
 
         private static void RegisterUnityDrawers() {

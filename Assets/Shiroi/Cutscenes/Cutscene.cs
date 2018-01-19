@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Tokens;
 using Shiroi.Cutscenes.Util;
+using UnityEditorInternal;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -11,34 +14,41 @@ namespace Shiroi.Cutscenes {
     public class Cutscene : ScriptableObject, ISerializationCallbackReceiver {
         public const string CreateCutsceneMenuPath = "Shiroi/Cutscenes/Cutscene";
         private List<IToken> loadedTokens = new List<IToken>();
+        public static readonly RandomNumberGenerator rng = RandomNumberGenerator.Create();
 
         [SerializeField]
         private List<ExpectedFuture> futures = new List<ExpectedFuture>();
 
-        public int NotifyFuture<T>(IFutureProvider provider) where T : Object {
-            return NotifyFuture(typeof(T), provider);
+        public ExpectedFuture GetFuture(int futureId) {
+            return futures.FirstOrDefault(future => future.Id == futureId);
         }
 
-        private uint FindIndexOfProvider(IFutureProvider provider) {
+        public int NotifyFuture<T>(IFutureProvider provider, string futureName) where T : Object {
+            return NotifyFuture(typeof(T), provider, futureName);
+        }
+
+        private int FindIndexOfProvider(IFutureProvider provider) {
             for (var i = 0; i < loadedTokens.Count; i++) {
                 var token = loadedTokens[i];
                 if (token == provider) {
-                    return (uint) i;
+                    return i;
                 }
             }
-            return uint.MaxValue;
+            return -1;
         }
 
-        public int NotifyFuture(Type type, IFutureProvider provider) {
-            var id = futures.Count;
+        public int NotifyFuture(Type type, IFutureProvider provider, string futureName) {
+            var array = new byte[4];
+            rng.GetBytes(array);
+            var id = BitConverter.ToInt32(array, 0);
             var providerId = FindIndexOfProvider(provider);
-            var future = new ExpectedFuture(providerId, id, type);
+            var future = new ExpectedFuture(providerId, id, type, futureName);
             futures.Add(future);
             return id;
         }
 
-        public ExpectedFuture[] GetFutures() {
-            return futures.ToArray();
+        public List<ExpectedFuture> GetFutures() {
+            return new List<ExpectedFuture>(futures);
         }
 
         [SerializeField, HideInInspector]
@@ -61,8 +71,26 @@ namespace Shiroi.Cutscenes {
         }
 
         public void RemoveToken(int tokenIndex) {
+            ReorderFutures(tokenIndex);
             var token = loadedTokens[tokenIndex];
             loadedTokens.RemoveAt(tokenIndex);
+        }
+
+        private void ReorderFutures(int tokenToBeRemoved) {
+            var toBeRemoved = new List<ExpectedFuture>();
+            foreach (var future in futures) {
+                var provider = future.Provider;
+                if (provider == tokenToBeRemoved) {
+                    toBeRemoved.Add(future);
+                }
+                //If provider is below token to be removed, nothing will change
+                if (provider > tokenToBeRemoved) {
+                    future.Provider--;
+                }
+            }
+            foreach (var future in toBeRemoved) {
+                futures.Remove(future);
+            }
         }
 
         public void OnBeforeSerialize() {
@@ -88,11 +116,12 @@ namespace Shiroi.Cutscenes {
         }
 
         public void Clear() {
+            futures.Clear();
             loadedTokens.Clear();
         }
 
         [Serializable]
-        public sealed class ExpectedFuture : ISerializationCallbackReceiver {
+        public sealed class ExpectedFuture : IComparable<ExpectedFuture>, ISerializationCallbackReceiver {
             [SerializeField]
             private string type;
 
@@ -110,26 +139,29 @@ namespace Shiroi.Cutscenes {
              * this future
              */
             [SerializeField]
-            private uint provider;
+            private int provider;
 
             public int Id {
                 get { return id; }
             }
 
-            public uint Provider {
+            public int Provider {
                 get { return provider; }
+                set { provider = value; }
             }
 
             public Type Type { get; private set; }
 
             public string Name {
                 get { return name; }
+                set { name = value; }
             }
 
-            public ExpectedFuture(uint provider, int id, Type type) {
+            public ExpectedFuture(int provider, int id, Type type, string name) {
                 this.provider = provider;
                 this.id = id;
                 Type = type;
+                this.name = name;
             }
 
             public void OnBeforeSerialize() {
@@ -138,6 +170,10 @@ namespace Shiroi.Cutscenes {
 
             public void OnAfterDeserialize() {
                 Type = Type.GetType(type);
+            }
+
+            public int CompareTo(ExpectedFuture other) {
+                return provider.CompareTo(other.provider);
             }
         }
 
@@ -165,12 +201,35 @@ namespace Shiroi.Cutscenes {
             }
         }
 
-        public uint IndexOfFuture(int futureId) {
-            return 0;
+        public int IndexOfFuture(int futureId) {
+            for (var i = 0; i < futures.Count; i++) {
+                var expectedFuture = futures[i];
+                if (expectedFuture.Id == futureId) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
-        public string[] GetFutureNames() {
-            throw new NotImplementedException();
+        public void OnReorder(ReorderableList list, int newIndex, int oldIndex) {
+            var toModify = Math.Sign(oldIndex - newIndex);
+            var min = Mathf.Min(newIndex, oldIndex);
+            var max = Mathf.Max(newIndex, oldIndex);
+            foreach (var future in futures) {
+                //Check if pointed to old
+                var provider = future.Provider;
+                if (provider == oldIndex) {
+                    future.Provider = newIndex;
+                    continue;
+                }
+                if (provider >= min && provider <= max) {
+                    future.Provider += toModify;
+                }
+            }
+        }
+
+        public IEnumerable<ExpectedFuture> GetFuturesOf(int providerIndex) {
+            return from future in futures where future.Provider == providerIndex select future;
         }
     }
 }

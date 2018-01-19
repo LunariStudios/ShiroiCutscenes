@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
 using UnityEditorInternal;
@@ -22,6 +24,9 @@ namespace Shiroi.Cutscenes.Editor {
         private static RectOffset kaomojiOffset;
         private static int currentKaomoji;
         public TokenSelectorWindow TokenSelector;
+        public const int IconSize = 24;
+        public static readonly GUILayoutOption IconHeightOption = GUILayout.Height(IconSize);
+        public static readonly GUILayoutOption IconWidthOption = GUILayout.Width(IconSize);
         public CutscenePlayer Player { get; private set; }
 
         private static readonly GUIContent ClearCutscene =
@@ -32,6 +37,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private static readonly GUIContent MultiplePlayersFound =
             new GUIContent("Found multiple CutscenePlayers within the current scene!");
+
         private static readonly GUIContent MultiplePlayersFoundWarning =
             new GUIContent("Please select one in order to assign ExposedReferences.");
 
@@ -93,6 +99,7 @@ namespace Shiroi.Cutscenes.Editor {
         //Can't use uint because Unity and List indexing uses int:( REEEEEE
 
         private Cutscene cutscene;
+        private int lastSelected;
 
         private void OnEnable() {
             LoadStyles();
@@ -103,9 +110,17 @@ namespace Shiroi.Cutscenes.Editor {
                 drawElementCallback = DrawToken,
                 drawElementBackgroundCallback = DrawBackground,
                 elementHeightCallback = CalculateHeight,
-                //onRemoveCallback = OnRemoveCallback,
-                //onReorderCallback = OnReorderCallback
+                onRemoveCallback = OnRemoveCallback,
+                onReorderCallback = OnReorderCallback
             };
+        }
+
+        private void OnReorderCallback(ReorderableList list) {
+            cutscene.OnReorder(list, list.index, lastSelected);
+        }
+
+        private void OnRemoveCallback(ReorderableList list) {
+            cutscene.RemoveToken(list.index);
         }
 
 
@@ -128,6 +143,7 @@ namespace Shiroi.Cutscenes.Editor {
             if (totalTokens <= 0) {
                 return;
             }
+            lastSelected = tokenList.index;
             tokenList.DoLayoutList();
         }
 
@@ -148,6 +164,25 @@ namespace Shiroi.Cutscenes.Editor {
                 }
             }
             EditorGUILayout.EndHorizontal();
+            var futures = cutscene.GetFutures();
+            if (futures.Count == 0) {
+                EditorGUILayout.LabelField("No futures registered.");
+            } else {
+                futures.Sort();
+                EditorGUILayout.LabelField(futures.Count + " futures found!", headerStyle);
+                foreach (var future in futures) {
+                    var index = future.Provider;
+                    var token = cutscene[index];
+                    var msg = string.Format("{0} @ {3} (Owner: {1} @ {2})", future.Name, token.GetType().Name, index,
+                        future.Id);
+                    EditorGUILayout.BeginHorizontal(MappedToken.For(token).Style);
+                    var content = EditorGUIUtility.ObjectContent(null, future.Type);
+                    content.text = null;
+                    GUILayout.Box(content, IconHeightOption, IconWidthOption);
+                    EditorGUILayout.LabelField(msg);
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
             if (isEmpty) {
                 GUI.enabled = false;
                 EditorGUILayout.LabelField(GetKaomoji(), kaomojiStyle, GUILayout.ExpandHeight(true));
@@ -177,8 +212,19 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void DrawToken(Rect rect, int index, bool isactive, bool isfocused) {
             var token = cutscene[index];
-            EditorGUI.LabelField(GetRect(rect, 0), token.GetType().Name, boldStyle);
-            MappedToken.For(token).DrawFields(rect, token, cutscene, Player);
+            var labelRect = GetRect(rect, 0);
+            var mappedToken = MappedToken.For(token);
+            EditorGUI.LabelField(labelRect, mappedToken.Label, boldStyle);
+            bool changed;
+            mappedToken.DrawFields(rect, token, cutscene, Player, out changed);
+            if (!changed) {
+                return;
+            }
+            EditorUtility.SetDirty(cutscene);
+            var l = token as ITokenChangedListener;
+            if (l != null) {
+                l.OnChanged(cutscene);
+            }
         }
 
 

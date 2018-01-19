@@ -5,11 +5,12 @@ using UnityEngine;
 
 namespace Shiroi.Cutscenes.Examples {
     public class FutureToken : IToken {
-        [FutureType(typeof(Camera))]
-        public FutureReference Camera;
+        [FutureType(typeof(GameObject))]
+        public FutureReference Object;
 
         public IEnumerator Execute(CutscenePlayer player) {
-            var camera = Camera.Resolve<Camera>(player);
+            var camera = Object.Resolve<GameObject>(player);
+            Debug.Log("Resolved future object = " + camera);
             yield break;
         }
     }

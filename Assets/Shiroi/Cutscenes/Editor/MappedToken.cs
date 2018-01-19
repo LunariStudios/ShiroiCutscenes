@@ -55,23 +55,18 @@ namespace Shiroi.Cutscenes.Editor {
             return byte.Parse(r, System.Globalization.NumberStyles.HexNumber);
         }
 
-        private static Setter GetSetterFor(Type fieldType, IToken token, FieldInfo info) {
-            if (SetterCache.ContainsKey(fieldType)) {
-                return SetterCache[fieldType];
-            }
-            Setter s = value => info.SetValue(token, value);
-            SetterCache[fieldType] = s;
-            return s;
-        }
+
+
 
         public readonly GUIStyle Style;
         public readonly GUIStyle SelectedStyle;
         public Color Color;
         public Color SelectedColor;
-
+        public GUIContent Label;
         public MappedToken(Type type) {
             SerializedFields = SerializationUtil.GetSerializedMembers(type);
             TotalElements = (uint) SerializedFields.Length;
+            Label = new GUIContent(type.Name);
             //Calculate color
             var name = type.Name;
             var totalLetters = name.Length;
@@ -103,14 +98,18 @@ namespace Shiroi.Cutscenes.Editor {
             return new GUIStyle(GUI.skin.box) {normal = {background = CreateTexture(2, 2, color)}};
         }
 
+        private static FieldInfo currentField;
+        private static IToken currentToken;
+        private Setter s = value => currentField.SetValue(currentToken, value);
 
-        public void DrawFields(Rect rect, IToken token, Cutscene cutscene, CutscenePlayer player) {
+        public void DrawFields(Rect rect, IToken token, Cutscene cutscene, CutscenePlayer player, out bool changed) {
+            changed = false;
+            currentToken = token;
             for (var index = 0; index < SerializedFields.Length; index++) {
-                var field = SerializedFields[index];
-                var fieldType = field.FieldType;
-                var setter = GetSetterFor(fieldType, token, field);
+                currentField = SerializedFields[index];
+                var fieldType = currentField.FieldType;
                 var drawer = TypeDrawers.GetDrawerFor(fieldType);
-                var fieldName = field.Name;
+                var fieldName = currentField.Name;
                 var typeName = fieldType.Name;
                 var r = CutsceneEditor.GetRect(rect, index + 1);
                 if (drawer == null) {
@@ -119,10 +118,10 @@ namespace Shiroi.Cutscenes.Editor {
                     continue;
                 }
                 EditorGUI.BeginChangeCheck();
-                drawer.Draw(player, cutscene, r, ObjectNames.NicifyVariableName(fieldName), field.GetValue(token),
-                    fieldType, setter);
+                drawer.Draw(player, cutscene, r, ObjectNames.NicifyVariableName(fieldName), currentField.GetValue(token),
+                    fieldType, currentField, s);
                 if (EditorGUI.EndChangeCheck()) {
-                    EditorUtility.SetDirty(cutscene);
+                    changed = true;
                 }
             }
         }
