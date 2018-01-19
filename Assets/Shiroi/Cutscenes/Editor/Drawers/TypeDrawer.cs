@@ -5,15 +5,26 @@ using UnityEngine;
 namespace Shiroi.Cutscenes.Editor.Drawers {
     public delegate void Setter(object value);
 
-    public abstract class TypeDrawer {
+    public abstract class TypeDrawer : IComparable<TypeDrawer> {
         public abstract bool Supports(Type type);
-        public abstract void Draw(CutscenePlayer player, Rect rect, string name, object value, Type valueType, Setter setter);
+
+        public abstract void Draw(CutscenePlayer player, Rect rect, string name, object value, Type valueType,
+            Setter setter);
+
+        public virtual byte GetPriority() {
+            return 0;
+        }
+
+        public int CompareTo(TypeDrawer other) {
+            return GetPriority().CompareTo(other.GetPriority());
+        }
     }
 
     public abstract class TypeDrawer<T> : TypeDrawer {
         private readonly Type supportedType;
 
-        public override void Draw(CutscenePlayer player, Rect rect, string name, object value, Type valueType, Setter setter) {
+        public override void Draw(CutscenePlayer player, Rect rect, string name, object value, Type valueType,
+            Setter setter) {
             T finalV;
             if (value == null || value is T) {
                 finalV = (T) value;
@@ -34,6 +45,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             return supportedType.IsAssignableFrom(type);
         }
 
-        public abstract void Draw(CutscenePlayer player, Rect rect, string name, T value, Type valueType, Setter setter);
+        public abstract void Draw(CutscenePlayer player, Rect rect, string name, T value, Type valueType,
+            Setter setter);
     }
 }

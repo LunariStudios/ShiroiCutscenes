@@ -103,9 +103,14 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
     }
 
     public class LayerMaskDrawer : TypeDrawer<LayerMask> {
+        public override byte GetPriority() {
+            //Prefer over int
+            return 1;
+        }
+
         public override void Draw(CutscenePlayer player, Rect rect, string name, LayerMask value, Type valueType,
             Setter setter) {
-            setter(EditorGUI.LayerField(rect, name, value));
+            setter((LayerMask) EditorGUI.LayerField(rect, name, value));
         }
     }
 }

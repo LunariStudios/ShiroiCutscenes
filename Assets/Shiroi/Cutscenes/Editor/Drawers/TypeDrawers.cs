@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,13 +9,14 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
     public static class TypeDrawers {
         private static readonly List<TypeDrawer> KnownDrawers = new List<TypeDrawer>();
         private static readonly List<TypeDrawerProvider> KnownProviders = new List<TypeDrawerProvider>();
-
+        private static readonly Dictionary<Type, TypeDrawer> AssignedDrawersCache = new Dictionary<Type, TypeDrawer>();
         static TypeDrawers() {
             RegisterBuiltIn();
         }
 
         private static void RegisterBuiltIn() {
             RegisterDrawers();
+            
             RegisterDrawerProviders();
         }
 
@@ -69,17 +71,26 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
 
         public static TypeDrawer GetDrawerFor(Type type) {
+            if (AssignedDrawersCache.ContainsKey(type)) {
+                return AssignedDrawersCache[type];
+            }
+            var supportedDrawers = new List<TypeDrawer>();
             foreach (var knownDrawer in KnownDrawers) {
                 if (knownDrawer.Supports(type)) {
-                    return knownDrawer;
+                    supportedDrawers.Add(knownDrawer);
                 }
             }
             foreach (var provider in KnownProviders) {
                 if (provider.Supports(type)) {
-                    return CreateAndRegisterDrawer(type, provider);
+                    supportedDrawers.Add(CreateAndRegisterDrawer(type, provider));
                 }
             }
-            return null;
+            if (supportedDrawers.Count == 0) {
+                return null;
+            }
+            var selected = supportedDrawers.Max();
+            AssignedDrawersCache[type] = selected;
+            return selected;
         }
 
         private static TypeDrawer CreateAndRegisterDrawer(Type type, TypeDrawerProvider provider) {
