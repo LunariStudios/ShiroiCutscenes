@@ -6,11 +6,9 @@ An Unity framework that provide tools to create, edit, and execute various cutsc
 
 Copy the 'Assets/Shiroi/Cutscenes' folder into anywhere in your unity project, although I recommend placing them inside a folder like 'Plugins' or 'Libraries'.
 
-## Getting Started
+## Getting Started  
 
-ShiroiCutscenes revolves around Tokens.  
-
-A **Token** is a simple action that *(obviously)* make something happen within a cutscene, for example: Spawning a new entity, turning lights off, moving the camera to a specific location
+Please refer to the [Wiki](https://github.com/DDevilISL/ShiroiCutscenes/wiki) for instructions on how to use ShiroiCutscenes
 
 ## Planned Features
 
