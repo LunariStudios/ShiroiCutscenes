@@ -5,6 +5,6 @@ namespace Shiroi.Cutscenes.Futures {
    
 
     public interface IFutureProvider {
-        void RegisterFutures(Cutscene manager);
+        void RegisterFutures(Cutscene cutscene);
     }
 }

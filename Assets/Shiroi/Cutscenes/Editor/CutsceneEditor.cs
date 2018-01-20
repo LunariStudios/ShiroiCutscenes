@@ -13,20 +13,10 @@ namespace Shiroi.Cutscenes.Editor {
     [CustomEditor(typeof(Cutscene))]
     public class CutsceneEditor : UnityEditor.Editor {
         public static readonly Vector2 TokenWindowSize = new Vector2(150, 500);
-        private static GUIStyle baseStyle;
-        private static GUIStyle headerStyle;
-        public static GUIStyle errorStyle;
-        private static GUIStyle kaomojiStyle;
-        private static GUIStyle boldStyle;
-        private const int KaomojiVerticalBorder = 50;
-        private const int KaomojiHorizontalBorder = 50;
-        private const int KaomojiFontSize = 100;
-        private static RectOffset kaomojiOffset;
+
+
         private static int currentKaomoji;
         public TokenSelectorWindow TokenSelector;
-        public const int IconSize = 24;
-        public static readonly GUILayoutOption IconHeightOption = GUILayout.Height(IconSize);
-        public static readonly GUILayoutOption IconWidthOption = GUILayout.Width(IconSize);
         public CutscenePlayer Player { get; private set; }
 
         private static readonly GUIContent ClearCutscene =
@@ -69,30 +59,7 @@ namespace Shiroi.Cutscenes.Editor {
             return Kaomojis[currentKaomoji];
         }
 
-        private static void LoadStyles() {
-            kaomojiOffset = new RectOffset(
-                KaomojiHorizontalBorder,
-                KaomojiHorizontalBorder,
-                KaomojiVerticalBorder,
-                KaomojiVerticalBorder
-            );
-            baseStyle = new GUIStyle {
-                alignment = TextAnchor.MiddleCenter
-            };
-            boldStyle = new GUIStyle {
-                fontStyle = FontStyle.Bold
-            };
-            headerStyle = new GUIStyle(baseStyle) {
-                fontStyle = FontStyle.Bold
-            };
-            errorStyle = new GUIStyle(baseStyle) {
-                fontStyle = FontStyle.Bold,
-            };
-            kaomojiStyle = new GUIStyle(errorStyle) {
-                fontSize = KaomojiFontSize,
-                margin = kaomojiOffset,
-            };
-        }
+        private static void LoadStyles() { }
 
         private ReorderableList tokenList;
 
@@ -127,13 +94,13 @@ namespace Shiroi.Cutscenes.Editor {
             if (Player == null) {
                 var found = FindObjectsOfType<CutscenePlayer>();
                 if (found.Length > 1) {
-                    EditorGUILayout.LabelField(NoSelectedPlayer, errorStyle);
+                    EditorGUILayout.LabelField(NoSelectedPlayer, ShiroiStyles.Error);
                 }
                 if (found.Length == 1) {
                     Player = found[0];
                 } else {
-                    EditorGUILayout.LabelField(NoSelectedPlayer, errorStyle);
-                    EditorGUILayout.LabelField(NoSelectedPlayerWarning, errorStyle);
+                    EditorGUILayout.LabelField(NoSelectedPlayer, ShiroiStyles.Error);
+                    EditorGUILayout.LabelField(NoSelectedPlayerWarning, ShiroiStyles.Error);
                 }
             }
             Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
@@ -149,7 +116,7 @@ namespace Shiroi.Cutscenes.Editor {
             var isEmpty = totalLines == 0;
             //No token in cutscene
             if (isEmpty) {
-                EditorGUILayout.LabelField(NoTokenContent, errorStyle);
+                EditorGUILayout.LabelField(NoTokenContent, ShiroiStyles.Error);
             }
             //Add button
             EditorGUILayout.BeginHorizontal();
@@ -167,7 +134,7 @@ namespace Shiroi.Cutscenes.Editor {
                 EditorGUILayout.LabelField("No futures registered.");
             } else {
                 futures.Sort();
-                EditorGUILayout.LabelField(futures.Count + " futures found!", headerStyle);
+                EditorGUILayout.LabelField(futures.Count + " futures found!", ShiroiStyles.Header);
                 foreach (var future in futures) {
                     var index = future.Provider;
                     var token = cutscene[index];
@@ -176,14 +143,14 @@ namespace Shiroi.Cutscenes.Editor {
                     EditorGUILayout.BeginHorizontal(MappedToken.For(token).Style);
                     var content = EditorGUIUtility.ObjectContent(null, future.Type);
                     content.text = null;
-                    GUILayout.Box(content, IconHeightOption, IconWidthOption);
+                    GUILayout.Box(content, ShiroiStyles.IconHeightOption, ShiroiStyles.IconWidthOption);
                     EditorGUILayout.LabelField(msg);
                     EditorGUILayout.EndHorizontal();
                 }
             }
             if (isEmpty) {
                 GUI.enabled = false;
-                EditorGUILayout.LabelField(GetKaomoji(), kaomojiStyle, GUILayout.ExpandHeight(true));
+                EditorGUILayout.LabelField(GetKaomoji(), ShiroiStyles.Kaomoji, GUILayout.ExpandHeight(true));
             } else {
                 //Reload kaomojis
                 currentKaomoji = Random.Range(0, Kaomojis.Length - 1);
@@ -200,7 +167,7 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         private void DrawTokensHeader(Rect rect) {
-            EditorGUI.LabelField(rect, "Tokens", headerStyle);
+            EditorGUI.LabelField(rect, "Tokens", ShiroiStyles.Header);
         }
 
         private float CalculateHeight(int index) {
@@ -212,9 +179,9 @@ namespace Shiroi.Cutscenes.Editor {
             var token = cutscene[index];
             var labelRect = GetRect(rect, 0);
             var mappedToken = MappedToken.For(token);
-            EditorGUI.LabelField(labelRect, mappedToken.Label, boldStyle);
+            EditorGUI.LabelField(labelRect, mappedToken.Label, ShiroiStyles.Bold);
             bool changed;
-            mappedToken.DrawFields(rect, token, cutscene, Player, out changed);
+            mappedToken.DrawFields(rect, index, token, cutscene, Player, out changed);
             if (!changed) {
                 return;
             }

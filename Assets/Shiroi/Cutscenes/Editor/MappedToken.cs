@@ -55,14 +55,14 @@ namespace Shiroi.Cutscenes.Editor {
             return byte.Parse(r, System.Globalization.NumberStyles.HexNumber);
         }
 
+        public GUIStyle Style;
 
+        public GUIStyle SelectedStyle;
 
-
-        public readonly GUIStyle Style;
-        public readonly GUIStyle SelectedStyle;
         public Color Color;
         public Color SelectedColor;
         public GUIContent Label;
+
         public MappedToken(Type type) {
             SerializedFields = SerializationUtil.GetSerializedMembers(type);
             TotalElements = (uint) SerializedFields.Length;
@@ -102,7 +102,7 @@ namespace Shiroi.Cutscenes.Editor {
         private static IToken currentToken;
         private Setter s = value => currentField.SetValue(currentToken, value);
 
-        public void DrawFields(Rect rect, IToken token, Cutscene cutscene, CutscenePlayer player, out bool changed) {
+        public void DrawFields(Rect rect, int tokenIndex, IToken token, Cutscene cutscene, CutscenePlayer player, out bool changed) {
             changed = false;
             currentToken = token;
             for (var index = 0; index < SerializedFields.Length; index++) {
@@ -118,7 +118,8 @@ namespace Shiroi.Cutscenes.Editor {
                     continue;
                 }
                 EditorGUI.BeginChangeCheck();
-                drawer.Draw(player, cutscene, r, ObjectNames.NicifyVariableName(fieldName), currentField.GetValue(token),
+                drawer.Draw(player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
+                    currentField.GetValue(token),
                     fieldType, currentField, s);
                 if (EditorGUI.EndChangeCheck()) {
                     changed = true;

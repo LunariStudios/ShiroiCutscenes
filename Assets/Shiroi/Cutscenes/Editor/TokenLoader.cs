@@ -10,10 +10,10 @@ namespace Shiroi.Cutscenes.Editor {
     [InitializeOnLoad]
     public static class TokenLoader {
         public static readonly Type TokenType = typeof(IToken);
-        public static List<Type> knownTokenTypes;
+        public static List<Type> KnownTokenTypes;
 
         private static void Reload() {
-            knownTokenTypes = new List<Type>();
+            KnownTokenTypes = new List<Type>();
         }
 
         static TokenLoader() {
@@ -34,11 +34,11 @@ namespace Shiroi.Cutscenes.Editor {
                 if (type == TokenType || !TokenType.IsAssignableFrom(type)) {
                     continue;
                 }
-                if (knownTokenTypes.Contains(type)) {
+                if (KnownTokenTypes.Contains(type)) {
                     continue;
                 }
                 var name = type.Name;
-                knownTokenTypes.Add(type);
+                KnownTokenTypes.Add(type);
                 total++;
             }
             if (total > 0) {
