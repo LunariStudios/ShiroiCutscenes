@@ -7,6 +7,9 @@ namespace Shiroi.Cutscenes.Examples {
         public AnimationCurve AccelerationGraph = AnimationCurve.EaseInOut(0, 0, 1, 1);
         public Color CharacterColor = Color.red;
         public string String;
+        public Rect Rect;
+        public RectInt RectInt;
+
         public IEnumerator Execute(CutscenePlayer player) {
             yield break;
         }

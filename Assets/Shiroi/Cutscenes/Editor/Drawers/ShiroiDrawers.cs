@@ -6,8 +6,26 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Editor.Drawers {
+    public class NotFoundDrawer : TypeDrawer {
+        public override int GetPriority() {
+            return -1;
+        }
+
+        public override bool Supports(Type type) {
+            return true;
+        }
+
+        public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
+            int tokenIndex, string name,
+            object value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            EditorGUI.LabelField(rect,
+                string.Format("Couldn't find drawer for field '{0}' of type '{1}'", name, valueType.Name));
+        }
+    }
+
     public class FutureDrawer : TypeDrawer<FutureReference> {
-        public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect, int tokenIndex, string name, FutureReference value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+        public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
+            int tokenIndex, string name, FutureReference value, Type valueType, FieldInfo fieldInfo, Setter setter) {
             var futures = cutscene.GetFutures().ToList();
             var attribute = (FutureTypeAttribute) Attribute.GetCustomAttribute(fieldInfo, typeof(FutureTypeAttribute));
             if (attribute != null) {

@@ -114,8 +114,32 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
     }
 
+    public class RectDrawer : TypeDrawer<Rect> {
+        public const uint RectFieldSize = 2;
+
+        public override uint GetTotalLines() {
+            return RectFieldSize;
+        }
+
+        public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
+            int tokenIndex, string name, Rect value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            setter(EditorGUI.RectField(rect, name, value));
+        }
+    }
+
+    public class RectIntDrawer : TypeDrawer<RectInt> {
+        public override uint GetTotalLines() {
+            return RectDrawer.RectFieldSize;
+        }
+
+        public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
+            int tokenIndex, string name, RectInt value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            setter(EditorGUI.RectIntField(rect, name, value));
+        }
+    }
+
     public class LayerMaskDrawer : TypeDrawer<LayerMask> {
-        public override byte GetPriority() {
+        public override int GetPriority() {
             //Prefer over int
             return 1;
         }

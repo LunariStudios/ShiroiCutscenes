@@ -121,7 +121,7 @@ namespace Shiroi.Cutscenes.Editor {
             changed = false;
             currentToken = token;
             //Start at 1 because label
-            int currentLine = 1;
+            var currentLine = 1;
             for (var index = 0; index < SerializedFields.Length; index++) {
                 currentField = SerializedFields[index];
                 var fieldType = currentField.FieldType;
@@ -129,15 +129,8 @@ namespace Shiroi.Cutscenes.Editor {
 
                 var fieldName = currentField.Name;
                 var typeName = fieldType.Name;
-                Rect r;
-                if (drawer == null) {
-                    r = rect.GetLine((uint) (index + 1));
-                    EditorGUI.LabelField(r,
-                        string.Format("Couldn't find drawer for field '{0}' of type '{1}'", fieldName, typeName));
-                    continue;
-                }
                 var totalLines = drawer.GetTotalLines();
-                r = rect.GetLine((uint) currentLine, totalLines);
+                var r = rect.GetLine((uint) currentLine, totalLines);
                 currentLine += (int) totalLines;
 
                 EditorGUI.BeginChangeCheck();

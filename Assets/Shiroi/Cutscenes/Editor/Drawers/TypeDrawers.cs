@@ -31,6 +31,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
 
         private static void RegisterShiroiDrawers() {
             RegisterDrawer(new FutureDrawer());
+            RegisterDrawer(new NotFoundDrawer());
         }
 
         private static void RegisterUnityDrawers() {
@@ -46,6 +47,8 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             RegisterDrawer(new ColorDrawer());
             RegisterDrawer(new AnimationCurveDrawer());
             RegisterDrawer(new LayerMaskDrawer());
+            RegisterDrawer(new RectDrawer());
+            RegisterDrawer(new RectIntDrawer());
         }
 
         private static void RegisterPrimitivesDrawers() {

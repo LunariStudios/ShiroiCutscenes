@@ -11,7 +11,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
 
         public abstract void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect, int tokenIndex, string name, object value, Type valueType, FieldInfo fieldInfo, Setter setter);
 
-        public virtual byte GetPriority() {
+        public virtual int GetPriority() {
             return 0;
         }
 
