@@ -138,7 +138,7 @@ namespace Shiroi.Cutscenes.Editor {
                     var future = futures[i];
                     var index = future.Provider;
                     var token = cutscene[index];
-                    var msg = string.Format("{0} @ {3} (Owner: {1} @ {2})", future.Name, token.GetType().Name, index,
+                    var msg = string.Format("{0} @ {3} (Owner: {1} @ #{2})", future.Name, token.GetType().Name, index,
                         future.Id);
                     var mappedToken = MappedToken.For(token);
                     var style = lastSelected == index ? mappedToken.SelectedStyle : mappedToken.Style;
@@ -209,7 +209,7 @@ namespace Shiroi.Cutscenes.Editor {
             var token = cutscene[index];
             var labelRect = GetRect(rect, 0);
             var mappedToken = MappedToken.For(token);
-            EditorGUI.LabelField(labelRect, mappedToken.Label, ShiroiStyles.Bold);
+            EditorGUI.LabelField(labelRect, string.Format("#{0} - {1}", index, mappedToken.Label), ShiroiStyles.Bold);
             bool changed;
             mappedToken.DrawFields(this, rect, index, token, cutscene, Player, out changed);
             if (!changed) {

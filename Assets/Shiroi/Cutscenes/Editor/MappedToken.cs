@@ -69,12 +69,12 @@ namespace Shiroi.Cutscenes.Editor {
         public readonly GUIStyle SelectedStyle;
         public readonly Color Color;
         public readonly Color SelectedColor;
-        public readonly GUIContent Label;
+        public readonly string Label;
         private readonly List<TypeDrawer> drawers = new List<TypeDrawer>();
 
         public MappedToken(Type type) {
             //Initialize fields
-            Label = new GUIContent(type.Name);
+            Label = type.Name;
 
             SerializedFields = SerializationUtil.GetSerializedMembers(type);
             TotalElements = (uint) SerializedFields.Length;
