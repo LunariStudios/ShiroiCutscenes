@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Shiroi.Cutscenes.Editor.Drawers;
+using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Serialization;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
@@ -10,12 +11,21 @@ using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Editor {
     public class MappedToken {
-        private const float SaturationValue = 0.5F;
-        private const float BrightnessValue = 0.7F;
-        private const float SelectedBrightnessValue = BrightnessValue + 0.2F;
+        //Setter things
+        private static FieldInfo currentField;
+
+        private static IToken currentToken;
+
+        private static readonly Setter Setter = value => currentField.SetValue(currentToken, value);
+
+        //Const value
+        private const float SaturationValue = 0.7F;
+
+        private const float BrightnessValue = 0.5F;
+        private const float BrightnessDifference = 0.2F;
+        private const float SelectedBrightnessValue = BrightnessValue + BrightnessDifference;
 
         private static readonly Dictionary<Type, MappedToken> Cache = new Dictionary<Type, MappedToken>();
-        private static readonly Dictionary<Type, Setter> SetterCache = new Dictionary<Type, Setter>();
 
         public static MappedToken For(IToken token) {
             return For(token.GetType());
@@ -60,27 +70,33 @@ namespace Shiroi.Cutscenes.Editor {
         public readonly Color Color;
         public readonly Color SelectedColor;
         public readonly GUIContent Label;
-        private readonly Queue<TypeDrawer> drawers = new Queue<TypeDrawer>();
+        private readonly List<TypeDrawer> drawers = new List<TypeDrawer>();
 
         public MappedToken(Type type) {
+            //Initialize fields
+            Label = new GUIContent(type.Name);
+
             SerializedFields = SerializationUtil.GetSerializedMembers(type);
             TotalElements = (uint) SerializedFields.Length;
-            Label = new GUIContent(type.Name);
+            //Initialize with label
+            Height = ShiroiStyles.SingleLineHeight;
             foreach (var field in SerializedFields) {
-                drawers.Enqueue(TypeDrawers.GetDrawerFor(field.FieldType));
+                var drawer = TypeDrawers.GetDrawerFor(field.FieldType);
+                drawers.Add(drawer);
+                Height += drawer.GetTotalLines() * ShiroiStyles.SingleLineHeight;
             }
             //Calculate color
-            var name = type.Name;
+            var name = string.Format("{0}.{1}", type.Namespace, type.Name);
             var totalLetters = name.Length;
             var increment = (float) (totalLetters - 1) / 5;
             float r, g, b;
-            //load colors from string
             r = LoadColor(name, 0, increment);
             g = LoadColor(name, 2, increment);
             b = LoadColor(name, 4, increment);
-            Color = new Color(r, g, b);
+            var typeColor = new Color(r, g, b);
             float h, s, v;
-            Color.RGBToHSV(Color, out h, out s, out v);
+            Color.RGBToHSV(typeColor, out h, out s, out v);
+            //Use hsv to calculate brightness
             Color = Color.HSVToRGB(h, SaturationValue, BrightnessValue);
             SelectedColor = Color.HSVToRGB(h, SaturationValue, SelectedBrightnessValue);
             Style = CreateGUIStyle(Color);
@@ -89,9 +105,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         public FieldInfo[] SerializedFields { get; private set; }
 
-        public float Height {
-            get { return (TotalElements + 1) * EditorGUIUtility.singleLineHeight; }
-        }
+        public float Height { get; private set; }
 
         public uint TotalElements { private set; get; }
 
@@ -100,31 +114,36 @@ namespace Shiroi.Cutscenes.Editor {
             return new GUIStyle(GUI.skin.box) {normal = {background = CreateTexture(1, 1, color)}};
         }
 
-        private static FieldInfo currentField;
-        private static IToken currentToken;
-        private Setter s = value => currentField.SetValue(currentToken, value);
 
         public void DrawFields(CutsceneEditor editor, Rect rect, int tokenIndex, IToken token, Cutscene cutscene,
             CutscenePlayer player,
             out bool changed) {
             changed = false;
             currentToken = token;
+            //Start at 1 because label
+            int currentLine = 1;
             for (var index = 0; index < SerializedFields.Length; index++) {
                 currentField = SerializedFields[index];
                 var fieldType = currentField.FieldType;
-                var drawer = TypeDrawers.GetDrawerFor(fieldType);
+                var drawer = drawers[index];
+
                 var fieldName = currentField.Name;
                 var typeName = fieldType.Name;
-                var r = CutsceneEditor.GetRect(rect, index + 1);
+                Rect r;
                 if (drawer == null) {
+                    r = rect.GetLine((uint) (index + 1));
                     EditorGUI.LabelField(r,
                         string.Format("Couldn't find drawer for field '{0}' of type '{1}'", fieldName, typeName));
                     continue;
                 }
+                var totalLines = drawer.GetTotalLines();
+                r = rect.GetLine((uint) currentLine, totalLines);
+                currentLine += (int) totalLines;
+
                 EditorGUI.BeginChangeCheck();
                 drawer.Draw(editor, player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
                     currentField.GetValue(token),
-                    fieldType, currentField, s);
+                    fieldType, currentField, Setter);
                 if (EditorGUI.EndChangeCheck()) {
                     changed = true;
                 }

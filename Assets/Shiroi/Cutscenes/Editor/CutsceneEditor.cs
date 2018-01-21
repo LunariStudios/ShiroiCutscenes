@@ -131,7 +131,7 @@ namespace Shiroi.Cutscenes.Editor {
                 EditorGUI.LabelField(labelRect, "No futures registered.");
             } else {
                 futures.Sort();
-                EditorGUI.LabelField(labelRect, totalFutures + " futures found! selected = " + lastSelected,
+                EditorGUI.LabelField(labelRect, totalFutures + " futures found!",
                     ShiroiStyles.Header);
                 var iconSize = ShiroiStyles.IconSize;
                 for (var i = 0; i < futures.Count; i++) {

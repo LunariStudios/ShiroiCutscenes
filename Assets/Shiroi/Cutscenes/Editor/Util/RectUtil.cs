@@ -2,16 +2,14 @@
 
 namespace Shiroi.Cutscenes.Editor.Util {
     public static class RectUtil {
-        public const float SingleLineHeight = 16;
-
-
         public static Rect GetLine(this Rect rect, uint collum, uint totalLines = 1,
-            float collumHeight = SingleLineHeight) {
+            float collumHeight = ShiroiStyles.SingleLineHeight) {
             var height = totalLines * collumHeight;
             return rect.GetLine(collum, height, collumHeight);
         }
 
-        public static Rect GetLine(this Rect rect, uint collum, float height, float collumHeight = SingleLineHeight) {
+        private static Rect GetLine(this Rect rect, uint collum, float height,
+            float collumHeight = ShiroiStyles.SingleLineHeight) {
             return rect.SubRect(rect.width, height, yOffset: collum * collumHeight);
         }
 
