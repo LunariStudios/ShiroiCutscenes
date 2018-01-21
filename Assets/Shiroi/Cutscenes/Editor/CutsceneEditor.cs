@@ -105,18 +105,19 @@ namespace Shiroi.Cutscenes.Editor {
             //Reserve futures rect
             var totalFutures = cutscene.TotalFutures;
             var hasFutures = totalFutures > 0;
-            Rect futuresRect = default(Rect);
+            var futuresRect = default(Rect);
             if (hasFutures) {
                 var futuresHeight = totalFutures * ShiroiStyles.IconSize + 2 * EditorGUIUtility.singleLineHeight;
                 futuresRect = GUILayoutUtility.GetRect(0, futuresHeight);
             }
-            //
             if (totalTokens <= 0) {
                 return;
             }
+            hasAnyFocused = false;
             tokenList.DoLayoutList();
-            lastSelected = tokenList.index;
-            //
+            if (!hasAnyFocused) {
+                lastSelected = -1;
+            }
             if (hasFutures) {
                 DrawFutures(futuresRect);
             }
@@ -130,7 +131,8 @@ namespace Shiroi.Cutscenes.Editor {
                 EditorGUI.LabelField(labelRect, "No futures registered.");
             } else {
                 futures.Sort();
-                EditorGUI.LabelField(labelRect, totalFutures + " futures found!", ShiroiStyles.Header);
+                EditorGUI.LabelField(labelRect, totalFutures + " futures found! selected = " + lastSelected,
+                    ShiroiStyles.Header);
                 var iconSize = ShiroiStyles.IconSize;
                 for (var i = 0; i < futures.Count; i++) {
                     var future = futures[i];
@@ -139,7 +141,7 @@ namespace Shiroi.Cutscenes.Editor {
                     var msg = string.Format("{0} @ {3} (Owner: {1} @ {2})", future.Name, token.GetType().Name, index,
                         future.Id);
                     var mappedToken = MappedToken.For(token);
-                    var style = tokenList.index == index ? mappedToken.SelectedStyle : mappedToken.Style;
+                    var style = lastSelected == index ? mappedToken.SelectedStyle : mappedToken.Style;
                     var content = EditorGUIUtility.ObjectContent(null, future.Type);
                     var futureRect = rect.GetLine((uint) (i + 1), collumHeight: iconSize);
                     var iconRect = futureRect.SubRect(iconSize, iconSize);
@@ -179,9 +181,14 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         private void DrawBackground(Rect rect, int index, bool isactive, bool isfocused) {
+            if (isfocused) {
+                hasAnyFocused = true;
+                lastSelected = index;
+            }
             if (index == -1) {
                 return;
             }
+
             var m = MappedToken.For(cutscene[index]);
             var style = isfocused ? m.SelectedStyle : m.Style;
             GUI.Box(rect, GUIContent.none, style);
@@ -195,6 +202,8 @@ namespace Shiroi.Cutscenes.Editor {
             var token = cutscene[index];
             return MappedToken.For(token).Height;
         }
+
+        private bool hasAnyFocused;
 
         private void DrawToken(Rect rect, int index, bool isactive, bool isfocused) {
             var token = cutscene[index];
@@ -225,6 +234,8 @@ namespace Shiroi.Cutscenes.Editor {
             cutscene.AddToken((IToken) Activator.CreateInstance(type));
             EditorUtility.SetDirty(this);
             SetCutsceneDirty();
+            tokenList.GrabKeyboardFocus();
+            tokenList.index = cutscene.Tokens.Count - 1;
         }
 
         private void SetCutsceneDirty() {
