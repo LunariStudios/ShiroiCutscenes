@@ -29,7 +29,7 @@ namespace Shiroi.Cutscenes.Editor {
             return Cache[type] = new MappedToken(type);
         }
 
-        private static Texture2D CreateTexture(int width, int height, Color color) {
+        public static Texture2D CreateTexture(int width, int height, Color color) {
             var pixels = new Color[width * height];
             for (var i = 0; i < pixels.Length; ++i) {
                 pixels[i] = color;
@@ -55,18 +55,20 @@ namespace Shiroi.Cutscenes.Editor {
             return byte.Parse(r, System.Globalization.NumberStyles.HexNumber);
         }
 
-        public GUIStyle Style;
-
-        public GUIStyle SelectedStyle;
-
-        public Color Color;
-        public Color SelectedColor;
-        public GUIContent Label;
+        public readonly GUIStyle Style;
+        public readonly GUIStyle SelectedStyle;
+        public readonly Color Color;
+        public readonly Color SelectedColor;
+        public readonly GUIContent Label;
+        private readonly Queue<TypeDrawer> drawers = new Queue<TypeDrawer>();
 
         public MappedToken(Type type) {
             SerializedFields = SerializationUtil.GetSerializedMembers(type);
             TotalElements = (uint) SerializedFields.Length;
             Label = new GUIContent(type.Name);
+            foreach (var field in SerializedFields) {
+                drawers.Enqueue(TypeDrawers.GetDrawerFor(field.FieldType));
+            }
             //Calculate color
             var name = type.Name;
             var totalLetters = name.Length;
@@ -95,14 +97,16 @@ namespace Shiroi.Cutscenes.Editor {
 
 
         private GUIStyle CreateGUIStyle(Color color) {
-            return new GUIStyle(GUI.skin.box) {normal = {background = CreateTexture(2, 2, color)}};
+            return new GUIStyle(GUI.skin.box) {normal = {background = CreateTexture(1, 1, color)}};
         }
 
         private static FieldInfo currentField;
         private static IToken currentToken;
         private Setter s = value => currentField.SetValue(currentToken, value);
 
-        public void DrawFields(Rect rect, int tokenIndex, IToken token, Cutscene cutscene, CutscenePlayer player, out bool changed) {
+        public void DrawFields(CutsceneEditor editor, Rect rect, int tokenIndex, IToken token, Cutscene cutscene,
+            CutscenePlayer player,
+            out bool changed) {
             changed = false;
             currentToken = token;
             for (var index = 0; index < SerializedFields.Length; index++) {
@@ -118,7 +122,7 @@ namespace Shiroi.Cutscenes.Editor {
                     continue;
                 }
                 EditorGUI.BeginChangeCheck();
-                drawer.Draw(player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
+                drawer.Draw(editor, player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
                     currentField.GetValue(token),
                     fieldType, currentField, s);
                 if (EditorGUI.EndChangeCheck()) {

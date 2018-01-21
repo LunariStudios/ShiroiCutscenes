@@ -17,11 +17,22 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         static TokenLoader() {
+            LoadTokens();
+            EditorApplication.playModeStateChanged += OnPlayerStateChanged;
+        }
+
+        private static void LoadTokens() {
             Reload();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()) {
                 RegisterAssembly(assembly);
             }
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoaded;
+        }
+
+        private static void OnPlayerStateChanged(PlayModeStateChange playModeStateChange) {
+            if (playModeStateChange == PlayModeStateChange.EnteredEditMode) {
+                LoadTokens();
+            }
         }
 
         private static void OnAssemblyLoaded(object sender, AssemblyLoadEventArgs args) {
@@ -46,7 +57,6 @@ namespace Shiroi.Cutscenes.Editor {
             }
         }
 
-        private static void Func(object userData) {
-        }
+        private static void Func(object userData) { }
     }
 }

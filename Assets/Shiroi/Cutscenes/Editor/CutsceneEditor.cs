@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Tokens;
+using Shiroi.Cutscenes.Editor.Util;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Shiroi.Cutscenes.Editor {
@@ -105,11 +102,54 @@ namespace Shiroi.Cutscenes.Editor {
             }
             Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
             DrawCutsceneHeader(totalTokens);
+            //Reserve futures rect
+            var totalFutures = cutscene.TotalFutures;
+            var hasFutures = totalFutures > 0;
+            Rect futuresRect = default(Rect);
+            if (hasFutures) {
+                var futuresHeight = totalFutures * ShiroiStyles.IconSize + 2 * EditorGUIUtility.singleLineHeight;
+                futuresRect = GUILayoutUtility.GetRect(0, futuresHeight);
+            }
+            //
             if (totalTokens <= 0) {
                 return;
             }
-            lastSelected = tokenList.index;
             tokenList.DoLayoutList();
+            lastSelected = tokenList.index;
+            //
+            if (hasFutures) {
+                DrawFutures(futuresRect);
+            }
+        }
+
+        private void DrawFutures(Rect rect) {
+            var futures = cutscene.GetFutures();
+            var totalFutures = futures.Count;
+            var labelRect = rect.GetLine(0);
+            if (totalFutures == 0) {
+                EditorGUI.LabelField(labelRect, "No futures registered.");
+            } else {
+                futures.Sort();
+                EditorGUI.LabelField(labelRect, totalFutures + " futures found!", ShiroiStyles.Header);
+                var iconSize = ShiroiStyles.IconSize;
+                for (var i = 0; i < futures.Count; i++) {
+                    var future = futures[i];
+                    var index = future.Provider;
+                    var token = cutscene[index];
+                    var msg = string.Format("{0} @ {3} (Owner: {1} @ {2})", future.Name, token.GetType().Name, index,
+                        future.Id);
+                    var mappedToken = MappedToken.For(token);
+                    var style = tokenList.index == index ? mappedToken.SelectedStyle : mappedToken.Style;
+                    var content = EditorGUIUtility.ObjectContent(null, future.Type);
+                    var futureRect = rect.GetLine((uint) (i + 1), collumHeight: iconSize);
+                    var iconRect = futureRect.SubRect(iconSize, iconSize);
+                    var msgRect = futureRect.SubRect(futureRect.width - iconSize, iconSize, iconSize);
+                    content.text = null;
+                    GUI.Box(futureRect, GUIContent.none, style);
+                    GUI.Box(iconRect, content);
+                    EditorGUI.LabelField(msgRect, msg);
+                }
+            }
         }
 
         private void DrawCutsceneHeader(int totalLines) {
@@ -129,25 +169,6 @@ namespace Shiroi.Cutscenes.Editor {
                 }
             }
             EditorGUILayout.EndHorizontal();
-            var futures = cutscene.GetFutures();
-            if (futures.Count == 0) {
-                EditorGUILayout.LabelField("No futures registered.");
-            } else {
-                futures.Sort();
-                EditorGUILayout.LabelField(futures.Count + " futures found!", ShiroiStyles.Header);
-                foreach (var future in futures) {
-                    var index = future.Provider;
-                    var token = cutscene[index];
-                    var msg = string.Format("{0} @ {3} (Owner: {1} @ {2})", future.Name, token.GetType().Name, index,
-                        future.Id);
-                    EditorGUILayout.BeginHorizontal(MappedToken.For(token).Style);
-                    var content = EditorGUIUtility.ObjectContent(null, future.Type);
-                    content.text = null;
-                    GUILayout.Box(content, ShiroiStyles.IconHeightOption, ShiroiStyles.IconWidthOption);
-                    EditorGUILayout.LabelField(msg);
-                    EditorGUILayout.EndHorizontal();
-                }
-            }
             if (isEmpty) {
                 GUI.enabled = false;
                 EditorGUILayout.LabelField(GetKaomoji(), ShiroiStyles.Kaomoji, GUILayout.ExpandHeight(true));
@@ -181,7 +202,7 @@ namespace Shiroi.Cutscenes.Editor {
             var mappedToken = MappedToken.For(token);
             EditorGUI.LabelField(labelRect, mappedToken.Label, ShiroiStyles.Bold);
             bool changed;
-            mappedToken.DrawFields(rect, index, token, cutscene, Player, out changed);
+            mappedToken.DrawFields(this, rect, index, token, cutscene, Player, out changed);
             if (!changed) {
                 return;
             }

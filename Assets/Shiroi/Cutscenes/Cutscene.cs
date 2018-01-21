@@ -62,6 +62,10 @@ namespace Shiroi.Cutscenes {
             get { return Tokens.Count == 0; }
         }
 
+        public int TotalFutures {
+            get { return futures.Count; }
+        }
+
         public void AddToken(IToken token) {
             loadedTokens.Add(token);
             var provider = token as IFutureProvider;
