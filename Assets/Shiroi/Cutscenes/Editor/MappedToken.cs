@@ -86,7 +86,7 @@ namespace Shiroi.Cutscenes.Editor {
                 Height += drawer.GetTotalLines() * ShiroiStyles.SingleLineHeight;
             }
             //Calculate color
-            var name = string.Format("{0}.{1}", type.Namespace, type.Name);
+            var name = type.Name;
             var totalLetters = name.Length;
             var increment = (float) (totalLetters - 1) / 5;
             float r, g, b;
