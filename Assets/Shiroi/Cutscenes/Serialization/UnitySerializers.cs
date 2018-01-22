@@ -1,0 +1,3 @@
+﻿namespace Shiroi.Cutscenes.Serialization {
+    
+}
