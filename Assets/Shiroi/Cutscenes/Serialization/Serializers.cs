@@ -49,6 +49,10 @@ namespace Shiroi.Cutscenes.Serialization {
             RegisterSerializer(new Vector2Serializer());
             RegisterSerializer(new Vector3Serializer());
             RegisterSerializer(new Vector4Serializer());
+            RegisterSerializer(new Vector2IntSerializer());
+            RegisterSerializer(new Vector3IntSerializer());
+            RegisterSerializer(new QuaternionSerializer());
+            RegisterSerializer(new ColorSerializer());
         }
 
         public static void RegisterPrimitiveSerializers() {

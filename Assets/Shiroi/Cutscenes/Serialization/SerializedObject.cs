@@ -208,7 +208,7 @@ namespace Shiroi.Cutscenes.Serialization {
             }
         }
 
-        public static SerializedObject From(IToken loadedToken) {
+        public static SerializedObject From(object loadedToken) {
             var type = loadedToken.GetType();
             var obj = new SerializedObject();
             foreach (var member in SerializationUtil.GetSerializedMembers(type)) {

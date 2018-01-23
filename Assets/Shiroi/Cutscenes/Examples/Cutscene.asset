@@ -39,13 +39,16 @@ MonoBehaviour:
         Value:
           Booleans: []
           Ints: []
-          Floats: []
-          Strings:
-          - Key: Type
-            Value: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-              PublicKeyToken=null
-          - Key: Data
-            Value: '{"r":1.0,"g":0.0,"b":0.0,"a":1.0}'
+          Floats:
+          - Key: r
+            Value: 0.4480969
+          - Key: g
+            Value: 0.8235294
+          - Key: b
+            Value: 0.73031855
+          - Key: a
+            Value: 1
+          Strings: []
           Objects: []
           UnityObjects: []
       - Key: Rect
@@ -70,6 +73,64 @@ MonoBehaviour:
           - Key: Type
             Value: UnityEngine.RectInt, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
               PublicKeyToken=null
+          - Key: Data
+            Value: '{}'
+          Objects: []
+          UnityObjects: []
+      UnityObjects: []
+  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken3
+    TokenData:
+      Booleans: []
+      Ints: []
+      Floats: []
+      Strings: []
+      Objects:
+      - Key: Camera
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: -1364261717
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+      - Key: Collider
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: 79183956
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+      - Key: Bounds
+        Value:
+          Booleans: []
+          Ints: []
+          Floats: []
+          Strings:
+          - Key: Type
+            Value: UnityEngine.Bounds, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+              PublicKeyToken=null
+          - Key: Data
+            Value: '{}'
+          Objects: []
+          UnityObjects: []
+      - Key: BoundsInt
+        Value:
+          Booleans: []
+          Ints: []
+          Floats: []
+          Strings:
+          - Key: Type
+            Value: UnityEngine.BoundsInt, UnityEngine.CoreModule, Version=0.0.0.0,
+              Culture=neutral, PublicKeyToken=null
           - Key: Data
             Value: '{}'
           Objects: []
@@ -139,64 +200,6 @@ MonoBehaviour:
               Culture=neutral, PublicKeyToken=null
           - Key: Data
             Value: '{"Id":0}'
-          Objects: []
-          UnityObjects: []
-      UnityObjects: []
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken3
-    TokenData:
-      Booleans: []
-      Ints: []
-      Floats: []
-      Strings: []
-      Objects:
-      - Key: Camera
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: -1364261717
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-      - Key: Collider
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: 79183956
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-      - Key: Bounds
-        Value:
-          Booleans: []
-          Ints: []
-          Floats: []
-          Strings:
-          - Key: Type
-            Value: UnityEngine.Bounds, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-              PublicKeyToken=null
-          - Key: Data
-            Value: '{}'
-          Objects: []
-          UnityObjects: []
-      - Key: BoundsInt
-        Value:
-          Booleans: []
-          Ints: []
-          Floats: []
-          Strings:
-          - Key: Type
-            Value: UnityEngine.BoundsInt, UnityEngine.CoreModule, Version=0.0.0.0,
-              Culture=neutral, PublicKeyToken=null
-          - Key: Data
-            Value: '{}'
           Objects: []
           UnityObjects: []
       UnityObjects: []

@@ -27,7 +27,7 @@ namespace Shiroi.Cutscenes.Serialization {
 #else
 json = JsonUtility.ToJson(value);
 #endif
-            
+
             obj.SetString(TypeKey, value.GetType().AssemblyQualifiedName);
             obj.SetString(DataKey, json);
             destination.SetObject(name, obj);
@@ -148,6 +148,93 @@ json = JsonUtility.ToJson(value);
             obj.SetFloat(Vector2Serializer.YKey, value.y);
             obj.SetFloat(Vector3Serializer.ZKey, value.z);
             obj.SetFloat(WKey, value.w);
+            destination.SetObject(name, obj);
+        }
+    }
+
+    public class Vector2IntSerializer : Serializer<Vector2Int> {
+
+        public override object Deserialize(string key, SerializedObject obj) {
+            var serializedVector = obj.GetObject(key);
+            var x = serializedVector.GetInt(Vector2Serializer.XKey);
+            var y = serializedVector.GetInt(Vector2Serializer.YKey);
+            return new Vector2Int(x, y);
+        }
+
+        public override void Serialize(Vector2Int value, string name, SerializedObject destination) {
+            var obj = new SerializedObject();
+            obj.SetInt(Vector2Serializer.XKey, value.x);
+            obj.SetInt(Vector2Serializer.YKey, value.y);
+            destination.SetObject(name, obj);
+        }
+    }
+
+    public class Vector3IntSerializer : Serializer<Vector3Int> {
+
+        public override object Deserialize(string key, SerializedObject obj) {
+            var serializedVector = obj.GetObject(key);
+            var x = serializedVector.GetInt(Vector2Serializer.XKey);
+            var y = serializedVector.GetInt(Vector2Serializer.YKey);
+            var z = serializedVector.GetInt(Vector3Serializer.ZKey);
+            return new Vector3Int(x, y, z);
+        }
+
+        public override void Serialize(Vector3Int value, string name, SerializedObject destination) {
+            var obj = new SerializedObject();
+            obj.SetInt(Vector2Serializer.XKey, value.x);
+            obj.SetInt(Vector2Serializer.YKey, value.y);
+            obj.SetInt(Vector3Serializer.ZKey, value.z);
+            destination.SetObject(name, obj);
+        }
+    }
+    public class QuaternionSerializer : Serializer<Quaternion> {
+        public const string XKey = "x";
+        public const string YKey = "y";
+        public const string ZKey = "z";
+        public const string WKey = "w";
+
+        public override object Deserialize(string key, SerializedObject obj) {
+            var serializedQuaternion = obj.GetObject(key);
+            float x, y, z, w;
+            x = serializedQuaternion.GetFloat(XKey);
+            y = serializedQuaternion.GetFloat(YKey);
+            z = serializedQuaternion.GetFloat(ZKey);
+            w = serializedQuaternion.GetFloat(WKey);
+            return new Color(x, y, z, w);
+        }
+
+        public override void Serialize(Quaternion value, string name, SerializedObject destination) {
+            var obj = new SerializedObject();
+            obj.SetFloat(XKey, value.x);
+            obj.SetFloat(YKey, value.y);
+            obj.SetFloat(ZKey, value.z);
+            obj.SetFloat(WKey, value.w);
+            destination.SetObject(name, obj);
+        }
+    }
+
+    public class ColorSerializer : Serializer<Color> {
+        public const string RKey = "r";
+        public const string GKey = "g";
+        public const string BKey = "b";
+        public const string AKey = "a";
+
+        public override object Deserialize(string key, SerializedObject obj) {
+            var serializedColor = obj.GetObject(key);
+            float r, g, b, a;
+            r = serializedColor.GetFloat(RKey);
+            g = serializedColor.GetFloat(GKey);
+            b = serializedColor.GetFloat(BKey);
+            a = serializedColor.GetFloat(AKey);
+            return new Color(r, g, b, a);
+        }
+
+        public override void Serialize(Color value, string name, SerializedObject destination) {
+            var obj = new SerializedObject();
+            obj.SetFloat(RKey, value.r);
+            obj.SetFloat(GKey, value.g);
+            obj.SetFloat(BKey, value.b);
+            obj.SetFloat(AKey, value.a);
             destination.SetObject(name, obj);
         }
     }
