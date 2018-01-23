@@ -146,7 +146,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 151.5, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &256391369
@@ -230,11 +230,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   references:
   - TotalUses: 1
-    Id: 1342970093
-    Object: {fileID: 334819055}
-  - TotalUses: 1
-    Id: -118119635
-    Object: {fileID: 455074047}
+    Id: 617455747
+    Object: {fileID: 778114337}
 --- !u!4 &315268713
 Transform:
   m_ObjectHideFlags: 0
@@ -465,7 +462,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 172.5, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &778114336

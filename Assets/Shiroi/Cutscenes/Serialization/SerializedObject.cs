@@ -241,10 +241,9 @@ namespace Shiroi.Cutscenes.Serialization {
                 var value = serializer.Deserialize(name, this);
                 if (!fieldType.IsInstanceOfType(value)) {
                     Debug.LogWarningFormat(
-                        "[ShiroiCutscenes] Expected type '{1}' for member '{0}', but serializer returned '{2}' ({3})!",
+                        "[ShiroiCutscenes] Expected type '{1}' for member '{0}', but serializer returned ({2})!",
                         name,
                         fieldType.FullName,
-                        value,
                         value.GetType().FullName
                     );
                     continue;

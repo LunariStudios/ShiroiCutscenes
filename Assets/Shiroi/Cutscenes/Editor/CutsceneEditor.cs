@@ -97,7 +97,7 @@ Not forcing player selection for now
         }
 
         private void OnReorderCallback(ReorderableList list) {
-            cutscene.OnReorder(list, list.index, lastSelected);
+            cutscene.OnReorder(list.index, lastSelected);
         }
 
         private void OnRemoveCallback(ReorderableList list) {
@@ -141,7 +141,7 @@ Not forcing player selection for now
         }
 
         private void DrawPlayerSettings() {
-            EditorGUILayout.BeginVertical(Player ? ShiroiStyles.PlayerConfig : ShiroiStyles.NoBoundPlayer);
+            EditorGUILayout.BeginVertical(Player ? ShiroiStyles.DefaultBackground : ShiroiStyles.ErrorBackground);
             EditorGUILayout.LabelField(PlayerHeader, ShiroiStyles.Header);
             Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
             if (Player) {
@@ -151,7 +151,7 @@ Not forcing player selection for now
         }
 
         private void DrawTokens(int totalTokens) {
-            EditorGUILayout.BeginVertical(ShiroiStyles.Tokens);
+            EditorGUILayout.BeginVertical(ShiroiStyles.DefaultBackground);
             DrawCutsceneHeader(totalTokens);
             if (totalTokens > 0) {
                 hasAnyFocused = false;
@@ -165,7 +165,7 @@ Not forcing player selection for now
 
 
         private void DrawFutures(Rect rect) {
-            GUI.Box(rect, GUIContent.none, ShiroiStyles.FuturesBackground);
+            GUI.Box(rect, GUIContent.none, ShiroiStyles.DefaultBackground);
             var futures = cutscene.GetFutures();
             var totalFutures = futures.Count;
             EditorGUI.LabelField(rect.GetLine(0), FuturesStats, ShiroiStyles.Header);
@@ -273,7 +273,12 @@ Not forcing player selection for now
         }
 
         public void AddToken(Type type) {
-            cutscene.AddToken((IToken) Activator.CreateInstance(type));
+            var instance = (IToken) Activator.CreateInstance(type);
+            if (cutscene.IsEmpty || lastSelected < 0) {
+                cutscene.AddToken(instance);
+            } else {
+                cutscene.AddToken(lastSelected, instance);
+            }
             EditorUtility.SetDirty(this);
             SetCutsceneDirty();
             tokenList.GrabKeyboardFocus();

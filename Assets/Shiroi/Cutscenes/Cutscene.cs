@@ -67,6 +67,15 @@ namespace Shiroi.Cutscenes {
             get { return futures.Count; }
         }
 
+        public void AddToken(int index, IToken instance) {
+            loadedTokens.Insert(index, instance);
+            var provider = instance as IFutureProvider;
+            if (provider != null) {
+                provider.RegisterFutures(this);
+            }
+            OnReorder(index, Tokens.Count - 1);
+        }
+
         public void AddToken(IToken token) {
             loadedTokens.Add(token);
             var provider = token as IFutureProvider;
@@ -88,7 +97,7 @@ namespace Shiroi.Cutscenes {
                 if (provider == tokenToBeRemoved) {
                     toBeRemoved.Add(future);
                 }
-                
+
                 //If provider is below token to be removed, nothing will change
                 if (provider > tokenToBeRemoved) {
                     future.Provider--;
@@ -219,7 +228,7 @@ namespace Shiroi.Cutscenes {
             return -1;
         }
 
-        public void OnReorder(ReorderableList list, int newIndex, int oldIndex) {
+        public void OnReorder(int newIndex, int oldIndex) {
             var toModify = Math.Sign(oldIndex - newIndex);
             var min = Mathf.Min(newIndex, oldIndex);
             var max = Mathf.Max(newIndex, oldIndex);
