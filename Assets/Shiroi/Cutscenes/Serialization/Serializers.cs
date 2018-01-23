@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Shiroi.Cutscenes.Futures;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -31,7 +33,10 @@ namespace Shiroi.Cutscenes.Serialization {
         }
 
         private static void RegisterProviders() {
-            RegisterProvider(new ExposedReferenceSerializerProvider());
+            RegisterProvider(new GenericSerializerProvider(typeof(ExposedReference<>),
+                typeof(ExposedReferenceSerializer<>)));
+            RegisterProvider(new GenericSerializerProvider(typeof(FutureReference<>),
+                typeof(FutureReferenceSerializer<>)));
         }
 
         private static void RegisterProvider(SerializerProvider provider) {

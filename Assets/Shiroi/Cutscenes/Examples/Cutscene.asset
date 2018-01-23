@@ -11,8 +11,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0439e1c9b6f54debb8acbb620a3a83c, type: 3}
   m_Name: Cutscene
   m_EditorClassIdentifier: 
-  futures: []
+  futures:
+  - type: UnityEngine.UI.Text, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+    name: a_future_text
+    id: -944218338
+    provider: 0
   tokens:
+  - TokenType: Shiroi.Cutscenes.Examples.CreateTextToken
+    TokenData:
+      Booleans: []
+      Ints: []
+      Floats: []
+      Strings:
+      - Key: TextName
+        Value: a_future_text
+      Objects:
+      - Key: Parent
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: 1037472194
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+          Arrays: []
+      UnityObjects: []
+      Arrays: []
   - TokenType: Shiroi.Cutscenes.Examples.ExampleToken3
     TokenData:
       Booleans: []
@@ -25,7 +53,7 @@ MonoBehaviour:
           Booleans: []
           Ints:
           - Key: Id
-            Value: 0
+            Value: 1342970093
           Floats: []
           Strings: []
           Objects: []
@@ -38,7 +66,7 @@ MonoBehaviour:
           Booleans: []
           Ints:
           - Key: Id
-            Value: 0
+            Value: 295044632
           Floats: []
           Strings: []
           Objects: []
@@ -50,27 +78,37 @@ MonoBehaviour:
         Value:
           Booleans: []
           Ints: []
-          Floats: []
-          Strings:
-          - Key: Type
-            Value: UnityEngine.Bounds, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-              PublicKeyToken=null
-          - Key: Data
-            Value: '{}'
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: z
+            Value: 0
+          - Key: w
+            Value: 0
+          - Key: h
+            Value: 0
+          Strings: []
           Objects: []
           UnityObjects: []
           Arrays: []
       - Key: BoundsInt
         Value:
           Booleans: []
-          Ints: []
+          Ints:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: z
+            Value: 0
+          - Key: w
+            Value: 0
+          - Key: h
+            Value: 0
           Floats: []
-          Strings:
-          - Key: Type
-            Value: UnityEngine.BoundsInt, UnityEngine.CoreModule, Version=0.0.0.0,
-              Culture=neutral, PublicKeyToken=null
-          - Key: Data
-            Value: '{}'
+          Strings: []
           Objects: []
           UnityObjects: []
           Arrays: []
@@ -79,7 +117,9 @@ MonoBehaviour:
   - TokenType: Shiroi.Cutscenes.Examples.ExampleToken2
     TokenData:
       Booleans: []
-      Ints: []
+      Ints:
+      - Key: LayerMask
+        Value: 10
       Floats: []
       Strings: []
       Objects:
@@ -105,7 +145,7 @@ MonoBehaviour:
           Booleans: []
           Ints:
           - Key: Id
-            Value: 0
+            Value: 1037472194
           Floats: []
           Strings: []
           Objects: []
@@ -113,130 +153,46 @@ MonoBehaviour:
           - Key: Default
             Value: {fileID: 0}
           Arrays: []
-      - Key: LayerMask
-        Value:
-          Booleans: []
-          Ints: []
-          Floats: []
-          Strings:
-          - Key: Type
-            Value: UnityEngine.LayerMask, UnityEngine.CoreModule, Version=0.0.0.0,
-              Culture=neutral, PublicKeyToken=null
-          - Key: Data
-            Value: '{}'
-          Objects: []
-          UnityObjects: []
-          Arrays: []
       UnityObjects: []
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken1
+  - TokenType: Shiroi.Cutscenes.Examples.SetFutureTextToken
     TokenData:
       Booleans: []
-      Ints: []
+      Ints:
+      - Key: Text
+        Value: -944218338
       Floats: []
       Strings:
-      - Key: String
-        Value: 
+      - Key: Content
+        Value: This is a test!
       Objects:
-      - Key: CharacterColor
+      - Key: Position
         Value:
           Booleans: []
           Ints: []
           Floats:
-          - Key: r
-            Value: 0.3529412
-          - Key: g
-            Value: 0.9411765
-          - Key: b
-            Value: 0.86815417
-          - Key: a
-            Value: 1
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: Rect
-        Value:
-          Booleans: []
-          Ints: []
-          Floats: []
-          Strings:
-          - Key: Type
-            Value: UnityEngine.Rect, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-              PublicKeyToken=null
-          - Key: Data
-            Value: '{}'
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: RectInt
-        Value:
-          Booleans: []
-          Ints: []
-          Floats: []
-          Strings:
-          - Key: Type
-            Value: UnityEngine.RectInt, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-              PublicKeyToken=null
-          - Key: Data
-            Value: '{}'
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      UnityObjects: []
-      Arrays:
-      - Key: KeyFrames
-        Value:
-        - Booleans: []
-          Ints: []
-          Floats:
-          - Key: Time
+          - Key: x
             Value: 0
-          - Key: Value
-            Value: 0
-          - Key: InTangent
-            Value: 2
-          - Key: OutTangent
-            Value: 2
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-        - Booleans: []
-          Ints: []
-          Floats:
-          - Key: Time
-            Value: 1
-          - Key: Value
-            Value: 1
-          - Key: InTangent
-            Value: 0
-          - Key: OutTangent
+          - Key: y
             Value: 0
           Strings: []
           Objects: []
           UnityObjects: []
           Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.FutureToken
-    TokenData:
-      Booleans: []
-      Ints: []
-      Floats: []
-      Strings: []
-      Objects:
-      - Key: Object
+      - Key: Size
         Value:
           Booleans: []
           Ints: []
-          Floats: []
-          Strings:
-          - Key: Type
-            Value: Shiroi.Cutscenes.Futures.FutureReference, Assembly-CSharp, Version=0.0.0.0,
-              Culture=neutral, PublicKeyToken=null
-          - Key: Data
-            Value: '{"Id":0}'
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          Strings: []
           Objects: []
           UnityObjects: []
           Arrays: []
-      UnityObjects: []
+      UnityObjects:
+      - Key: Font
+        Value: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
       Arrays: []

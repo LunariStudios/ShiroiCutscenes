@@ -4,6 +4,7 @@ using System.Reflection;
 using Shiroi.Cutscenes.Futures;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Editor.Drawers {
     public class NotFoundDrawer : TypeDrawer {
@@ -23,14 +24,13 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
     }
 
-    public class FutureDrawer : TypeDrawer<FutureReference> {
+    public class FutureDrawer<T> : TypeDrawer<FutureReference<T>> where T : Object {
+        private readonly Type futureType = typeof(T);
+
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
-            int tokenIndex, string name, FutureReference value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            int tokenIndex, string name, FutureReference<T> value, Type valueType, FieldInfo fieldInfo, Setter setter) {
             var futures = cutscene.GetFutures().ToList();
-            var attribute = (FutureTypeAttribute) Attribute.GetCustomAttribute(fieldInfo, typeof(FutureTypeAttribute));
-            if (attribute != null) {
-                futures.RemoveAll(future => !attribute.Type.IsAssignableFrom(future.Type));
-            }
+            futures.RemoveAll(future => !futureType.IsAssignableFrom(future.Type));
             futures.RemoveAll(future => future.Provider >= tokenIndex);
             var optionNames = futures.Select(future => future.Name).ToArray();
             var possibleOptions = futures.Select(future => future.Id).ToArray();

@@ -8,8 +8,7 @@ using UnityEngine.UI;
 namespace Shiroi.Cutscenes.Examples {
     [UsedImplicitly]
     public class SetFutureTextToken : IToken {
-        [FutureType(typeof(Text))]
-        public FutureReference Text;
+        public FutureReference<Text> Text;
 
         public Font Font;
         public string Content = "Hello from ShiroiCutscenes!";
@@ -17,7 +16,7 @@ namespace Shiroi.Cutscenes.Examples {
         public Vector2 Size;
 
         public IEnumerator Execute(CutscenePlayer player) {
-            var t = Text.Resolve<Text>(player);
+            var t = Text.Resolve(player);
             t.text = Content;
             t.font = Font;
             var rect = t.rectTransform;

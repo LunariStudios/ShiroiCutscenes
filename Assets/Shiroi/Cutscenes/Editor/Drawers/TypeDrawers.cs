@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Shiroi.Cutscenes.Futures;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,7 +21,8 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
 
         private static void RegisterDrawerProviders() {
-            RegisterDrawerProvider(new ExposedReferenceDrawerProvider());
+            RegisterDrawerProvider(new GenericDrawerProvider(typeof(ExposedReference<>), typeof(ExposedReferenceDrawer<>)));
+            RegisterDrawerProvider(new GenericDrawerProvider(typeof(FutureReference<>), typeof(FutureDrawer<>)));
         }
 
         private static void RegisterDrawers() {
@@ -30,7 +32,6 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
 
         private static void RegisterShiroiDrawers() {
-            RegisterDrawer(new FutureDrawer());
             RegisterDrawer(new NotFoundDrawer());
         }
 

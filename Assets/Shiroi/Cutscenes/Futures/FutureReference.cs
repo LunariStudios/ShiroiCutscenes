@@ -3,20 +3,16 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Futures {
-    public class FutureTypeAttribute : Attribute {
-        public FutureTypeAttribute(Type type) {
-            Type = type;
-        }
-
-        public Type Type { get; private set; }
-    }
-
     [Serializable]
-    public struct FutureReference {
+    public struct FutureReference<T> where T : Object {
         public int Id;
 
-        public T Resolve<T>(CutscenePlayer player) where T : Object {
-            var found = player.Request<T>(this);
+        public FutureReference(int id) {
+            Id = id;
+        }
+
+        public T Resolve(CutscenePlayer player) {
+            var found = player.Request(this);
             if (found != null) {
                 return found;
             }
