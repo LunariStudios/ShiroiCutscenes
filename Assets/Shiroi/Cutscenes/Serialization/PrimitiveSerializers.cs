@@ -120,14 +120,4 @@
             destination.SetString(name, value);
         }
     }
-
-    public class ObjectSerializer : Serializer<SerializedObject> {
-        public override object Deserialize(string key, SerializedObject obj) {
-            return obj.GetObject(key);
-        }
-
-        public override void Serialize(SerializedObject value, string name, SerializedObject destination) {
-            destination.SetObject(name, value);
-        }
-    }
 }

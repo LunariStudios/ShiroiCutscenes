@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using Shiroi.Cutscenes.Futures;
+using Shiroi.Cutscenes.Serialization;
 using Shiroi.Cutscenes.Tokens;
 using Shiroi.Cutscenes.Util;
 using UnityEditorInternal;
@@ -87,6 +88,7 @@ namespace Shiroi.Cutscenes {
                 if (provider == tokenToBeRemoved) {
                     toBeRemoved.Add(future);
                 }
+                
                 //If provider is below token to be removed, nothing will change
                 if (provider > tokenToBeRemoved) {
                     future.Provider--;
@@ -187,21 +189,23 @@ namespace Shiroi.Cutscenes {
             public string TokenType;
 
             [SerializeField]
-            public byte[] TokenData;
+            public SerializedObject TokenData;
 
-            private SerializedToken(string tokenType, byte[] tokenData) {
+            private SerializedToken(string tokenType, SerializedObject tokenData) {
                 TokenType = tokenType;
                 TokenData = tokenData;
             }
 
             public IToken Deserialize() {
-                return (IToken) JsonUtility.FromJson(Base64Util.Base64Decode(TokenData), Type.GetType(TokenType));
+                var token = (IToken) Activator.CreateInstance(Type.GetType(TokenType));
+                TokenData.Deserialize(token);
+                return token;
             }
 
             public static SerializedToken From(IToken loadedToken) {
-                var typeName = loadedToken.GetType().AssemblyQualifiedName;
-                var json = Base64Util.Base64Encode(JsonUtility.ToJson(loadedToken));
-                return new SerializedToken(typeName, json);
+                var typeName = loadedToken.GetType().FullName;
+                var obj = SerializedObject.From(loadedToken);
+                return new SerializedToken(typeName, obj);
             }
         }
 

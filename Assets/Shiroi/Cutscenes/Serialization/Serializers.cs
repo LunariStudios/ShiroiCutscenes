@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -11,14 +14,41 @@ namespace Shiroi.Cutscenes.Serialization {
 [RuntimeInitializeOnLoadMethod]
 #endif
     public static class Serializers {
-        private static readonly List<Serializer> KnownDrawers = new List<Serializer>();
+        private static readonly List<Serializer> KnownSerializers = new List<Serializer>();
+
+        private static readonly Dictionary<Type, Serializer> AssignedSerializersCache =
+            new Dictionary<Type, Serializer>();
+
+        private static readonly List<SerializerProvider> KnownProviders = new List<SerializerProvider>();
 
         static Serializers() {
             RegisterBuiltIn();
         }
 
         private static void RegisterBuiltIn() {
+            RegisterSerializers();
+            RegisterProviders();
+        }
+
+        private static void RegisterProviders() {
+            RegisterProvider(new ExposedReferenceSerializerProvider());
+        }
+
+        private static void RegisterProvider(SerializerProvider provider) {
+            KnownProviders.Add(provider);
+        }
+
+        private static void RegisterSerializers() {
             RegisterPrimitiveSerializers();
+            RegisterUnitySerializers();
+        }
+
+        private static void RegisterUnitySerializers() {
+            RegisterSerializer(new JsonSerializer());
+            RegisterSerializer(new ObjectSerializer());
+            RegisterSerializer(new Vector2Serializer());
+            RegisterSerializer(new Vector3Serializer());
+            RegisterSerializer(new Vector4Serializer());
         }
 
         public static void RegisterPrimitiveSerializers() {
@@ -40,7 +70,36 @@ namespace Shiroi.Cutscenes.Serialization {
         }
 
         public static void RegisterSerializer(Serializer serializer) {
-            KnownDrawers.Add(serializer);
+            KnownSerializers.Add(serializer);
+        }
+
+        public static Serializer For(Type type) {
+            if (AssignedSerializersCache.ContainsKey(type)) {
+                return AssignedSerializersCache[type];
+            }
+            var supportedSerializers = new List<Serializer>();
+            foreach (var knownSerializer in KnownSerializers) {
+                if (knownSerializer.Supports(type)) {
+                    supportedSerializers.Add(knownSerializer);
+                }
+            }
+            foreach (var provider in KnownProviders) {
+                if (provider.Supports(type)) {
+                    supportedSerializers.Add(CreateAndRegisterSerializer(type, provider));
+                }
+            }
+            if (supportedSerializers.Count == 0) {
+                return null;
+            }
+            var selected = supportedSerializers.Max();
+            AssignedSerializersCache[type] = selected;
+            return selected;
+        }
+
+        private static Serializer CreateAndRegisterSerializer(Type type, SerializerProvider provider) {
+            var drawer = provider.Provide(type);
+            RegisterSerializer(drawer);
+            return drawer;
         }
     }
 }
