@@ -21,7 +21,7 @@ namespace Shiroi.Cutscenes.Editor {
         //Const value
         private const float SaturationValue = 0.7F;
 
-        private const float BrightnessValue = 0.5F;
+        private const float BrightnessValue = 0.7F;
         private const float BrightnessDifference = 0.2F;
         private const float SelectedBrightnessValue = BrightnessValue + BrightnessDifference;
 
@@ -39,16 +39,6 @@ namespace Shiroi.Cutscenes.Editor {
             return Cache[type] = new MappedToken(type);
         }
 
-        public static Texture2D CreateTexture(int width, int height, Color color) {
-            var pixels = new Color[width * height];
-            for (var i = 0; i < pixels.Length; ++i) {
-                pixels[i] = color;
-            }
-            var result = new Texture2D(width, height);
-            result.SetPixels(pixels);
-            result.Apply();
-            return result;
-        }
 
         private static float LoadColor(string str, int offset, float increment) {
             return (float) LoadByte(str, offset, increment) / byte.MaxValue;
@@ -99,8 +89,8 @@ namespace Shiroi.Cutscenes.Editor {
             //Use hsv to calculate brightness
             Color = Color.HSVToRGB(h, SaturationValue, BrightnessValue);
             SelectedColor = Color.HSVToRGB(h, SaturationValue, SelectedBrightnessValue);
-            Style = CreateGUIStyle(Color);
-            SelectedStyle = CreateGUIStyle(SelectedColor);
+            Style = ShiroiStyles.CreateGUIStyle(Color);
+            SelectedStyle = ShiroiStyles.CreateGUIStyle(SelectedColor);
         }
 
         public FieldInfo[] SerializedFields { get; private set; }
@@ -108,11 +98,6 @@ namespace Shiroi.Cutscenes.Editor {
         public float Height { get; private set; }
 
         public uint TotalElements { private set; get; }
-
-
-        private GUIStyle CreateGUIStyle(Color color) {
-            return new GUIStyle(GUI.skin.box) {normal = {background = CreateTexture(1, 1, color)}};
-        }
 
 
         public void DrawFields(CutsceneEditor editor, Rect rect, int tokenIndex, IToken token, Cutscene cutscene,

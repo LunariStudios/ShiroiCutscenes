@@ -18,7 +18,8 @@ namespace Shiroi.Cutscenes.Editor {
 
         private static readonly GUIContent ClearCutscene =
             new GUIContent("Clear cutscene", "Removes all tokens");
-
+/*
+Not forcing player selection for now
         private static readonly GUIContent NoSelectedPlayer =
             new GUIContent("You don't have any CutscenePlayer bound!");
 
@@ -30,6 +31,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private static readonly GUIContent NoSelectedPlayerWarning =
             new GUIContent("You won't be able to assign ExposedReferences until you do so.");
+*/
 
         private static readonly GUIContent PlayerContent =
             new GUIContent("Bound player", "The player that will store the references to the cutscene's scene objects");
@@ -88,22 +90,26 @@ namespace Shiroi.Cutscenes.Editor {
 
         public override void OnInspectorGUI() {
             var totalTokens = cutscene.Tokens.Count;
-            if (Player == null) {
-                var found = FindObjectsOfType<CutscenePlayer>();
-                if (found.Length > 1) {
-                    EditorGUILayout.LabelField(NoSelectedPlayer, ShiroiStyles.Error);
-                }
-                if (found.Length == 1) {
-                    Player = found[0];
-                } else {
-                    EditorGUILayout.LabelField(NoSelectedPlayer, ShiroiStyles.Error);
-                    EditorGUILayout.LabelField(NoSelectedPlayerWarning, ShiroiStyles.Error);
-                }
-            }
+
+            /* Let's not annoy users with this for now
+               if (Player == null) {
+                  var found = FindObjectsOfType<CutscenePlayer>();
+                  if (found.Length > 1) {
+                      EditorGUILayout.LabelField(NoSelectedPlayer, ShiroiStyles.Error);
+                  }
+                  if (found.Length == 1) {
+                      Player = found[0];
+                  } else {
+                      EditorGUILayout.LabelField(NoSelectedPlayer, ShiroiStyles.Error);
+                      EditorGUILayout.LabelField(NoSelectedPlayerWarning, ShiroiStyles.Error);
+                  }
+              }*/
+            EditorGUILayout.BeginVertical(Player ? ShiroiStyles.PlayerConfig : ShiroiStyles.NoBoundPlayer);
             Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
             if (Player) {
-                DrawReferences();
+                ShiroiEditorUtil.DrawReferencesLayout(Player);
             }
+            EditorGUILayout.EndVertical();
             DrawCutsceneHeader(totalTokens);
             //Reserve futures rect
             var totalFutures = cutscene.TotalFutures;
@@ -116,6 +122,17 @@ namespace Shiroi.Cutscenes.Editor {
             if (totalTokens <= 0) {
                 return;
             }
+            //Add button
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button(AddTokenContent)) {
+                PopupWindow.Show(GUILayoutUtility.GetLastRect(), TokenSelector);
+            }
+            if (totalTokens > 0) {
+                if (GUILayout.Button(ClearCutscene)) {
+                    cutscene.Clear();
+                }
+            }
+            EditorGUILayout.EndHorizontal();
             hasAnyFocused = false;
             tokenList.DoLayoutList();
             if (!hasAnyFocused) {
@@ -126,32 +143,6 @@ namespace Shiroi.Cutscenes.Editor {
             }
         }
 
-        private void DrawReferences() {
-            var references = Player.References;
-            var total = references.Count;
-            if (total == 0) {
-                EditorGUILayout.LabelField(CutscenePlayerEditor.NoReferences, ShiroiStyles.Bold);
-                return;
-            }
-            if (GUILayout.Button(CutscenePlayerEditor.Clear)) {
-                Player.ClearReferences();
-                return;
-            }
-            EditorGUILayout.LabelField(string.Format("There are a total of {0} references.", total), ShiroiStyles.Bold);
-            const int iconSize = ShiroiStyles.IconSize;
-            for (var i = 0; i < references.Count; i++) {
-                var reference = references[i];
-                var obj = reference.Object;
-                var futureRect = GUILayoutUtility.GetRect(0, iconSize, ShiroiStyles.ExpandWidthOption);
-                var content = EditorGUIUtility.ObjectContent(null, obj.GetType());
-                content.text = null;
-
-                var iconRect = futureRect.SubRect(iconSize, iconSize);
-                var msgRect = futureRect.SubRect(futureRect.width - iconSize, iconSize, iconSize);
-                GUI.Box(iconRect, content);
-                EditorGUI.LabelField(msgRect, string.Format("{0} @ {1}", obj.name, reference.Id));
-            }
-        }
 
         private void DrawFutures(Rect rect) {
             var futures = cutscene.GetFutures();
@@ -190,17 +181,6 @@ namespace Shiroi.Cutscenes.Editor {
             if (isEmpty) {
                 EditorGUILayout.LabelField(NoTokenContent, ShiroiStyles.Error);
             }
-            //Add button
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button(AddTokenContent)) {
-                PopupWindow.Show(GUILayoutUtility.GetLastRect(), TokenSelector);
-            }
-            if (!isEmpty) {
-                if (GUILayout.Button(ClearCutscene)) {
-                    cutscene.Clear();
-                }
-            }
-            EditorGUILayout.EndHorizontal();
             if (isEmpty) {
                 GUI.enabled = false;
                 EditorGUILayout.LabelField(GetKaomoji(), ShiroiStyles.Kaomoji, GUILayout.ExpandHeight(true));
