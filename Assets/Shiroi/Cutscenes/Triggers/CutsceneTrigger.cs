@@ -3,14 +3,13 @@
 namespace Shiroi.Cutscenes.Triggers {
     public abstract class CutsceneTrigger : MonoBehaviour {
         public Cutscene Cutscene;
-
+        public CutscenePlayer Player;
         protected void Trigger() {
-            var player = CutscenePlayer.Instance;
-            if (!player) {
+            if (!Player) {
                 Debug.LogWarning("[ShiroiCutscenes] Couldn't find an active instance of CutscenePlayer!");
                 return;
             }
-            player.Play(Cutscene);
+            Player.Play(Cutscene);
         }
     }
 }

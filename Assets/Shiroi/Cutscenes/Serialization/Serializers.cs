@@ -49,7 +49,7 @@ namespace Shiroi.Cutscenes.Serialization {
         }
 
         private static void RegisterUnitySerializers() {
-            RegisterSerializer(new JsonSerializer());
+            //RegisterSerializer(new JsonSerializer()); Unity doesn't support this on callback receiver?
             RegisterSerializer(new ObjectSerializer());
             RegisterSerializer(new Vector2Serializer());
             RegisterSerializer(new Vector3Serializer());

@@ -38,10 +38,13 @@ namespace Shiroi.Cutscenes.Editor {
             };
         }
 
+        public static GUIStyle Checkbox1 { get; private set; }
+        public static GUIStyle Checkbox2 { get; private set; }
         public static GUIStyle Base { get; private set; }
         public static GUIStyle Header { get; private set; }
         public static GUIStyle Error { get; private set; }
         public static GUIStyle Kaomoji { get; private set; }
         public static GUIStyle Bold { get; private set; }
+        public static readonly GUILayoutOption ExpandWidthOption = GUILayout.ExpandWidth(true);
     }
 }

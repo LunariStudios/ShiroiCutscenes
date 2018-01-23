@@ -13,34 +13,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   futures:
   - type: UnityEngine.UI.Text, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-    name: a_future_text
+    name: hello
     id: -944218338
-    provider: 0
+    provider: 2
+  - type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    name: future_name
+    id: -1086127228
+    provider: 1
+  - type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    name: future_name
+    id: -863539852
+    provider: 3
   tokens:
-  - TokenType: Shiroi.Cutscenes.Examples.CreateTextToken
-    TokenData:
-      Booleans: []
-      Ints: []
-      Floats: []
-      Strings:
-      - Key: TextName
-        Value: a_future_text
-      Objects:
-      - Key: Parent
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: 1037472194
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-          Arrays: []
-      UnityObjects: []
-      Arrays: []
   - TokenType: Shiroi.Cutscenes.Examples.ExampleToken3
     TokenData:
       Booleans: []
@@ -53,7 +39,7 @@ MonoBehaviour:
           Booleans: []
           Ints:
           - Key: Id
-            Value: 1342970093
+            Value: 295044632
           Floats: []
           Strings: []
           Objects: []
@@ -66,7 +52,7 @@ MonoBehaviour:
           Booleans: []
           Ints:
           - Key: Id
-            Value: 295044632
+            Value: -6789324
           Floats: []
           Strings: []
           Objects: []
@@ -114,15 +100,32 @@ MonoBehaviour:
           Arrays: []
       UnityObjects: []
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken2
+  - TokenType: Shiroi.Cutscenes.Tokens.SpawnPrefabToken
     TokenData:
       Booleans: []
       Ints:
-      - Key: LayerMask
-        Value: 10
+      - Key: futureId
+        Value: -1086127228
       Floats: []
-      Strings: []
+      Strings:
+      - Key: FutureName
+        Value: future_name
       Objects:
+      - Key: Position
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: z
+            Value: 0
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
       - Key: Rotation
         Value:
           Booleans: []
@@ -140,31 +143,32 @@ MonoBehaviour:
           Objects: []
           UnityObjects: []
           Arrays: []
+      UnityObjects:
       - Key: Obj
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: 1037472194
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-          Arrays: []
-      UnityObjects: []
+        Value: {fileID: 1435105111820948, guid: eb95746ac7706476d8c530147a02edec,
+          type: 2}
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.SetFutureTextToken
+  - TokenType: Shiroi.Cutscenes.Examples.FutureToken
     TokenData:
       Booleans: []
       Ints:
-      - Key: Text
-        Value: -944218338
+      - Key: Object
+        Value: -1086127228
+      Floats: []
+      Strings: []
+      Objects: []
+      UnityObjects: []
+      Arrays: []
+  - TokenType: Shiroi.Cutscenes.Tokens.SpawnPrefabToken
+    TokenData:
+      Booleans: []
+      Ints:
+      - Key: futureId
+        Value: -863539852
       Floats: []
       Strings:
-      - Key: Content
-        Value: This is a test!
+      - Key: FutureName
+        Value: future_name
       Objects:
       - Key: Position
         Value:
@@ -175,11 +179,13 @@ MonoBehaviour:
             Value: 0
           - Key: y
             Value: 0
+          - Key: z
+            Value: 0
           Strings: []
           Objects: []
           UnityObjects: []
           Arrays: []
-      - Key: Size
+      - Key: Rotation
         Value:
           Booleans: []
           Ints: []
@@ -188,11 +194,16 @@ MonoBehaviour:
             Value: 0
           - Key: y
             Value: 0
+          - Key: z
+            Value: 0
+          - Key: w
+            Value: 1
           Strings: []
           Objects: []
           UnityObjects: []
           Arrays: []
       UnityObjects:
-      - Key: Font
-        Value: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+      - Key: Obj
+        Value: {fileID: 1435105111820948, guid: eb95746ac7706476d8c530147a02edec,
+          type: 2}
       Arrays: []

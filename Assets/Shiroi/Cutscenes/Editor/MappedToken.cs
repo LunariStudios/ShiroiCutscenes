@@ -76,7 +76,7 @@ namespace Shiroi.Cutscenes.Editor {
             //Initialize fields
             Label = type.Name;
 
-            SerializedFields = SerializationUtil.GetSerializedMembers(type);
+            SerializedFields = SerializationUtil.GetSerializedMembers(type, true);
             TotalElements = (uint) SerializedFields.Length;
             //Initialize with label
             Height = ShiroiStyles.SingleLineHeight;

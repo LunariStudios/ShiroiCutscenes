@@ -14,10 +14,21 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             int tokenIndex, string name, ExposedReference<T> value, Type valueType, FieldInfo fieldInfo,
             Setter setter) {
             GUI.enabled = player != null;
-            var chosen = EditorGUI.ObjectField(rect, name, value.Resolve(player), referenceType, true);
+            var found = value.Resolve(player);
+            var msg = found == null
+                ? "null"
+                : string.Format("{0}:{1}", found.GetInstanceID(), value.exposedName.GetHashCode());
+            var label = string.Format("{0} ({1})", name, msg);
+            var chosen = EditorGUI.ObjectField(rect, label, found, referenceType, true);
             GUI.enabled = true;
+            if (chosen != found && player != null) {
+                player.NotifyStopUse(value.exposedName);
+            }
             if (chosen != null) {
                 value.exposedName = chosen.GetInstanceID().ToString();
+                if (found != null & player != null) {
+                    player.NotifyUse(value.exposedName);
+                }
             }
             if (player != null) {
                 player.SetReferenceValue(value.exposedName, chosen);

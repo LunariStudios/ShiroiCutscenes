@@ -76,7 +76,8 @@ json = JsonUtility.ToJson(value);
 
         public override void Serialize(ExposedReference<T> value, string name, SerializedObject destination) {
             var obj = new SerializedObject();
-            obj.SetInt(IdKey, value.exposedName.GetHashCode());
+            var id = value.exposedName.GetHashCode();
+            obj.SetInt(IdKey, id);
             obj.SetUnity(DefaultKey, value.defaultValue);
             destination.SetObject(name, obj);
         }
@@ -380,6 +381,7 @@ json = JsonUtility.ToJson(value);
             destination.SetObject(name, obj);
         }
     }
+
     public class LayerMaskSerializer : Serializer<LayerMask> {
         public override object Deserialize(string key, SerializedObject obj) {
             return (LayerMask) obj.GetInt(key);

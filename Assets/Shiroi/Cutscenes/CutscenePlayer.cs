@@ -35,22 +35,6 @@ namespace Shiroi.Cutscenes {
             return false;
         }
 
-        //
-        private static CutscenePlayer instance;
-
-        public static CutscenePlayer Instance {
-            get { return instance ?? (instance = FindObjectOfType<CutscenePlayer>()); }
-        }
-
-        private void Awake() {
-            if (!instance) {
-                return;
-            }
-            Debug.LogWarning(
-                "[ShiroiCutscenes] There is already an instance of CutscenePlayer loaded! Destroying newly created instance...");
-            Destroy(gameObject);
-        }
-
         public void Play(Cutscene cutscene) {
             StartCoroutine(YieldPlay(cutscene));
         }
@@ -63,6 +47,10 @@ namespace Shiroi.Cutscenes {
 
         [SerializeField, HideInInspector]
         private List<SceneReference> references = new List<SceneReference>();
+
+        public List<SceneReference> References {
+            get { return references; }
+        }
 
         public Object GetReferenceValue(PropertyName id, out bool idValid) {
             var found = FindReference(id);
@@ -98,6 +86,10 @@ namespace Shiroi.Cutscenes {
 
         [Serializable]
         public sealed class SceneReference : IComparable<SceneReference> {
+#if UNITY_EDITOR
+            public int TotalUses = 0;
+#endif
+
             [SerializeField]
             public int Id;
 
@@ -115,5 +107,29 @@ namespace Shiroi.Cutscenes {
                 return Id.CompareTo(other.Id);
             }
         }
+
+        public void ClearReferences() {
+            References.Clear();
+        }
+
+#if UNITY_EDITOR
+        public void NotifyUse(PropertyName valueExposedName) {
+            var reference = FindReference(valueExposedName);
+            if (reference == null) {
+                return;
+            }
+            reference.TotalUses++;
+        }
+        public void NotifyStopUse(PropertyName valueExposedName) {
+            var reference = FindReference(valueExposedName);
+            if (reference == null) {
+                return;
+            }
+            reference.TotalUses--;
+            if (reference.TotalUses <= 0) {
+                ClearReferenceValue(valueExposedName);
+            }
+        }
+#endif
     }
 }

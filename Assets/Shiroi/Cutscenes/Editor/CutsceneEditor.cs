@@ -101,6 +101,9 @@ namespace Shiroi.Cutscenes.Editor {
                 }
             }
             Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
+            if (Player) {
+                DrawReferences();
+            }
             DrawCutsceneHeader(totalTokens);
             //Reserve futures rect
             var totalFutures = cutscene.TotalFutures;
@@ -120,6 +123,33 @@ namespace Shiroi.Cutscenes.Editor {
             }
             if (hasFutures) {
                 DrawFutures(futuresRect);
+            }
+        }
+
+        private void DrawReferences() {
+            var references = Player.References;
+            var total = references.Count;
+            if (total == 0) {
+                EditorGUILayout.LabelField(CutscenePlayerEditor.NoReferences, ShiroiStyles.Bold);
+                return;
+            }
+            if (GUILayout.Button(CutscenePlayerEditor.Clear)) {
+                Player.ClearReferences();
+                return;
+            }
+            EditorGUILayout.LabelField(string.Format("There are a total of {0} references.", total), ShiroiStyles.Bold);
+            const int iconSize = ShiroiStyles.IconSize;
+            for (var i = 0; i < references.Count; i++) {
+                var reference = references[i];
+                var obj = reference.Object;
+                var futureRect = GUILayoutUtility.GetRect(0, iconSize, ShiroiStyles.ExpandWidthOption);
+                var content = EditorGUIUtility.ObjectContent(null, obj.GetType());
+                content.text = null;
+
+                var iconRect = futureRect.SubRect(iconSize, iconSize);
+                var msgRect = futureRect.SubRect(futureRect.width - iconSize, iconSize, iconSize);
+                GUI.Box(iconRect, content);
+                EditorGUI.LabelField(msgRect, string.Format("{0} @ {1}", obj.name, reference.Id));
             }
         }
 
