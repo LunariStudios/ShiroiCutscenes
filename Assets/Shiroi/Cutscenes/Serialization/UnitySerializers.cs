@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -153,7 +154,6 @@ json = JsonUtility.ToJson(value);
     }
 
     public class Vector2IntSerializer : Serializer<Vector2Int> {
-
         public override object Deserialize(string key, SerializedObject obj) {
             var serializedVector = obj.GetObject(key);
             var x = serializedVector.GetInt(Vector2Serializer.XKey);
@@ -170,7 +170,6 @@ json = JsonUtility.ToJson(value);
     }
 
     public class Vector3IntSerializer : Serializer<Vector3Int> {
-
         public override object Deserialize(string key, SerializedObject obj) {
             var serializedVector = obj.GetObject(key);
             var x = serializedVector.GetInt(Vector2Serializer.XKey);
@@ -187,6 +186,7 @@ json = JsonUtility.ToJson(value);
             destination.SetObject(name, obj);
         }
     }
+
     public class QuaternionSerializer : Serializer<Quaternion> {
         public const string XKey = "x";
         public const string YKey = "y";
@@ -200,7 +200,7 @@ json = JsonUtility.ToJson(value);
             y = serializedQuaternion.GetFloat(YKey);
             z = serializedQuaternion.GetFloat(ZKey);
             w = serializedQuaternion.GetFloat(WKey);
-            return new Color(x, y, z, w);
+            return new Quaternion(x, y, z, w);
         }
 
         public override void Serialize(Quaternion value, string name, SerializedObject destination) {
@@ -235,6 +235,87 @@ json = JsonUtility.ToJson(value);
             obj.SetFloat(GKey, value.g);
             obj.SetFloat(BKey, value.b);
             obj.SetFloat(AKey, value.a);
+            destination.SetObject(name, obj);
+        }
+    }
+
+    public class AnimationCurveSerializer : Serializer<AnimationCurve> {
+        public const string KeyFramesKey = "KeyFrames";
+        public const string TimeKey = "Time";
+        public const string ValueKey = "Value";
+        public const string InTangentKey = "InTangent";
+        public const string OutTangentKey = "OutTangent";
+
+        public override object Deserialize(string key, SerializedObject obj) {
+            var serializedFrames = obj.GetArray(KeyFramesKey);
+            var frames = from frame in serializedFrames select DeserializeFrame(frame);
+            return new AnimationCurve(frames.ToArray());
+        }
+
+        public override void Serialize(AnimationCurve value, string name, SerializedObject destination) {
+            var frames = from frame in value.keys select SerializeFrame(frame);
+            destination.SetArray(KeyFramesKey, frames);
+        }
+
+        private static Keyframe DeserializeFrame(SerializedObject frame) {
+            var time = frame.GetFloat(TimeKey);
+            var value = frame.GetFloat(ValueKey);
+            var inTangent = frame.GetFloat(InTangentKey);
+            var outTangent = frame.GetFloat(OutTangentKey);
+            return new Keyframe(time, value, inTangent, outTangent);
+        }
+
+        private static SerializedObject SerializeFrame(Keyframe frame) {
+            var obj = new SerializedObject();
+            obj.SetFloat(TimeKey, frame.time);
+            obj.SetFloat(ValueKey, frame.value);
+            obj.SetFloat(InTangentKey, frame.inTangent);
+            obj.SetFloat(OutTangentKey, frame.outTangent);
+            return obj;
+        }
+    }
+
+    public class RectSerializer : Serializer<Rect> {
+        public const string XKey = "x";
+        public const string YKey = "y";
+        public const string WKey = "w";
+        public const string HKey = "h";
+
+        public override object Deserialize(string key, SerializedObject obj) {
+            var serializedRect = obj.GetObject(key);
+            var x = serializedRect.GetFloat(XKey);
+            var y = serializedRect.GetFloat(YKey);
+            var w = serializedRect.GetFloat(WKey);
+            var h = serializedRect.GetFloat(HKey);
+            return new Rect(x, y, w, h);
+        }
+
+        public override void Serialize(Rect value, string name, SerializedObject destination) {
+            var obj = new SerializedObject();
+            obj.SetFloat(XKey, value.x);
+            obj.SetFloat(YKey, value.y);
+            obj.SetFloat(WKey, value.width);
+            obj.SetFloat(HKey, value.height);
+            destination.SetObject(name, obj);
+        }
+    }
+
+    public class RectIntSerializer : Serializer<RectInt> {
+        public override object Deserialize(string key, SerializedObject obj) {
+            var serializedRect = obj.GetObject(key);
+            var x = serializedRect.GetInt(RectSerializer.XKey);
+            var y = serializedRect.GetInt(RectSerializer.YKey);
+            var w = serializedRect.GetInt(RectSerializer.WKey);
+            var h = serializedRect.GetInt(RectSerializer.HKey);
+            return new RectInt(x, y, w, h);
+        }
+
+        public override void Serialize(RectInt value, string name, SerializedObject destination) {
+            var obj = new SerializedObject();
+            obj.SetInt(RectSerializer.XKey, value.x);
+            obj.SetInt(RectSerializer.YKey, value.y);
+            obj.SetInt(RectSerializer.WKey, value.width);
+            obj.SetInt(RectSerializer.HKey, value.height);
             destination.SetObject(name, obj);
         }
     }

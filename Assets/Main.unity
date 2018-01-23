@@ -267,6 +267,12 @@ MonoBehaviour:
     Object: {fileID: 778114337}
   - Id: 79183956
     Object: {fileID: 334819057}
+  - Id: -1212926486
+    Object: {fileID: 334819056}
+  - Id: 1342970093
+    Object: {fileID: 334819057}
+  - Id: -726321929
+    Object: {fileID: 1788000408}
 --- !u!4 &315268713
 Transform:
   m_ObjectHideFlags: 0

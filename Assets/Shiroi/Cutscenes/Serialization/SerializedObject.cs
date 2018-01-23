@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using Shiroi.Cutscenes.Tokens;
 using Shiroi.Cutscenes.Util;
 using UnityEngine;
@@ -41,6 +42,12 @@ namespace Shiroi.Cutscenes.Serialization {
         }
 
         [Serializable]
+        public class ArrayPair : Pair<SerializedObject[]> {
+            public ArrayPair() { }
+            public ArrayPair(string key, SerializedObject[] value) : base(key, value) { }
+        }
+
+        [Serializable]
         public class UnityPair : Pair<Object> {
             public UnityPair() { }
             public UnityPair(string key, Object value) : base(key, value) { }
@@ -70,6 +77,7 @@ namespace Shiroi.Cutscenes.Serialization {
         public List<ObjectPair> Objects = new List<ObjectPair>();
 
         public List<UnityPair> UnityObjects = new List<UnityPair>();
+        public List<ArrayPair> Arrays = new List<ArrayPair>();
 
         //Implementation
         public void SetBoolean(string key, bool value) {
@@ -100,6 +108,15 @@ namespace Shiroi.Cutscenes.Serialization {
         public void SetUnity(string key, Object value) {
             UnityObjects.GetOrPut(pair => pair.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase),
                 () => new UnityPair(key, value)).Value = value;
+        }
+
+        public void SetArray(string key, IEnumerable<SerializedObject> value) {
+            SetArray(key, value.ToArray());
+        }
+
+        public void SetArray(string key, SerializedObject[] value) {
+            Arrays.GetOrPut(pair => pair.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase),
+                () => new ArrayPair(key, value)).Value = value;
         }
 
         public bool GetBoolean(string key) {
@@ -160,6 +177,20 @@ namespace Shiroi.Cutscenes.Serialization {
             }
             if (first == null) {
                 return NotifyMissing<string>(key);
+            }
+            return first.Value;
+        }
+
+        public SerializedObject[] GetArray(string key) {
+            ArrayPair first = null;
+            foreach (var pair in Arrays) {
+                if (pair.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)) {
+                    first = pair;
+                    break;
+                }
+            }
+            if (first == null) {
+                return NotifyMissing<SerializedObject[]>(key);
             }
             return first.Value;
         }
