@@ -11,199 +11,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0439e1c9b6f54debb8acbb620a3a83c, type: 3}
   m_Name: Cutscene
   m_EditorClassIdentifier: 
-  futures:
-  - type: UnityEngine.UI.Text, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-    name: hello
-    id: -944218338
-    provider: 2
-  - type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    name: future_name
-    id: -1086127228
-    provider: 1
-  - type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    name: future_name
-    id: -863539852
-    provider: 3
+  futures: []
   tokens:
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken3
+  - TokenType: Shiroi.Cutscenes.Tokens.SetParentToken
     TokenData:
       Booleans: []
       Ints: []
       Floats: []
       Strings: []
       Objects:
-      - Key: Camera
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: 295044632
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-          Arrays: []
-      - Key: Collider
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: -6789324
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-          Arrays: []
-      - Key: Bounds
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          - Key: w
-            Value: 0
-          - Key: h
-            Value: 0
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: BoundsInt
-        Value:
-          Booleans: []
-          Ints:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          - Key: w
-            Value: 0
-          - Key: h
-            Value: 0
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      UnityObjects: []
-      Arrays: []
-  - TokenType: Shiroi.Cutscenes.Tokens.SpawnPrefabToken
-    TokenData:
-      Booleans: []
-      Ints:
-      - Key: futureId
-        Value: -1086127228
-      Floats: []
-      Strings:
-      - Key: FutureName
-        Value: future_name
-      Objects:
-      - Key: Position
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: Rotation
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          - Key: w
-            Value: 1
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      UnityObjects:
-      - Key: Obj
-        Value: {fileID: 1435105111820948, guid: eb95746ac7706476d8c530147a02edec,
-          type: 2}
-      Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.FutureToken
-    TokenData:
-      Booleans: []
-      Ints:
       - Key: Object
-        Value: -1086127228
-      Floats: []
-      Strings: []
-      Objects: []
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: -118119635
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+          Arrays: []
+      - Key: NewParent
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: 1342970093
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+          Arrays: []
       UnityObjects: []
-      Arrays: []
-  - TokenType: Shiroi.Cutscenes.Tokens.SpawnPrefabToken
-    TokenData:
-      Booleans: []
-      Ints:
-      - Key: futureId
-        Value: -863539852
-      Floats: []
-      Strings:
-      - Key: FutureName
-        Value: future_name
-      Objects:
-      - Key: Position
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: Rotation
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          - Key: w
-            Value: 1
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      UnityObjects:
-      - Key: Obj
-        Value: {fileID: 1435105111820948, guid: eb95746ac7706476d8c530147a02edec,
-          type: 2}
       Arrays: []

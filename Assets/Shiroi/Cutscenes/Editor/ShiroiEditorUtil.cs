@@ -18,6 +18,7 @@ namespace Shiroi.Cutscenes.Editor {
                 return;
             }
             EditorGUILayout.EndHorizontal();
+            
             const int iconSize = ShiroiStyles.IconSize;
             for (var i = 0; i < references.Count; i++) {
                 var reference = references[i];
@@ -29,7 +30,7 @@ namespace Shiroi.Cutscenes.Editor {
                 var iconRect = futureRect.SubRect(iconSize, iconSize);
                 var msgRect = futureRect.SubRect(futureRect.width - iconSize, iconSize, iconSize);
                 GUI.Box(iconRect, content);
-                EditorGUI.LabelField(msgRect, string.Format("{0} @ {1}", obj.name, reference.Id));
+                EditorGUI.LabelField(msgRect, string.Format("{0} @ {1} ({2} uses)", obj.name, reference.Id, reference.TotalUses));
             }
         }
     }

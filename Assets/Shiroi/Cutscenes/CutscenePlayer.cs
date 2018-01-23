@@ -60,15 +60,24 @@ namespace Shiroi.Cutscenes {
         }
 
         public void SetReferenceValue(PropertyName id, Object value) {
-            if (value == null) {
-                ClearReferenceValue(id);
-                return;
-            }
             var reference = FindReference(id);
             if (reference == null) {
+                if (value == null) {
+                    return;
+                }
                 reference = new SceneReference(id.GetHashCode(), value);
                 references.Add(reference);
             }
+#if UNITY_EDITOR
+            if (value == null) {
+                reference.TotalUses--;
+                if (reference.TotalUses <= 0) {
+                    ClearReferenceValue(id);
+                }
+                return;
+            }
+            reference.TotalUses++;
+#endif
             reference.Object = value;
         }
 
@@ -111,25 +120,5 @@ namespace Shiroi.Cutscenes {
         public void ClearReferences() {
             References.Clear();
         }
-
-#if UNITY_EDITOR
-        public void NotifyUse(PropertyName valueExposedName) {
-            var reference = FindReference(valueExposedName);
-            if (reference == null) {
-                return;
-            }
-            reference.TotalUses++;
-        }
-        public void NotifyStopUse(PropertyName valueExposedName) {
-            var reference = FindReference(valueExposedName);
-            if (reference == null) {
-                return;
-            }
-            reference.TotalUses--;
-            if (reference.TotalUses <= 0) {
-                ClearReferenceValue(valueExposedName);
-            }
-        }
-#endif
     }
 }

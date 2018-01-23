@@ -14,10 +14,11 @@ namespace Shiroi.Cutscenes.Editor {
 
         private static int currentKaomoji;
         public TokenSelectorWindow TokenSelector;
-        public CutscenePlayer Player { get; private set; }
+
 
         private static readonly GUIContent ClearCutscene =
             new GUIContent("Clear cutscene", "Removes all tokens");
+
 /*
 Not forcing player selection for now
         private static readonly GUIContent NoSelectedPlayer =
@@ -32,6 +33,15 @@ Not forcing player selection for now
         private static readonly GUIContent NoSelectedPlayerWarning =
             new GUIContent("You won't be able to assign ExposedReferences until you do so.");
 */
+        public const float FuturesHeaderLines = 2.5F;
+
+        public const float SpaceHeight = 5F;
+
+        private static readonly GUIContent FuturesStats =
+            new GUIContent("Futures Stats", "All of the info on your futures is listed below");
+
+        private static readonly GUIContent PlayerHeader =
+            new GUIContent("Player Settings", "All of the info on your Cutscene Player is listed below");
 
         private static readonly GUIContent PlayerContent =
             new GUIContent("Bound player", "The player that will store the references to the cutscene's scene objects");
@@ -58,19 +68,26 @@ Not forcing player selection for now
             return Kaomojis[currentKaomoji];
         }
 
-        private static void LoadStyles() { }
 
+        //Instance Fields
         private ReorderableList tokenList;
 
+        private bool hasAnyFocused;
         private Cutscene cutscene;
         private int lastSelected;
 
+        [SerializeField]
+        private CutscenePlayer player;
+
+        public CutscenePlayer Player {
+            get { return player; }
+            private set { player = value; }
+        }
+
         private void OnEnable() {
-            LoadStyles();
             TokenSelector = new TokenSelectorWindow(this);
             cutscene = (Cutscene) target;
-            tokenList = new ReorderableList(cutscene.Tokens, typeof(IToken), true, true, false, true) {
-                drawHeaderCallback = DrawTokensHeader,
+            tokenList = new ReorderableList(cutscene.Tokens, typeof(IToken), true, false, false, true) {
                 drawElementCallback = DrawToken,
                 drawElementBackgroundCallback = DrawBackground,
                 elementHeightCallback = CalculateHeight,
@@ -90,7 +107,6 @@ Not forcing player selection for now
 
         public override void OnInspectorGUI() {
             var totalTokens = cutscene.Tokens.Count;
-
             /* Let's not annoy users with this for now
                if (Player == null) {
                   var found = FindObjectsOfType<CutscenePlayer>();
@@ -104,50 +120,56 @@ Not forcing player selection for now
                       EditorGUILayout.LabelField(NoSelectedPlayerWarning, ShiroiStyles.Error);
                   }
               }*/
-            EditorGUILayout.BeginVertical(Player ? ShiroiStyles.PlayerConfig : ShiroiStyles.NoBoundPlayer);
-            Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
-            if (Player) {
-                ShiroiEditorUtil.DrawReferencesLayout(Player);
-            }
-            EditorGUILayout.EndVertical();
-            DrawCutsceneHeader(totalTokens);
+            DrawPlayerSettings();
+            GUILayout.Space(SpaceHeight);
             //Reserve futures rect
             var totalFutures = cutscene.TotalFutures;
             var hasFutures = totalFutures > 0;
             var futuresRect = default(Rect);
             if (hasFutures) {
-                var futuresHeight = totalFutures * ShiroiStyles.IconSize + 2 * EditorGUIUtility.singleLineHeight;
+                var futuresHeight = totalFutures * ShiroiStyles.IconSize +
+                                    FuturesHeaderLines * EditorGUIUtility.singleLineHeight;
                 futuresRect = GUILayoutUtility.GetRect(0, futuresHeight);
+                GUILayout.Space(SpaceHeight);
             }
-            if (totalTokens <= 0) {
-                return;
-            }
-            //Add button
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button(AddTokenContent)) {
-                PopupWindow.Show(GUILayoutUtility.GetLastRect(), TokenSelector);
-            }
-            if (totalTokens > 0) {
-                if (GUILayout.Button(ClearCutscene)) {
-                    cutscene.Clear();
-                }
-            }
-            EditorGUILayout.EndHorizontal();
-            hasAnyFocused = false;
-            tokenList.DoLayoutList();
-            if (!hasAnyFocused) {
-                lastSelected = -1;
-            }
+
+            DrawTokens(totalTokens);
+
             if (hasFutures) {
                 DrawFutures(futuresRect);
             }
         }
 
+        private void DrawPlayerSettings() {
+            EditorGUILayout.BeginVertical(Player ? ShiroiStyles.PlayerConfig : ShiroiStyles.NoBoundPlayer);
+            EditorGUILayout.LabelField(PlayerHeader, ShiroiStyles.Header);
+            Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
+            if (Player) {
+                ShiroiEditorUtil.DrawReferencesLayout(Player);
+            }
+            EditorGUILayout.EndVertical();
+        }
+
+        private void DrawTokens(int totalTokens) {
+            EditorGUILayout.BeginVertical(ShiroiStyles.Tokens);
+            DrawCutsceneHeader(totalTokens);
+            if (totalTokens > 0) {
+                hasAnyFocused = false;
+                tokenList.DoLayoutList();
+                if (!hasAnyFocused) {
+                    lastSelected = -1;
+                }
+            }
+            EditorGUILayout.EndVertical();
+        }
+
 
         private void DrawFutures(Rect rect) {
+            GUI.Box(rect, GUIContent.none, ShiroiStyles.FuturesBackground);
             var futures = cutscene.GetFutures();
             var totalFutures = futures.Count;
-            var labelRect = rect.GetLine(0);
+            EditorGUI.LabelField(rect.GetLine(0), FuturesStats, ShiroiStyles.Header);
+            var labelRect = rect.GetLine(1);
             if (totalFutures == 0) {
                 EditorGUI.LabelField(labelRect, "No futures registered.");
             } else {
@@ -155,6 +177,7 @@ Not forcing player selection for now
                 EditorGUI.LabelField(labelRect, totalFutures + " futures found!",
                     ShiroiStyles.Header);
                 var iconSize = ShiroiStyles.IconSize;
+                var yOffset = EditorGUIUtility.singleLineHeight * FuturesHeaderLines;
                 for (var i = 0; i < futures.Count; i++) {
                     var future = futures[i];
                     var index = future.Provider;
@@ -164,7 +187,8 @@ Not forcing player selection for now
                     var mappedToken = MappedToken.For(token);
                     var style = lastSelected == index ? mappedToken.SelectedStyle : mappedToken.Style;
                     var content = EditorGUIUtility.ObjectContent(null, future.Type);
-                    var futureRect = rect.GetLine((uint) (i + 1), collumHeight: iconSize);
+                    var futureRect = rect.GetLine((uint) i, collumHeight: iconSize,
+                        yOffset: yOffset);
                     var iconRect = futureRect.SubRect(iconSize, iconSize);
                     var msgRect = futureRect.SubRect(futureRect.width - iconSize, iconSize, iconSize);
                     content.text = null;
@@ -176,7 +200,20 @@ Not forcing player selection for now
         }
 
         private void DrawCutsceneHeader(int totalLines) {
+            EditorGUILayout.LabelField("Tokens", ShiroiStyles.Header);
             var isEmpty = totalLines == 0;
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button(AddTokenContent)) {
+                PopupWindow.Show(GUILayoutUtility.GetLastRect(), TokenSelector);
+            }
+            if (!isEmpty) {
+                if (GUILayout.Button(ClearCutscene)) {
+                    cutscene.Clear();
+                }
+            }
+
+            EditorGUILayout.EndHorizontal();
             //No token in cutscene
             if (isEmpty) {
                 EditorGUILayout.LabelField(NoTokenContent, ShiroiStyles.Error);
@@ -204,16 +241,11 @@ Not forcing player selection for now
             GUI.Box(rect, GUIContent.none, style);
         }
 
-        private void DrawTokensHeader(Rect rect) {
-            EditorGUI.LabelField(rect, "Tokens", ShiroiStyles.Header);
-        }
-
         private float CalculateHeight(int index) {
             var token = cutscene[index];
             return MappedToken.For(token).Height;
         }
 
-        private bool hasAnyFocused;
 
         private void DrawToken(Rect rect, int index, bool isactive, bool isfocused) {
             var token = cutscene[index];

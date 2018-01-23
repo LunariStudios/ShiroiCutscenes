@@ -21,19 +21,20 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             var label = string.Format("{0} ({1})", name, msg);
             var chosen = EditorGUI.ObjectField(rect, label, found, referenceType, true);
             GUI.enabled = true;
-            if (chosen != found && player != null) {
-                player.NotifyStopUse(value.exposedName);
+
+            if (player == null) {
+                return;
             }
-            if (chosen != null) {
-                value.exposedName = chosen.GetInstanceID().ToString();
-                if (found != null & player != null) {
-                    player.NotifyUse(value.exposedName);
+            if (chosen != found) {
+                //Remove old
+                player.SetReferenceValue(value.exposedName, null);
+                //If there is a new one, add it
+                if (chosen != null) {
+                    var newId = chosen.GetInstanceID().ToString();
+                    value.exposedName = newId;
+                    player.SetReferenceValue(newId, chosen);
                 }
             }
-            if (player != null) {
-                player.SetReferenceValue(value.exposedName, chosen);
-            }
-
             setter(value);
         }
     }

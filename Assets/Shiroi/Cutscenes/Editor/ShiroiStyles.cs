@@ -13,8 +13,8 @@ namespace Shiroi.Cutscenes.Editor {
 
         public static readonly Color PlayerConfigColor = new Color(0.26f, 0.63f, 0.28f);
         public static readonly Color NoBoundPlayerColor = new Color(0.9f, 0.22f, 0.21f);
-        public static readonly GUILayoutOption IconHeightOption = GUILayout.Height(IconSize);
-        public static readonly GUILayoutOption IconWidthOption = GUILayout.Width(IconSize);
+        public static readonly Color TokensBackgroundColor = new Color(0.6f, 0.6f, 0.6f);
+        public static readonly Color FuturesBackgroundColor = TokensBackgroundColor;
 
         public static GUIStyle CreateGUIStyle(Color color) {
             return new GUIStyle {normal = {background = CreateTexture(1, 1, color)}};
@@ -56,6 +56,8 @@ namespace Shiroi.Cutscenes.Editor {
             };
             PlayerConfig = CreateGUIStyle(PlayerConfigColor);
             NoBoundPlayer = CreateGUIStyle(NoBoundPlayerColor);
+            FuturesBackground = CreateGUIStyle(FuturesBackgroundColor);
+            Tokens = CreateGUIStyle(TokensBackgroundColor);
         }
 
         public static GUIStyle PlayerConfig { get; private set; }
@@ -68,6 +70,9 @@ namespace Shiroi.Cutscenes.Editor {
         public static GUIStyle Error { get; private set; }
         public static GUIStyle Kaomoji { get; private set; }
         public static GUIStyle Bold { get; private set; }
+        public static GUIStyle FuturesBackground { get; private set; }
+        public static GUIStyle Tokens { get; private set; }
+
         public static readonly GUILayoutOption ExpandWidthOption = GUILayout.ExpandWidth(true);
     }
 }

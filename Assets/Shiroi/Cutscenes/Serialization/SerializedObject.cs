@@ -135,7 +135,8 @@ namespace Shiroi.Cutscenes.Serialization {
 
         private static T NotifyMissing<T>(string key) {
             var value = default(T);
-            Debug.LogWarningFormat("[ShiroiCutscenes] Couldn't find {2} for '{0}' when deserializing, returning '{1}' ...",
+            Debug.LogWarningFormat(
+                "[ShiroiCutscenes] Couldn't find {2} for '{0}' when deserializing, returning '{1}' ...",
                 key, value, typeof(T).Name);
             return value;
         }
@@ -221,6 +222,7 @@ namespace Shiroi.Cutscenes.Serialization {
             if (first == null) {
                 return NotifyMissing<Object>(key);
             }
+            
             return first.Value;
         }
 
@@ -231,11 +233,22 @@ namespace Shiroi.Cutscenes.Serialization {
                 var name = member.Name;
                 var serializer = Serializers.For(fieldType);
                 if (serializer == null) {
-                    Debug.LogWarningFormat("Couldn't find serializer for member '{0}' of type '{1}'", name,
+                    Debug.LogWarningFormat("[ShiroiCutscenes] Couldn't find serializer for member '{0}' of type '{1}'",
+                        name,
                         fieldType.FullName);
                     continue;
                 }
                 var value = serializer.Deserialize(name, this);
+                if (!fieldType.IsInstanceOfType(value)) {
+                    Debug.LogWarningFormat(
+                        "[ShiroiCutscenes] Expected type '{1}' for member '{0}', but serializer returned '{2}' ({3})!",
+                        name,
+                        fieldType.FullName,
+                        value,
+                        value.GetType().FullName
+                    );
+                    continue;
+                }
                 member.SetValue(token, value);
             }
         }
