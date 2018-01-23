@@ -319,4 +319,74 @@ json = JsonUtility.ToJson(value);
             destination.SetObject(name, obj);
         }
     }
+
+    public class BoundsSerializer : Serializer<Bounds> {
+        public const string XKey = "x";
+        public const string YKey = "y";
+        public const string ZKey = "z";
+        public const string WKey = "w";
+        public const string HKey = "h";
+        public const string LKey = "h";
+
+        public override object Deserialize(string key, SerializedObject obj) {
+            var serializedBounds = obj.GetObject(key);
+            float x, y, z, w, h, l;
+            x = serializedBounds.GetFloat(XKey);
+            y = serializedBounds.GetFloat(YKey);
+            z = serializedBounds.GetFloat(ZKey);
+            w = serializedBounds.GetFloat(WKey);
+            h = serializedBounds.GetFloat(HKey);
+            l = serializedBounds.GetFloat(LKey);
+            return new Bounds(new Vector3(x, y, z), new Vector3(w, h, l));
+        }
+
+        public override void Serialize(Bounds value, string name, SerializedObject destination) {
+            var obj = new SerializedObject();
+            var center = value.center;
+            var size = value.size;
+            obj.SetFloat(XKey, center.x);
+            obj.SetFloat(YKey, center.y);
+            obj.SetFloat(ZKey, center.z);
+            obj.SetFloat(WKey, size.x);
+            obj.SetFloat(HKey, size.y);
+            obj.SetFloat(LKey, size.z);
+            destination.SetObject(name, obj);
+        }
+    }
+
+    public class BoundsIntSerializer : Serializer<BoundsInt> {
+        public override object Deserialize(string key, SerializedObject obj) {
+            var serializedBounds = obj.GetObject(key);
+            int x, y, z, w, h, l;
+            x = serializedBounds.GetInt(BoundsSerializer.XKey);
+            y = serializedBounds.GetInt(BoundsSerializer.YKey);
+            z = serializedBounds.GetInt(BoundsSerializer.ZKey);
+            w = serializedBounds.GetInt(BoundsSerializer.WKey);
+            h = serializedBounds.GetInt(BoundsSerializer.HKey);
+            l = serializedBounds.GetInt(BoundsSerializer.LKey);
+            return new BoundsInt(x, y, z, w, h, l);
+        }
+
+        public override void Serialize(BoundsInt value, string name, SerializedObject destination) {
+            var obj = new SerializedObject();
+            var center = value.min;
+            var size = value.size;
+            obj.SetInt(BoundsSerializer.XKey, center.x);
+            obj.SetInt(BoundsSerializer.YKey, center.y);
+            obj.SetInt(BoundsSerializer.ZKey, center.z);
+            obj.SetInt(BoundsSerializer.WKey, size.x);
+            obj.SetInt(BoundsSerializer.HKey, size.y);
+            obj.SetInt(BoundsSerializer.LKey, size.z);
+            destination.SetObject(name, obj);
+        }
+    }
+    public class LayerMaskSerializer : Serializer<LayerMask> {
+        public override object Deserialize(string key, SerializedObject obj) {
+            return (LayerMask) obj.GetInt(key);
+        }
+
+        public override void Serialize(LayerMask value, string name, SerializedObject destination) {
+            destination.SetInt(name, value);
+        }
+    }
 }

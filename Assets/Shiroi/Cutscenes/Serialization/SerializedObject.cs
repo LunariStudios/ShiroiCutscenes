@@ -135,7 +135,8 @@ namespace Shiroi.Cutscenes.Serialization {
 
         private static T NotifyMissing<T>(string key) {
             var value = default(T);
-            Debug.LogWarningFormat("Couldn't find {2} for '{0}' returning '{1}' ...", key, value, typeof(T).Name);
+            Debug.LogWarningFormat("[ShiroiCutscenes] Couldn't find {2} for '{0}' when deserializing, returning '{1}' ...",
+                key, value, typeof(T).Name);
             return value;
         }
 

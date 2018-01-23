@@ -56,6 +56,9 @@ namespace Shiroi.Cutscenes.Serialization {
             RegisterSerializer(new AnimationCurveSerializer());
             RegisterSerializer(new RectSerializer());
             RegisterSerializer(new RectIntSerializer());
+            RegisterSerializer(new BoundsSerializer());
+            RegisterSerializer(new BoundsIntSerializer());
+            RegisterSerializer(new LayerMaskSerializer());
         }
 
         public static void RegisterPrimitiveSerializers() {
