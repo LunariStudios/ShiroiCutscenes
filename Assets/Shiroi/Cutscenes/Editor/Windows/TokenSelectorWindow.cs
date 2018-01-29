@@ -1,16 +1,22 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Shiroi.Cutscenes.Editor {
+namespace Shiroi.Cutscenes.Editor.Windows {
     public class TokenSelectorWindow : PopupWindowContent {
+
+        public static Vector2 Size {
+            get {
+                return new Vector2(200, (TokenLoader.KnownTokenTypes.Count + 1) * EditorGUIUtility.singleLineHeight);
+            }
+        }
+
         public TokenSelectorWindow(CutsceneEditor currentEditor) {
             CurrentEditor = currentEditor;
         }
-
-        public CutsceneEditor CurrentEditor { get; set; }
+        public CutsceneEditor CurrentEditor { get; private set; }
 
         public override Vector2 GetWindowSize() {
-            return new Vector2(200, (TokenLoader.KnownTokenTypes.Count + 1) * EditorGUIUtility.singleLineHeight);
+            return Size;
         }
 
         public override void OnGUI(Rect rect) {

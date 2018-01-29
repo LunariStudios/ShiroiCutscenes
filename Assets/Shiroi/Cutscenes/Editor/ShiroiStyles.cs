@@ -36,6 +36,8 @@ namespace Shiroi.Cutscenes.Editor {
                 KaomojiVerticalBorder,
                 KaomojiVerticalBorder
             );
+            ErrorBackground = CreateGUIStyle(ErrorBackgroundColor);
+            DefaultBackground = CreateGUIStyle(DefaultBackgroundColor);
             Base = new GUIStyle {
                 alignment = TextAnchor.MiddleCenter
             };
@@ -45,15 +47,14 @@ namespace Shiroi.Cutscenes.Editor {
             Header = new GUIStyle(Base) {
                 fontStyle = FontStyle.Bold
             };
-            Error = new GUIStyle(Base) {
+            Error = new GUIStyle(ErrorBackground) {
+                alignment = TextAnchor.MiddleCenter,
                 fontStyle = FontStyle.Bold,
             };
-            Kaomoji = new GUIStyle(Error) {
+            Kaomoji = new GUIStyle(Header) {
                 fontSize = KaomojiFontSize,
                 margin = kaomojiOffset,
             };
-            ErrorBackground = CreateGUIStyle(ErrorBackgroundColor);
-            DefaultBackground = CreateGUIStyle(DefaultBackgroundColor);
         }
 
         public static GUIStyle ErrorBackground { get; private set; }

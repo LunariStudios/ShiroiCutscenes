@@ -1,4 +1,6 @@
-﻿namespace Shiroi.Cutscenes.Serialization {
+﻿using System;
+
+namespace Shiroi.Cutscenes.Serialization {
     public class ByteSerializer : Serializer<byte> {
         public override object Deserialize(string key, SerializedObject obj) {
             return (byte) obj.GetInt(key);
@@ -6,6 +8,20 @@
 
         public override void Serialize(byte value, string name, SerializedObject destination) {
             destination.SetInt(name, value);
+        }
+    }
+
+    public class EnumSerializer : Serializer {
+        public override bool Supports(Type type) {
+            return type.IsEnum;
+        }
+
+        public override void Serialize(object value, string name, SerializedObject destination) {
+            destination.SetInt(name, (int) value);
+        }
+
+        public override object Deserialize(string key, SerializedObject obj) {
+            return obj.GetInt(key);
         }
     }
 

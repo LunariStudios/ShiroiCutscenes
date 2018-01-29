@@ -55,8 +55,6 @@ namespace Shiroi.Cutscenes.Editor {
             return byte.Parse(r, System.Globalization.NumberStyles.HexNumber);
         }
 
-        public readonly GUIStyle Style;
-        public readonly GUIStyle SelectedStyle;
         public readonly Color Color;
         public readonly Color SelectedColor;
         public readonly string Label;
@@ -89,8 +87,6 @@ namespace Shiroi.Cutscenes.Editor {
             //Use hsv to calculate brightness
             Color = Color.HSVToRGB(h, SaturationValue, BrightnessValue);
             SelectedColor = Color.HSVToRGB(h, SaturationValue, SelectedBrightnessValue);
-            Style = ShiroiStyles.CreateGUIStyle(Color);
-            SelectedStyle = ShiroiStyles.CreateGUIStyle(SelectedColor);
         }
 
         public FieldInfo[] SerializedFields { get; private set; }

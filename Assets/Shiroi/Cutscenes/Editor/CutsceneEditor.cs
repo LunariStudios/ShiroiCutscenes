@@ -1,6 +1,7 @@
 ﻿using System;
-using Shiroi.Cutscenes.Tokens;
 using Shiroi.Cutscenes.Editor.Util;
+using Shiroi.Cutscenes.Editor.Windows;
+using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -13,7 +14,6 @@ namespace Shiroi.Cutscenes.Editor {
 
 
         private static int currentKaomoji;
-        public TokenSelectorWindow TokenSelector;
 
 
         private static readonly GUIContent ClearCutscene =
@@ -73,21 +73,31 @@ Not forcing player selection for now
         private ReorderableList tokenList;
 
         private bool hasAnyFocused;
-        private Cutscene cutscene;
-        private int lastSelected;
 
         [SerializeField]
         private CutscenePlayer player;
+
+        public ContextWindow ContextWindow;
+        public TokenSelectorWindow SelectorWindow;
 
         public CutscenePlayer Player {
             get { return player; }
             private set { player = value; }
         }
 
+        public bool HasSelected {
+            get { return LastSelected >= 0; }
+        }
+
+        public int LastSelected { get; private set; }
+
+        public Cutscene Cutscene { get; private set; }
+
         private void OnEnable() {
-            TokenSelector = new TokenSelectorWindow(this);
-            cutscene = (Cutscene) target;
-            tokenList = new ReorderableList(cutscene.Tokens, typeof(IToken), true, false, false, true) {
+            ContextWindow = new ContextWindow(this);
+            SelectorWindow = new TokenSelectorWindow(this);
+            Cutscene = (Cutscene) target;
+            tokenList = new ReorderableList(Cutscene.Tokens, typeof(IToken), true, false, false, true) {
                 drawElementCallback = DrawToken,
                 drawElementBackgroundCallback = DrawBackground,
                 elementHeightCallback = CalculateHeight,
@@ -97,16 +107,16 @@ Not forcing player selection for now
         }
 
         private void OnReorderCallback(ReorderableList list) {
-            cutscene.OnReorder(list.index, lastSelected);
+            Cutscene.OnReorder(list.index, LastSelected);
         }
 
         private void OnRemoveCallback(ReorderableList list) {
-            cutscene.RemoveToken(list.index);
+            Cutscene.RemoveToken(list.index);
         }
 
 
         public override void OnInspectorGUI() {
-            var totalTokens = cutscene.Tokens.Count;
+            var totalTokens = Cutscene.Tokens.Count;
             /* Let's not annoy users with this for now
                if (Player == null) {
                   var found = FindObjectsOfType<CutscenePlayer>();
@@ -123,7 +133,7 @@ Not forcing player selection for now
             DrawPlayerSettings();
             GUILayout.Space(SpaceHeight);
             //Reserve futures rect
-            var totalFutures = cutscene.TotalFutures;
+            var totalFutures = Cutscene.TotalFutures;
             var hasFutures = totalFutures > 0;
             var futuresRect = default(Rect);
             if (hasFutures) {
@@ -137,6 +147,10 @@ Not forcing player selection for now
 
             if (hasFutures) {
                 DrawFutures(futuresRect);
+            }
+            if (Event.current.type == EventType.ContextClick) {
+                var rect = new Rect(Event.current.mousePosition, ContextWindow.Size);
+                PopupWindow.Show(rect, ContextWindow);
             }
         }
 
@@ -157,7 +171,7 @@ Not forcing player selection for now
                 hasAnyFocused = false;
                 tokenList.DoLayoutList();
                 if (!hasAnyFocused) {
-                    lastSelected = -1;
+                    LastSelected = -1;
                 }
             }
             EditorGUILayout.EndVertical();
@@ -166,7 +180,7 @@ Not forcing player selection for now
 
         private void DrawFutures(Rect rect) {
             GUI.Box(rect, GUIContent.none, ShiroiStyles.DefaultBackground);
-            var futures = cutscene.GetFutures();
+            var futures = Cutscene.GetFutures();
             var totalFutures = futures.Count;
             EditorGUI.LabelField(rect.GetLine(0), FuturesStats, ShiroiStyles.Header);
             var labelRect = rect.GetLine(1);
@@ -176,40 +190,54 @@ Not forcing player selection for now
                 futures.Sort();
                 EditorGUI.LabelField(labelRect, totalFutures + " futures found!",
                     ShiroiStyles.Header);
-                var iconSize = ShiroiStyles.IconSize;
+                const int iconSize = ShiroiStyles.IconSize;
                 var yOffset = EditorGUIUtility.singleLineHeight * FuturesHeaderLines;
+                var initColor = GUI.backgroundColor;
+                var totalTokens = Cutscene.TotalTokens;
                 for (var i = 0; i < futures.Count; i++) {
                     var future = futures[i];
                     var index = future.Provider;
-                    var token = cutscene[index];
-                    var msg = string.Format("{0} @ {3} (Owner: {1} @ #{2})", future.Name, token.GetType().Name, index,
-                        future.Id);
-                    var mappedToken = MappedToken.For(token);
-                    var style = lastSelected == index ? mappedToken.SelectedStyle : mappedToken.Style;
-                    var content = EditorGUIUtility.ObjectContent(null, future.Type);
+                    string msg;
+                    Color color;
                     var futureRect = rect.GetLine((uint) i, collumHeight: iconSize,
                         yOffset: yOffset);
+                    if (index < 0) {
+                        msg = string.Format("{0} #{1} (Error! Owner not found)", future.Name, index);
+                        EditorGUI.LabelField(futureRect, msg);
+                        color = ShiroiStyles.ErrorBackgroundColor;
+                    } else {
+                        var token = Cutscene[index];
+                        msg = string.Format("{0} @ {3} (Owner: {1} @ #{2})", future.Name, token.GetType().Name, index,
+                            future.Id);
+                        var mappedToken = MappedToken.For(token);
+                        color = LastSelected == index ? mappedToken.SelectedColor : mappedToken.Color;
+                    }
+
+                    var content = EditorGUIUtility.ObjectContent(null, future.Type);
+
                     var iconRect = futureRect.SubRect(iconSize, iconSize);
                     var msgRect = futureRect.SubRect(futureRect.width - iconSize, iconSize, iconSize);
                     content.text = null;
-                    GUI.Box(futureRect, GUIContent.none, style);
+                    GUI.backgroundColor = color;
+                    GUI.Box(futureRect, GUIContent.none);
                     GUI.Box(iconRect, content);
                     EditorGUI.LabelField(msgRect, msg);
                 }
+                GUI.backgroundColor = initColor;
             }
         }
 
         private void DrawCutsceneHeader(int totalLines) {
             EditorGUILayout.LabelField("Tokens", ShiroiStyles.Header);
             var isEmpty = totalLines == 0;
-
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button(AddTokenContent)) {
-                PopupWindow.Show(GUILayoutUtility.GetLastRect(), TokenSelector);
+                var rect = new Rect(Event.current.mousePosition, TokenSelectorWindow.Size);
+                PopupWindow.Show(rect, SelectorWindow);
             }
             if (!isEmpty) {
                 if (GUILayout.Button(ClearCutscene)) {
-                    cutscene.Clear();
+                    Cutscene.Clear();
                 }
             }
 
@@ -217,8 +245,6 @@ Not forcing player selection for now
             //No token in cutscene
             if (isEmpty) {
                 EditorGUILayout.LabelField(NoTokenContent, ShiroiStyles.Error);
-            }
-            if (isEmpty) {
                 GUI.enabled = false;
                 EditorGUILayout.LabelField(GetKaomoji(), ShiroiStyles.Kaomoji, GUILayout.ExpandHeight(true));
             } else {
@@ -230,37 +256,39 @@ Not forcing player selection for now
         private void DrawBackground(Rect rect, int index, bool isactive, bool isfocused) {
             if (isfocused) {
                 hasAnyFocused = true;
-                lastSelected = index;
+                LastSelected = index;
             }
             if (index == -1) {
                 return;
             }
 
-            var m = MappedToken.For(cutscene[index]);
-            var style = isfocused ? m.SelectedStyle : m.Style;
-            GUI.Box(rect, GUIContent.none, style);
+            var m = MappedToken.For(Cutscene[index]);
+            var initColor = GUI.backgroundColor;
+            GUI.backgroundColor = isfocused ? m.SelectedColor : m.Color;
+            GUI.Box(rect, GUIContent.none);
+            GUI.backgroundColor = initColor;
         }
 
         private float CalculateHeight(int index) {
-            var token = cutscene[index];
+            var token = Cutscene[index];
             return MappedToken.For(token).Height;
         }
 
 
         private void DrawToken(Rect rect, int index, bool isactive, bool isfocused) {
-            var token = cutscene[index];
+            var token = Cutscene[index];
             var labelRect = GetRect(rect, 0);
             var mappedToken = MappedToken.For(token);
             EditorGUI.LabelField(labelRect, string.Format("#{0} - {1}", index, mappedToken.Label), ShiroiStyles.Bold);
             bool changed;
-            mappedToken.DrawFields(this, rect, index, token, cutscene, Player, out changed);
+            mappedToken.DrawFields(this, rect, index, token, Cutscene, Player, out changed);
             if (!changed) {
                 return;
             }
-            EditorUtility.SetDirty(cutscene);
+            EditorUtility.SetDirty(Cutscene);
             var l = token as ITokenChangedListener;
             if (l != null) {
-                l.OnChanged(cutscene);
+                l.OnChanged(Cutscene);
             }
         }
 
@@ -274,19 +302,19 @@ Not forcing player selection for now
 
         public void AddToken(Type type) {
             var instance = (IToken) Activator.CreateInstance(type);
-            if (cutscene.IsEmpty || lastSelected < 0) {
-                cutscene.AddToken(instance);
+            if (Cutscene.IsEmpty || LastSelected < 0) {
+                Cutscene.AddToken(instance);
             } else {
-                cutscene.AddToken(lastSelected, instance);
+                Cutscene.AddToken(LastSelected, instance);
             }
             EditorUtility.SetDirty(this);
             SetCutsceneDirty();
             tokenList.GrabKeyboardFocus();
-            tokenList.index = cutscene.Tokens.Count - 1;
+            tokenList.index = Cutscene.Tokens.Count - 1;
         }
 
         private void SetCutsceneDirty() {
-            EditorUtility.SetDirty(cutscene);
+            EditorUtility.SetDirty(Cutscene);
         }
     }
 }

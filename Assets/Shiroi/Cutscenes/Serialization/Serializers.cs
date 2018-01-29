@@ -74,6 +74,7 @@ namespace Shiroi.Cutscenes.Serialization {
             RegisterSerializer(new StringSerializer());
 
             //Other primitives
+            RegisterSerializer(new EnumSerializer());
             RegisterSerializer(new ByteSerializer());
             RegisterSerializer(new SignedByteSerializer());
             RegisterSerializer(new ShortSerializer());

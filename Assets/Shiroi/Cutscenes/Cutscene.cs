@@ -13,9 +13,9 @@ using Object = UnityEngine.Object;
 namespace Shiroi.Cutscenes {
     [CreateAssetMenu(menuName = CreateCutsceneMenuPath), Serializable]
     public class Cutscene : ScriptableObject, ISerializationCallbackReceiver {
+        private static readonly RandomNumberGenerator FutureIDGenerator = RandomNumberGenerator.Create();
         public const string CreateCutsceneMenuPath = "Shiroi/Cutscenes/Cutscene";
-        private List<IToken> loadedTokens = new List<IToken>();
-        public static readonly RandomNumberGenerator rng = RandomNumberGenerator.Create();
+        private readonly List<IToken> loadedTokens = new List<IToken>();
 
         [SerializeField]
         private List<ExpectedFuture> futures = new List<ExpectedFuture>();
@@ -39,8 +39,8 @@ namespace Shiroi.Cutscenes {
         }
 
         public int NotifyFuture(Type type, IFutureProvider provider, string futureName) {
-            var array = new byte[4];
-            rng.GetBytes(array);
+            var array = new byte[sizeof(int)];
+            FutureIDGenerator.GetBytes(array);
             var id = BitConverter.ToInt32(array, 0);
             var providerId = FindIndexOfProvider(provider);
             var future = new ExpectedFuture(providerId, id, type, futureName);
@@ -67,13 +67,17 @@ namespace Shiroi.Cutscenes {
             get { return futures.Count; }
         }
 
+        public int TotalTokens {
+            get { return Tokens.Count; }
+        }
+
         public void AddToken(int index, IToken instance) {
+            OnReorder(index, Tokens.Count);
             loadedTokens.Insert(index, instance);
             var provider = instance as IFutureProvider;
             if (provider != null) {
                 provider.RegisterFutures(this);
             }
-            OnReorder(index, Tokens.Count - 1);
         }
 
         public void AddToken(IToken token) {
@@ -189,6 +193,11 @@ namespace Shiroi.Cutscenes {
 
             public int CompareTo(ExpectedFuture other) {
                 return provider.CompareTo(other.provider);
+            }
+
+            public override string ToString() {
+                return string.Format("ExpectedFuture(Type: {0}, Name: {1}, ID: {2}, Provider: {3})", type, name, id,
+                    provider);
             }
         }
 
