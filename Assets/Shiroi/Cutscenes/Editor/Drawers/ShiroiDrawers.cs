@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Futures;
+using Shiroi.Cutscenes.Util;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -24,19 +26,66 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
     }
 
+    public class ReferenceDrawer<T> : TypeDrawer<Reference<T>> where T : Object {
+        public const float TypeWidth = 60;
+        public const float LabelOffset = 15;
+        
+        //TODO: Make this less horrible
+        public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
+            int tokenIndex, string name,
+            Reference<T> value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            string label;
+            var found = player == null ? null : value.Resolve(player);
+            switch (value.Type) {
+                case Reference<T>.ReferenceType.Future:
+                    label = name;
+                    break;
+                case Reference<T>.ReferenceType.Exposed:
+                    label = ExposedReferenceDrawer<T>.GetLabel(found, value.PropertyName, name);
+                    break;
+                default:
+                    return;
+            }
+            var labelWidth = GUIStyle.none.CalcSize(new GUIContent(label)).x;
+            var r2 = rect.SubRect(TypeWidth, rect.height, labelWidth + LabelOffset);
+            value.Type = (Reference<T>.ReferenceType) EditorGUI.EnumPopup(r2, value.Type);
+            switch (value.Type) {
+                case Reference<T>.ReferenceType.Exposed:
+                    value.Id = DrawExposed(value, player, rect, name);
+                    break;
+                case Reference<T>.ReferenceType.Future:
+                    value.Id = DrawFuture(value, cutscene, rect, name, tokenIndex);
+                    break;
+            }
+            setter(value);
+        }
+
+        private int DrawExposed(Reference<T> value, CutscenePlayer cutscene, Rect rect, string name) {
+            return ExposedReferenceDrawer<T>.DrawExposed(cutscene, value, name, rect).exposedName.GetHashCode();
+        }
+
+        private int DrawFuture(Reference<T> value, Cutscene cutscene, Rect rect, string name, int tokenIndex) {
+            return FutureDrawer<T>.DrawFuture(cutscene, tokenIndex, rect, name, value.Id);
+        }
+    }
+
     public class FutureDrawer<T> : TypeDrawer<FutureReference<T>> where T : Object {
-        private readonly Type futureType = typeof(T);
+        private static readonly Type FutureType = typeof(T);
 
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
             int tokenIndex, string name, FutureReference<T> value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            value.Id = DrawFuture(cutscene, tokenIndex, rect, name, value.Id);
+            setter(value);
+        }
+
+        public static int DrawFuture(Cutscene cutscene, int tokenIndex, Rect rect, string name, int id) {
             var futures = cutscene.GetFutures().ToList();
-            futures.RemoveAll(future => !futureType.IsAssignableFrom(future.Type));
+            futures.RemoveAll(future => !FutureType.IsAssignableFrom(future.Type));
             futures.RemoveAll(future => future.Provider >= tokenIndex);
             var optionNames = futures.Select(future => future.Name).ToArray();
             var possibleOptions = futures.Select(future => future.Id).ToArray();
 
-            value.Id = EditorGUI.IntPopup(rect, name, value.Id, optionNames, possibleOptions);
-            setter(value);
+            return EditorGUI.IntPopup(rect, name, id, optionNames, possibleOptions);
         }
     }
 }

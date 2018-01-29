@@ -27,6 +27,11 @@ namespace Shiroi.Cutscenes.Editor {
 
         private static readonly Dictionary<Type, MappedToken> Cache = new Dictionary<Type, MappedToken>();
 
+        public static void Clear() {
+            Cache.Clear();
+        }
+        
+
         public static MappedToken For(IToken token) {
             return For(token.GetType());
         }

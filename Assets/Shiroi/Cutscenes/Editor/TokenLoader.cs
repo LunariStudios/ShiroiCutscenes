@@ -14,6 +14,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private static void Reload() {
             KnownTokenTypes = new List<Type>();
+            MappedToken.Clear();
         }
 
         static TokenLoader() {

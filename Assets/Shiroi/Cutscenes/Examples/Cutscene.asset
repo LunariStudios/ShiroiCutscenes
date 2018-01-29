@@ -12,14 +12,10 @@ MonoBehaviour:
   m_Name: Cutscene
   m_EditorClassIdentifier: 
   futures:
-  - type: UnityEngine.UI.Text, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-    name: test
-    id: 1866586964
-    provider: 1
   - type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-    name: FUCK YEAH
-    id: 588506909
+    name: spawned_particles
+    id: 906628425
     provider: 0
   tokens:
   - TokenType: Shiroi.Cutscenes.Tokens.SpawnPrefabToken
@@ -27,11 +23,11 @@ MonoBehaviour:
       Booleans: []
       Ints:
       - Key: futureId
-        Value: 588506909
+        Value: 906628425
       Floats: []
       Strings:
       - Key: FutureName
-        Value: FUCK YEAH
+        Value: spawned_particles
       Objects:
       - Key: Position
         Value:
@@ -67,31 +63,43 @@ MonoBehaviour:
           Arrays: []
       UnityObjects:
       - Key: Obj
-        Value: {fileID: 0}
+        Value: {fileID: 1435105111820948, guid: eb95746ac7706476d8c530147a02edec,
+          type: 2}
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.CreateTextToken
+  - TokenType: Shiroi.Cutscenes.Examples.MyToken
     TokenData:
       Booleans: []
-      Ints:
-      - Key: textId
-        Value: 1866586964
+      Ints: []
       Floats: []
-      Strings:
-      - Key: TextName
-        Value: test
+      Strings: []
       Objects:
-      - Key: Parent
+      - Key: System
         Value:
           Booleans: []
           Ints:
-          - Key: Id
-            Value: 0
+          - Key: Value
+            Value: 2010648960
+          - Key: Type
+            Value: 1
           Floats: []
           Strings: []
           Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
+          UnityObjects: []
+          Arrays: []
+      - Key: Position
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: z
+            Value: 0
+          Strings: []
+          Objects: []
+          UnityObjects: []
           Arrays: []
       UnityObjects: []
       Arrays: []

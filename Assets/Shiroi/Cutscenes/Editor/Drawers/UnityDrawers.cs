@@ -8,34 +8,41 @@ using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Editor.Drawers {
     public class ExposedReferenceDrawer<T> : TypeDrawer<ExposedReference<T>> where T : Object {
-        private readonly Type referenceType = typeof(T);
+        private static readonly Type ReferenceType = typeof(T);
 
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
             int tokenIndex, string name, ExposedReference<T> value, Type valueType, FieldInfo fieldInfo,
             Setter setter) {
-            GUI.enabled = player != null;
-            var found = value.Resolve(player);
+            setter(DrawExposed(player, value, name, rect));
+        }
+
+        public static string GetLabel(Object found, PropertyName value, string name) {
             var msg = found == null
                 ? "null"
-                : string.Format("{0}:{1}", found.GetInstanceID(), value.exposedName.GetHashCode());
-            var label = string.Format("{0} ({1})", name, msg);
-            var chosen = EditorGUI.ObjectField(rect, label, found, referenceType, true);
+                : string.Format("{0}:{1}", found.GetInstanceID(), value.GetHashCode());
+            return string.Format("{0} ({1})", name, msg);
+        }
+
+        public static ExposedReference<T> DrawExposed(CutscenePlayer player, ExposedReference<T> value, string name,
+            Rect rect) {
+            GUI.enabled = player != null;
+            var found = value.Resolve(player);
+            var label = GetLabel(found, value.exposedName, name);
+            var chosen = EditorGUI.ObjectField(rect, label, found, ReferenceType, true);
             GUI.enabled = true;
 
-            if (player == null) {
-                return;
+            if (player == null || chosen == found) {
+                return value;
             }
-            if (chosen != found) {
-                //Remove old
-                player.SetReferenceValue(value.exposedName, null);
-                //If there is a new one, add it
-                if (chosen != null) {
-                    var newId = chosen.GetInstanceID().ToString();
-                    value.exposedName = newId;
-                    player.SetReferenceValue(newId, chosen);
-                }
+            //Remove old
+            player.SetReferenceValue(value.exposedName, null);
+            //If there is a new one, add it
+            if (chosen != null) {
+                var newId = chosen.GetInstanceID().ToString();
+                value.exposedName = newId;
+                player.SetReferenceValue(newId, chosen);
             }
-            setter(value);
+            return value;
         }
     }
 

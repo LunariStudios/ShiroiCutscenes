@@ -12,7 +12,7 @@ namespace Shiroi.Cutscenes.Futures {
         }
 
         public T Resolve(CutscenePlayer player) {
-            var found = player.Request(this);
+            var found = player.RequestFuture(this);
             if (found != null) {
                 return found;
             }

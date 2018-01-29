@@ -17,7 +17,15 @@ namespace Shiroi.Cutscenes {
             providedFutures[id] = future;
         }
 
-        public T Request<T>(FutureReference<T> reference) where T : Object {
+        public T RequestFuture<T>(FutureReference<T> reference) where T : Object {
+            Object future;
+            if (TryGetFuture(reference, out future)) {
+                return (T) future;
+            }
+            return null;
+        }
+
+        public T RequestFuture<T>(int reference) where T : Object {
             Object future;
             if (TryGetFuture(reference, out future)) {
                 return (T) future;
@@ -27,6 +35,15 @@ namespace Shiroi.Cutscenes {
 
         private bool TryGetFuture<T>(FutureReference<T> reference, out Object future) where T : Object {
             var id = reference.Id;
+            if (providedFutures.ContainsKey(id)) {
+                future = providedFutures[id];
+                return true;
+            }
+            future = null;
+            return false;
+        }
+
+        private bool TryGetFuture(int id, out Object future) {
             if (providedFutures.ContainsKey(id)) {
                 future = providedFutures[id];
                 return true;

@@ -41,7 +41,6 @@ namespace Shiroi.Cutscenes.Editor.Windows {
                 PopupWindow.Show(rect, selector);
             }
             var initColor = GUI.backgroundColor;
-            Debug.Log("GUI Color = " + GUI.backgroundColor);
             GUI.backgroundColor = ShiroiStyles.ErrorBackgroundColor;
             if (GUI.Button(rect.GetLine(2), RemoveTokenContent)) {
                 CurrentEditor.Cutscene.RemoveToken(lastSelected);
