@@ -11,7 +11,7 @@ namespace Shiroi.Cutscenes.Editor {
     [CustomEditor(typeof(Cutscene))]
     public class CutsceneEditor : UnityEditor.Editor {
         public static readonly Vector2 TokenWindowSize = new Vector2(150, 500);
-
+        public static CutscenePlayer LastSelectedPlayer;
 
         private static int currentKaomoji;
 
@@ -82,7 +82,10 @@ Not forcing player selection for now
 
         public CutscenePlayer Player {
             get { return player; }
-            private set { player = value; }
+            private set {
+                player = value;
+                LastSelectedPlayer = value;
+            }
         }
 
         public bool HasSelected {
@@ -94,6 +97,7 @@ Not forcing player selection for now
         public Cutscene Cutscene { get; private set; }
 
         private void OnEnable() {
+            Player = LastSelectedPlayer;
             ContextWindow = new ContextWindow(this);
             SelectorWindow = new TokenSelectorWindow(this);
             Cutscene = (Cutscene) target;
