@@ -1,6 +1,6 @@
 
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/DDevilISL/ShiroiCutscenes/master/ReadMe/Images/ShiroiCutscenesLogo.png" alt="ShiroiCutscenes" width="600">
+    <img src="https://raw.githubusercontent.com/DDevilISL/ShiroiCutscenes/master/ReadMe/Images/ShiroiCutscenesLogo.png" alt="ShiroiCutscenes" width="400">
 </h1>
 
 <p align="center">
