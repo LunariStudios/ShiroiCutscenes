@@ -10,6 +10,7 @@ namespace Shiroi.Cutscenes.Editor {
         public const int KaomojiVerticalBorder = 50;
         public const int KaomojiHorizontalBorder = 50;
         public const int IconSize = 24;
+        public const float SpaceHeight = 10F;
 
         public const float SingleLineHeight = 16;
 

@@ -24,7 +24,6 @@ namespace Shiroi.Cutscenes.Editor {
 
         public const float FuturesHeaderLines = 2.5F;
 
-        public const float SpaceHeight = 10F;
 
         private static readonly GUIContent FuturesStats =
             new GUIContent("Futures Stats", "All of the info on your futures is listed below");
@@ -68,9 +67,12 @@ namespace Shiroi.Cutscenes.Editor {
 
         public ContextWindow ContextWindow;
         public TokenSelectorWindow SelectorWindow;
+        public readonly ErrorManager ErrorManager = new ErrorManager();
 
         public CutscenePlayer Player {
-            get { return player; }
+            get {
+                return player;
+            }
             private set {
                 player = value;
                 LastSelectedPlayer = value;
@@ -78,12 +80,20 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         public bool HasSelected {
-            get { return LastSelected >= 0; }
+            get {
+                return LastSelected >= 0;
+            }
         }
 
-        public int LastSelected { get; private set; }
+        public int LastSelected {
+            get;
+            private set;
+        }
 
-        public Cutscene Cutscene { get; private set; }
+        public Cutscene Cutscene {
+            get;
+            private set;
+        }
 
         private void OnEnable() {
             Player = LastSelectedPlayer;
@@ -110,23 +120,12 @@ namespace Shiroi.Cutscenes.Editor {
 
         //Errors
 
-        public void NotifyError(int tokenIndex, int fieldIndex, ErrorLevel level, params string[] message) {
-            errors.Add(new ErrorMessage(tokenIndex, fieldIndex, level, message));
-        }
-
-        public IEnumerable<ErrorMessage> GetErrors(int tokenIndex, int index) {
-            return from message in errors
-                where message.FieldIndex == index && message.TokenIndex == tokenIndex
-                select message;
-        }
-
-        private readonly List<ErrorMessage> errors = new List<ErrorMessage>();
 
         public override void OnInspectorGUI() {
-            errors.Clear();
+            ErrorManager.Clear();
             var totalTokens = Cutscene.Tokens.Count;
             DrawPlayerSettings();
-            GUILayout.Space(SpaceHeight);
+            GUILayout.Space(ShiroiStyles.SpaceHeight);
             //Reserve futures rect
             var totalFutures = Cutscene.TotalFutures;
             var hasFutures = totalFutures > 0;
@@ -135,9 +134,9 @@ namespace Shiroi.Cutscenes.Editor {
                 var futuresHeight = totalFutures * ShiroiStyles.IconSize +
                                     FuturesHeaderLines * EditorGUIUtility.singleLineHeight;
                 futuresRect = GUILayoutUtility.GetRect(0, futuresHeight);
-                GUILayout.Space(SpaceHeight);
+                GUILayout.Space(ShiroiStyles.SpaceHeight);
             }
-            DrawErrors();
+            ErrorManager.DrawErrors(this);
             DrawTokens(totalTokens);
 
             if (hasFutures) {
@@ -147,53 +146,6 @@ namespace Shiroi.Cutscenes.Editor {
                 var rect = new Rect(Event.current.mousePosition, ContextWindow.Size);
                 PopupWindow.Show(rect, ContextWindow);
             }
-        }
-
-        private bool showErrors;
-
-        private void DrawErrors() {
-            ErrorCheckers.CheckErrors(this, errors);
-            var totalErrors = errors.Count;
-            if (totalErrors <= 0) {
-                return;
-            }
-            var max = (from message in errors select message.Level).Max();
-            showErrors = GUILayout.Toggle(showErrors, GetErrorContent(totalErrors, max),
-                ShiroiStyles.GetErrorStyle(max));
-            if (!showErrors) {
-                return;
-            }
-            var init = GUI.backgroundColor;
-            foreach (var errorMessage in errors) {
-                var lines = errorMessage.Lines;
-                var height = (lines.Length + 1) * ShiroiStyles.SingleLineHeight;
-                var rect = GUILayoutUtility.GetRect(10, height, ShiroiStyles.ExpandWidthOption);
-                Rect iconRect;
-                Rect messagesRect;
-                rect.Split(ShiroiStyles.IconSize, out iconRect, out messagesRect);
-
-                GUI.backgroundColor = ShiroiStyles.GetColor(errorMessage.Level);
-                GUI.Box(rect, GUIContent.none);
-                GUI.Box(iconRect, ShiroiStyles.GetContent(errorMessage.Level));
-                var index = errorMessage.TokenIndex;
-                var token = Cutscene[index];
-                var label = string.Format("Token #{0} ({1})", index, token.GetType().Name);
-                GUI.Label(messagesRect.GetLine(0), label, ShiroiStyles.Bold);
-                for (uint i = 0; i < lines.Length; i++) {
-                    var pos = messagesRect.GetLine(i + 1);
-                    GUI.Label(pos, lines[i]);
-                }
-            }
-            GUILayout.Space(SpaceHeight);
-            GUI.backgroundColor = init;
-        }
-
-        private GUIContent GetErrorContent(int totalErrors, ErrorLevel maxLevel) {
-            var msg = showErrors ? "Hide Errors" : "Show Errors";
-            if (totalErrors > 0) {
-                msg += string.Format(" ({0})", totalErrors);
-            }
-            return new GUIContent(msg, ShiroiStyles.GetIcon(maxLevel));
         }
 
         private void DrawPlayerSettings() {

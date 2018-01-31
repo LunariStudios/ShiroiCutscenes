@@ -125,7 +125,7 @@ namespace Shiroi.Cutscenes.Editor {
                 drawer.Draw(editor, player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
                     currentField.GetValue(token),
                     fieldType, currentField, Setter);
-                var errors = editor.GetErrors(tokenIndex, index).ToArray();
+                var errors = editor.ErrorManager.GetErrors(tokenIndex, index).ToArray();
                 if (errors.Any()) {
                     var highestLevel = (from error in errors select error.Level).Max();
                     var size = r.height;

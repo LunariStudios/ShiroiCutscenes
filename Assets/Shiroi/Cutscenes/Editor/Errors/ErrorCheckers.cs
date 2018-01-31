@@ -31,7 +31,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
                     for (var fieldIndex = 0; fieldIndex < mapped.SerializedFields.Length; fieldIndex++) {
                         var serializedField = mapped.SerializedFields[fieldIndex];
                         var value = serializedField.GetValue(token);
-                        checker.Check(editor, i, token, value, fieldIndex, serializedField);
+                        checker.Check(editor, editor.ErrorManager, i, token, value, fieldIndex, serializedField);
                     }
                 }
             }
