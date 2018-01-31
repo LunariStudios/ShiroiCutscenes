@@ -12,47 +12,99 @@ MonoBehaviour:
   m_Name: Cutscene
   m_EditorClassIdentifier: 
   tokens:
-  - TokenType: Shiroi.Cutscenes.Examples.CreateTextToken
+  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken1
     TokenData:
       Booleans: []
-      Ints:
-      - Key: textId
-        Value: 2078017254
+      Ints: []
       Floats: []
       Strings:
-      - Key: TextName
-        Value: test_token
+      - Key: String
+        Value: 
       Objects:
-      - Key: Parent
+      - Key: CharacterColor
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: r
+            Value: 0.7607844
+          - Key: g
+            Value: 0.7607844
+          - Key: b
+            Value: 0.7607844
+          - Key: a
+            Value: 1
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
+      - Key: Rect
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: w
+            Value: 0
+          - Key: h
+            Value: 0
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
+      - Key: RectInt
         Value:
           Booleans: []
           Ints:
-          - Key: Id
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: w
+            Value: 0
+          - Key: h
             Value: 0
           Floats: []
           Strings: []
           Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
+          UnityObjects: []
           Arrays: []
       UnityObjects: []
-      Arrays: []
-  - TokenType: Shiroi.Cutscenes.Tokens.DeleteFutureToken
-    TokenData:
-      Booleans: []
-      Ints:
-      - Key: Future
-        Value: 2078017254
-      Floats: []
-      Strings: []
-      Objects: []
-      UnityObjects: []
-      Arrays: []
+      Arrays:
+      - Key: KeyFrames
+        Value:
+        - Booleans: []
+          Ints: []
+          Floats:
+          - Key: Time
+            Value: 0
+          - Key: Value
+            Value: 0
+          - Key: InTangent
+            Value: 0
+          - Key: OutTangent
+            Value: 0
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
+        - Booleans: []
+          Ints: []
+          Floats:
+          - Key: Time
+            Value: 1
+          - Key: Value
+            Value: 1
+          - Key: InTangent
+            Value: 0
+          - Key: OutTangent
+            Value: 0
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
   FutureManager:
-    futures:
-    - type: UnityEngine.UI.Text, UnityEngine.UI, Version=1.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      name: test_token
-      id: 2078017254
-      provider: 0
+    futures: []
