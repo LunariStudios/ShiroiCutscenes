@@ -24,7 +24,11 @@ What can you do with it?
 
 ### Installing
 
-Copy the 'Assets/Shiroi/Cutscenes' folder into anywhere in your unity project, although I recommend placing them inside a folder like 'Plugins' or 'Libraries'.
+Copy the 'Assets' folder into anywhere in your unity project.  
+
+If you do not want the cutscene icons on Cutscene files, delete the folder 'Gizmos' *(If you had other things in there before adding this framework, just remove 'Gizmos/Cutscene Icon.png')*  
+
+After that, I recommend placing the 'Shiroi' folder (and all it's contents) inside a folder like 'Libraries', to keep things organized.
 
 ## Getting Started  
 
