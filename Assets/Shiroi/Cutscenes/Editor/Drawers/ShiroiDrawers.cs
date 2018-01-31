@@ -29,18 +29,21 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
     public class ReferenceDrawer<T> : TypeDrawer<Reference<T>> where T : Object {
         public const float TypeWidth = 60;
         public const float LabelOffset = 15;
-        
+
         //TODO: Make this less horrible
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
             int tokenIndex, string name,
             Reference<T> value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            if (value == null) {
+                value = new Reference<T>(Reference.ReferenceType.Exposed, -1);
+            }
             string label;
             var found = player == null ? null : value.Resolve(player);
             switch (value.Type) {
-                case Reference<T>.ReferenceType.Future:
+                case Reference.ReferenceType.Future:
                     label = name;
                     break;
-                case Reference<T>.ReferenceType.Exposed:
+                case Reference.ReferenceType.Exposed:
                     label = ExposedReferenceDrawer<T>.GetLabel(found, value.PropertyName, name);
                     break;
                 default:
@@ -48,12 +51,12 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             }
             var labelWidth = GUIStyle.none.CalcSize(new GUIContent(label)).x;
             var r2 = rect.SubRect(TypeWidth, rect.height, labelWidth + LabelOffset);
-            value.Type = (Reference<T>.ReferenceType) EditorGUI.EnumPopup(r2, value.Type);
+            value.Type = (Reference.ReferenceType) EditorGUI.EnumPopup(r2, value.Type);
             switch (value.Type) {
-                case Reference<T>.ReferenceType.Exposed:
+                case Reference.ReferenceType.Exposed:
                     value.Id = DrawExposed(value, player, rect, name);
                     break;
-                case Reference<T>.ReferenceType.Future:
+                case Reference.ReferenceType.Future:
                     value.Id = DrawFuture(value, cutscene, rect, name, tokenIndex);
                     break;
             }
@@ -74,6 +77,9 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
 
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
             int tokenIndex, string name, FutureReference<T> value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            if (value == null) {
+                value = new FutureReference<T>(-1);
+            }
             value.Id = DrawFuture(cutscene, tokenIndex, rect, name, value.Id);
             setter(value);
         }

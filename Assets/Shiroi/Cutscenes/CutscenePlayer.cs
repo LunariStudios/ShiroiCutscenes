@@ -32,6 +32,13 @@ namespace Shiroi.Cutscenes {
             }
             return null;
         }
+        public Object RequestFuture(int reference) {
+            Object future;
+            if (TryGetFuture(reference, out future)) {
+                return future;
+            }
+            return null;
+        }
 
         private bool TryGetFuture<T>(FutureReference<T> reference, out Object future) where T : Object {
             var id = reference.Id;

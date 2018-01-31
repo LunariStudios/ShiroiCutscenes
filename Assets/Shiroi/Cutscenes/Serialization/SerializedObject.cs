@@ -222,7 +222,7 @@ namespace Shiroi.Cutscenes.Serialization {
             if (first == null) {
                 return NotifyMissing<Object>(key);
             }
-            
+
             return first.Value;
         }
 
@@ -244,7 +244,7 @@ namespace Shiroi.Cutscenes.Serialization {
                         "[ShiroiCutscenes] Expected type '{1}' for member '{0}', but serializer returned ({2})!",
                         name,
                         fieldType.FullName,
-                        value.GetType().FullName
+                        value == null ? "null" : value.GetType().FullName
                     );
                     continue;
                 }
@@ -261,6 +261,9 @@ namespace Shiroi.Cutscenes.Serialization {
                     continue;
                 }
                 var value = member.GetValue(loadedToken);
+                if (value == null) {
+                    continue;
+                }
                 serializer.Serialize(value, member.Name, obj);
             }
             return obj;

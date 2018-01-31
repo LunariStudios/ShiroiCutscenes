@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Shiroi.Cutscenes.Editor.Errors;
 using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Editor.Windows;
 using Shiroi.Cutscenes.Tokens;
@@ -19,23 +22,9 @@ namespace Shiroi.Cutscenes.Editor {
         private static readonly GUIContent ClearCutscene =
             new GUIContent("Clear cutscene", "Removes all tokens");
 
-/*
-Not forcing player selection for now
-        private static readonly GUIContent NoSelectedPlayer =
-            new GUIContent("You don't have any CutscenePlayer bound!");
-
-        private static readonly GUIContent MultiplePlayersFound =
-            new GUIContent("Found multiple CutscenePlayers within the current scene!");
-
-        private static readonly GUIContent MultiplePlayersFoundWarning =
-            new GUIContent("Please select one in order to assign ExposedReferences.");
-
-        private static readonly GUIContent NoSelectedPlayerWarning =
-            new GUIContent("You won't be able to assign ExposedReferences until you do so.");
-*/
         public const float FuturesHeaderLines = 2.5F;
 
-        public const float SpaceHeight = 5F;
+        public const float SpaceHeight = 10F;
 
         private static readonly GUIContent FuturesStats =
             new GUIContent("Futures Stats", "All of the info on your futures is listed below");
@@ -119,21 +108,17 @@ Not forcing player selection for now
         }
 
 
+        //Errors
+
+        public void NotifyError(int tokenIndex, ErrorLevel level, params string[] message) {
+            errors.Add(new ErrorMessage(tokenIndex, level, message));
+        }
+
+        private readonly List<ErrorMessage> errors = new List<ErrorMessage>();
+
         public override void OnInspectorGUI() {
+            errors.Clear();
             var totalTokens = Cutscene.Tokens.Count;
-            /* Let's not annoy users with this for now
-               if (Player == null) {
-                  var found = FindObjectsOfType<CutscenePlayer>();
-                  if (found.Length > 1) {
-                      EditorGUILayout.LabelField(NoSelectedPlayer, ShiroiStyles.Error);
-                  }
-                  if (found.Length == 1) {
-                      Player = found[0];
-                  } else {
-                      EditorGUILayout.LabelField(NoSelectedPlayer, ShiroiStyles.Error);
-                      EditorGUILayout.LabelField(NoSelectedPlayerWarning, ShiroiStyles.Error);
-                  }
-              }*/
             DrawPlayerSettings();
             GUILayout.Space(SpaceHeight);
             //Reserve futures rect
@@ -146,7 +131,7 @@ Not forcing player selection for now
                 futuresRect = GUILayoutUtility.GetRect(0, futuresHeight);
                 GUILayout.Space(SpaceHeight);
             }
-
+            DrawErrors();
             DrawTokens(totalTokens);
 
             if (hasFutures) {
@@ -158,8 +143,54 @@ Not forcing player selection for now
             }
         }
 
+        private bool showErrors;
+
+        private void DrawErrors() {
+            ErrorCheckers.CheckErrors(this, errors);
+            var totalErrors = errors.Count;
+            if (totalErrors <= 0) {
+                return;
+            }
+            var max = (from message in errors select message.Level).Max();
+            showErrors = GUILayout.Toggle(showErrors, GetErrorContent(totalErrors, max), ShiroiStyles.GetErrorStyle(max));
+            if (!showErrors) {
+                return;
+            }
+            var init = GUI.backgroundColor;
+            foreach (var errorMessage in errors) {
+                var lines = errorMessage.Lines;
+                var height = (lines.Length + 1) * ShiroiStyles.SingleLineHeight;
+                var rect = GUILayoutUtility.GetRect(10, height, ShiroiStyles.ExpandWidthOption);
+                Rect iconRect;
+                Rect messagesRect;
+                rect.Split(ShiroiStyles.IconSize, out iconRect, out messagesRect);
+
+                GUI.backgroundColor = ShiroiStyles.GetColor(errorMessage.Level);
+                GUI.Box(rect, GUIContent.none);
+                GUI.Box(iconRect, ShiroiStyles.GetContent(errorMessage.Level));
+                var index = errorMessage.TokenIndex;
+                var token = Cutscene[index];
+                var label = string.Format("Token #{0} ({1})", index, token.GetType().Name);
+                GUI.Label(messagesRect.GetLine(0), label, ShiroiStyles.Bold);
+                for (uint i = 0; i < lines.Length; i++) {
+                    var pos = messagesRect.GetLine(i + 1);
+                    GUI.Label(pos, lines[i]);
+                }
+            }
+            GUILayout.Space(SpaceHeight);
+            GUI.backgroundColor = init;
+        }
+
+        private GUIContent GetErrorContent(int totalErrors, ErrorLevel maxLevel) {
+            var msg = showErrors ? "Hide Errors" : "Show Errors";
+            if (totalErrors > 0) {
+                msg += string.Format(" ({0})", totalErrors);
+            }
+            return new GUIContent(msg, ShiroiStyles.GetIcon(maxLevel));
+        }
+
         private void DrawPlayerSettings() {
-            EditorGUILayout.BeginVertical(Player ? ShiroiStyles.DefaultBackground : ShiroiStyles.ErrorBackground);
+            EditorGUILayout.BeginVertical(Player ? ShiroiStyles.DefaultBackground : ShiroiStyles.Error);
             EditorGUILayout.LabelField(PlayerHeader, ShiroiStyles.Header);
             Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
             if (Player) {
@@ -219,8 +250,9 @@ Not forcing player selection for now
 
                     var content = EditorGUIUtility.ObjectContent(null, future.Type);
 
-                    var iconRect = futureRect.SubRect(iconSize, iconSize);
-                    var msgRect = futureRect.SubRect(futureRect.width - iconSize, iconSize, iconSize);
+                    Rect iconRect;
+                    Rect msgRect;
+                    futureRect.Split(iconSize, out iconRect, out msgRect);
                     content.text = null;
                     GUI.backgroundColor = color;
                     GUI.Box(futureRect, GUIContent.none);

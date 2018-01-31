@@ -20,7 +20,7 @@ namespace Shiroi.Cutscenes.Serialization {
 
         public override object Deserialize(string key, SerializedObject obj) {
             var serializedReference = obj.GetObject(key);
-            var type = (Reference<T>.ReferenceType) serializedReference.GetInt(ReferenceTypeKey);
+            var type = (Reference.ReferenceType) serializedReference.GetInt(ReferenceTypeKey);
             var value = serializedReference.GetInt(ReferenceValueKey);
             return new Reference<T>(type, value);
         }
