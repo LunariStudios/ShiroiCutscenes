@@ -1,7 +1,9 @@
 ﻿using System;
 using Shiroi.Cutscenes.Editor.Errors;
+using Shiroi.Cutscenes.Editor.Preview;
 using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Editor.Windows;
+using Shiroi.Cutscenes.Preview;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
 using UnityEditorInternal;
@@ -93,7 +95,12 @@ namespace Shiroi.Cutscenes.Editor {
             private set;
         }
 
+        private void OnDisable() {
+            SceneView.onSceneGUIDelegate -= OnScene;
+        }
+
         private void OnEnable() {
+            SceneView.onSceneGUIDelegate += OnScene;
             Player = LastSelectedPlayer;
             ContextWindow = new ContextWindow(this);
             SelectorWindow = new TokenSelectorWindow(this);
@@ -105,6 +112,17 @@ namespace Shiroi.Cutscenes.Editor {
                 onRemoveCallback = OnRemoveCallback,
                 onReorderCallback = OnReorderCallback
             };
+        }
+
+        private void OnScene(SceneView sceneview) {
+            var index = tokenList.index;
+            if (index < 0) {
+                return;
+            }
+            var selectedToken = Cutscene[index] as IScenePreviewable;
+            if (selectedToken != null) {
+                selectedToken.OnPreview(EditorSceneHandle.Instance, sceneview);
+            }
         }
 
         private void OnReorderCallback(ReorderableList list) {

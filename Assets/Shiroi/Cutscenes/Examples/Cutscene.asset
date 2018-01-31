@@ -106,5 +106,55 @@ MonoBehaviour:
           Objects: []
           UnityObjects: []
           Arrays: []
+  - TokenType: Shiroi.Cutscenes.Tokens.SpawnPrefabToken
+    TokenData:
+      Booleans: []
+      Ints:
+      - Key: futureId
+        Value: 1433810656
+      Floats: []
+      Strings:
+      - Key: FutureName
+        Value: future_name
+      Objects:
+      - Key: Position
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: x
+            Value: -1.9770877
+          - Key: y
+            Value: 0
+          - Key: z
+            Value: 0.072304726
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
+      - Key: Rotation
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: z
+            Value: 0
+          - Key: w
+            Value: 1
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
+      UnityObjects: []
+      Arrays: []
   FutureManager:
-    futures: []
+    futures:
+    - type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      name: future_name
+      id: 1433810656
+      provider: 1

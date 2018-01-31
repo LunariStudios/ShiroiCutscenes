@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using JetBrains.Annotations;
 using Shiroi.Cutscenes.Futures;
+using Shiroi.Cutscenes.Preview;
+using UnityEditor;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    public class SpawnPrefabToken : IToken, IFutureProvider, ITokenChangedListener {
+    public class SpawnPrefabToken : IToken, IFutureProvider, ITokenChangedListener, IScenePreviewable {
         public GameObject Obj;
         public string FutureName = "future_name";
         public Vector3 Position;
@@ -26,6 +28,12 @@ namespace Shiroi.Cutscenes.Tokens {
 
         public void OnChanged(Cutscene cutscene) {
             cutscene.FutureManager.GetFuture(futureId).Name = FutureName;
+        }
+
+        public void OnPreview(ISceneHandle handle, SceneView sceneView) {
+            handle.Label(Position, string.Format("Prefab Spawn Position ({0})", FutureName));
+            Position = handle.PositionHandle(Position);
+            Rotation = handle.RotationHandle(Position, Rotation);
         }
     }
 }

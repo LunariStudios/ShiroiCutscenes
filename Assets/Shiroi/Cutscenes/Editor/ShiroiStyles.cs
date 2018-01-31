@@ -25,12 +25,35 @@ namespace Shiroi.Cutscenes.Editor {
         public const string WarningIconName = "d_console.warnicon.png";
         public const string InfoIconName = "d_console.infoicon.png";
 
-        public static Texture2D ErrorIcon { get; private set; }
-        public static Texture2D WarningIcon { get; private set; }
-        public static Texture2D InfoIcon { get; private set; }
-        public static GUIContent ErrorContent { get; private set; }
-        public static GUIContent WarningContent { get; private set; }
-        public static GUIContent InfoContent { get; private set; }
+        public static Texture2D ErrorIcon {
+            get;
+            private set;
+        }
+
+        public static Texture2D WarningIcon {
+            get;
+            private set;
+        }
+
+        public static Texture2D InfoIcon {
+            get;
+            private set;
+        }
+
+        public static GUIContent ErrorContent {
+            get;
+            private set;
+        }
+
+        public static GUIContent WarningContent {
+            get;
+            private set;
+        }
+
+        public static GUIContent InfoContent {
+            get;
+            private set;
+        }
 
         public static Color GetColor(ErrorLevel level) {
             switch (level) {
@@ -72,7 +95,11 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         public static GUIStyle CreateGUIStyle(Color color) {
-            return new GUIStyle {normal = {background = CreateTexture(1, 1, color)}};
+            return new GUIStyle {normal = {background = CreateTexture(color)}};
+        }
+
+        public static Texture2D CreateTexture(Color color) {
+            return CreateTexture(1, 1, color);
         }
 
         public static Texture2D CreateTexture(int width, int height, Color color) {
@@ -134,9 +161,6 @@ namespace Shiroi.Cutscenes.Editor {
             };
         }
 
-        private static Texture2D CreateTexture(Color color) {
-            return CreateTexture(1, 1, color);
-        }
 
         private static GUIContent CreateContent(Texture errorIcon) {
             return new GUIContent {
@@ -148,15 +172,50 @@ namespace Shiroi.Cutscenes.Editor {
             return EditorGUIUtility.Load("icons/" + path) as Texture2D;
         }
 
-        public static GUIStyle Base { get; private set; }
-        public static GUIStyle Header { get; private set; }
-        public static GUIStyle HeaderCenter { get; private set; }
-        public static GUIStyle Error { get; private set; }
-        public static GUIStyle Kaomoji { get; private set; }
-        public static GUIStyle Bold { get; private set; }
-        public static GUIStyle DefaultBackground { get; private set; }
-        public static GUIStyle Warning { get; private set; }
-        public static GUIStyle Info { get; private set; }
+        public static GUIStyle Base {
+            get;
+            private set;
+        }
+
+        public static GUIStyle Header {
+            get;
+            private set;
+        }
+
+        public static GUIStyle HeaderCenter {
+            get;
+            private set;
+        }
+
+        public static GUIStyle Error {
+            get;
+            private set;
+        }
+
+        public static GUIStyle Kaomoji {
+            get;
+            private set;
+        }
+
+        public static GUIStyle Bold {
+            get;
+            private set;
+        }
+
+        public static GUIStyle DefaultBackground {
+            get;
+            private set;
+        }
+
+        public static GUIStyle Warning {
+            get;
+            private set;
+        }
+
+        public static GUIStyle Info {
+            get;
+            private set;
+        }
 
         public static readonly GUILayoutOption ExpandWidthOption = GUILayout.ExpandWidth(true);
 
