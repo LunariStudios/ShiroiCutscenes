@@ -37,6 +37,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             ShowErrors = GUILayout.Toggle(ShowErrors, GetErrorContent(totalErrors, max),
                 ShiroiStyles.GetErrorStyle(max));
             if (!ShowErrors) {
+                GUILayout.Space(ShiroiStyles.SpaceHeight);
                 return;
             }
             var init = GUI.backgroundColor;
