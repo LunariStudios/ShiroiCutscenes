@@ -29,7 +29,7 @@ namespace Shiroi.Cutscenes.Examples {
         }
 
         public void OnChanged(Cutscene cutscene) {
-            cutscene.GetFuture(textId).Name = TextName;
+            cutscene.FutureManager.GetFuture(textId).Name = TextName;
         }
     }
 }

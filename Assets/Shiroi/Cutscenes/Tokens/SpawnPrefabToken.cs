@@ -25,7 +25,7 @@ namespace Shiroi.Cutscenes.Tokens {
         }
 
         public void OnChanged(Cutscene cutscene) {
-            cutscene.GetFuture(futureId).Name = FutureName;
+            cutscene.FutureManager.GetFuture(futureId).Name = FutureName;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
                 return;
             }
             var id = reference.Id;
-            if (editor.Cutscene.GetFuture(id) != null) {
+            if (editor.Cutscene.FutureManager.GetFuture(id) != null) {
                 return;
             }
             var msg = string.Format("Couldn't find future of id {0} in field {1}.", id, info.Name);

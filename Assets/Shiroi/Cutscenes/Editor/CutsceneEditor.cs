@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Shiroi.Cutscenes.Editor.Errors;
 using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Editor.Windows;
@@ -110,7 +108,7 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         private void OnReorderCallback(ReorderableList list) {
-            Cutscene.OnReorder(list.index, LastSelected);
+            Cutscene.FutureManager.OnReorder(list.index, LastSelected);
         }
 
         private void OnRemoveCallback(ReorderableList list) {
@@ -127,7 +125,7 @@ namespace Shiroi.Cutscenes.Editor {
             DrawPlayerSettings();
             GUILayout.Space(ShiroiStyles.SpaceHeight);
             //Reserve futures rect
-            var totalFutures = Cutscene.TotalFutures;
+            var totalFutures = Cutscene.FutureManager.TotalFutures;
             var hasFutures = totalFutures > 0;
             var futuresRect = default(Rect);
             if (hasFutures) {
@@ -175,7 +173,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void DrawFutures(Rect rect) {
             GUI.Box(rect, GUIContent.none, ShiroiStyles.DefaultBackground);
-            var futures = Cutscene.GetFutures();
+            var futures = Cutscene.FutureManager.GetFutures();
             var totalFutures = futures.Count;
             EditorGUI.LabelField(rect.GetLine(0), FuturesStats, ShiroiStyles.Header);
             var labelRect = rect.GetLine(1);

@@ -85,7 +85,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
 
         public static int DrawFuture(Cutscene cutscene, int tokenIndex, Rect rect, string name, int id) {
-            var futures = cutscene.GetFutures().ToList();
+            var futures = cutscene.FutureManager.Futures.ToList();
             futures.RemoveAll(future => !FutureType.IsAssignableFrom(future.Type));
             futures.RemoveAll(future => future.Provider >= tokenIndex);
             var optionNames = futures.Select(future => future.Name).ToArray();
