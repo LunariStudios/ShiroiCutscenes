@@ -14,6 +14,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             RegisterChecker(new NullChecker());
             RegisterChecker(new MissingFutureChecker());
             RegisterChecker(new MissingReferenceChecker());
+            RegisterChecker(new EmptyStringChecker());
         }
 
         private static void RegisterChecker(ErrorChecker nullChecker) {
@@ -27,9 +28,10 @@ namespace Shiroi.Cutscenes.Editor.Errors {
                 var token = cutscene[i];
                 var mapped = MappedToken.For(token);
                 foreach (var checker in Checkers) {
-                    foreach (var serializedField in mapped.SerializedFields) {
+                    for (var fieldIndex = 0; fieldIndex < mapped.SerializedFields.Length; fieldIndex++) {
+                        var serializedField = mapped.SerializedFields[fieldIndex];
                         var value = serializedField.GetValue(token);
-                        checker.Check(editor, i, token, value, serializedField);
+                        checker.Check(editor, i, token, value, fieldIndex, serializedField);
                     }
                 }
             }

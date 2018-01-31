@@ -110,8 +110,14 @@ namespace Shiroi.Cutscenes.Editor {
 
         //Errors
 
-        public void NotifyError(int tokenIndex, ErrorLevel level, params string[] message) {
-            errors.Add(new ErrorMessage(tokenIndex, level, message));
+        public void NotifyError(int tokenIndex, int fieldIndex, ErrorLevel level, params string[] message) {
+            errors.Add(new ErrorMessage(tokenIndex, fieldIndex, level, message));
+        }
+
+        public IEnumerable<ErrorMessage> GetErrors(int tokenIndex, int index) {
+            return from message in errors
+                where message.FieldIndex == index && message.TokenIndex == tokenIndex
+                select message;
         }
 
         private readonly List<ErrorMessage> errors = new List<ErrorMessage>();
@@ -152,7 +158,8 @@ namespace Shiroi.Cutscenes.Editor {
                 return;
             }
             var max = (from message in errors select message.Level).Max();
-            showErrors = GUILayout.Toggle(showErrors, GetErrorContent(totalErrors, max), ShiroiStyles.GetErrorStyle(max));
+            showErrors = GUILayout.Toggle(showErrors, GetErrorContent(totalErrors, max),
+                ShiroiStyles.GetErrorStyle(max));
             if (!showErrors) {
                 return;
             }
@@ -200,7 +207,8 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         private void DrawTokens(int totalTokens) {
-            EditorGUILayout.BeginVertical(ShiroiStyles.DefaultBackground);
+            var empty = totalTokens == 0;
+            EditorGUILayout.BeginVertical(empty ? ShiroiStyles.Error : ShiroiStyles.DefaultBackground);
             DrawCutsceneHeader(totalTokens);
             if (totalTokens > 0) {
                 hasAnyFocused = false;
@@ -280,7 +288,7 @@ namespace Shiroi.Cutscenes.Editor {
             EditorGUILayout.EndHorizontal();
             //No token in cutscene
             if (isEmpty) {
-                EditorGUILayout.LabelField(NoTokenContent, ShiroiStyles.Error);
+                EditorGUILayout.LabelField(NoTokenContent, ShiroiStyles.HeaderCenter);
                 GUI.enabled = false;
                 EditorGUILayout.LabelField(GetKaomoji(), ShiroiStyles.Kaomoji, GUILayout.ExpandHeight(true));
             } else {

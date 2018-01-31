@@ -11,5 +11,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0439e1c9b6f54debb8acbb620a3a83c, type: 3}
   m_Name: Cutscene
   m_EditorClassIdentifier: 
-  futures: []
-  tokens: []
+  futures:
+  - type: UnityEngine.UI.Text, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+    name: woah
+    id: 481902727
+    provider: 0
+  tokens:
+  - TokenType: Shiroi.Cutscenes.Examples.CreateTextToken
+    TokenData:
+      Booleans: []
+      Ints:
+      - Key: textId
+        Value: 481902727
+      Floats: []
+      Strings:
+      - Key: TextName
+        Value: woah
+      Objects:
+      - Key: Parent
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: 1449279165
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+          Arrays: []
+      UnityObjects: []
+      Arrays: []
+  - TokenType: Shiroi.Cutscenes.Tokens.DeleteFutureToken
+    TokenData:
+      Booleans: []
+      Ints:
+      - Key: Future
+        Value: 481902727
+      Floats: []
+      Strings: []
+      Objects: []
+      UnityObjects: []
+      Arrays: []

@@ -76,6 +76,9 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
 
     public class StringDrawer : TypeDrawer<string> {
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect, int tokenIndex, string name, string value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            if (value == null) {
+                value = string.Empty;
+            }
             setter(EditorGUI.TextField(rect, name, value));
         }
     }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Shiroi.Cutscenes.Editor.Drawers;
+using Shiroi.Cutscenes.Editor.Errors;
 using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Serialization;
 using Shiroi.Cutscenes.Tokens;
@@ -30,7 +32,7 @@ namespace Shiroi.Cutscenes.Editor {
         public static void Clear() {
             Cache.Clear();
         }
-        
+
 
         public static MappedToken For(IToken token) {
             return For(token.GetType());
@@ -123,6 +125,16 @@ namespace Shiroi.Cutscenes.Editor {
                 drawer.Draw(editor, player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
                     currentField.GetValue(token),
                     fieldType, currentField, Setter);
+                var errors = editor.GetErrors(tokenIndex, index).ToArray();
+                if (errors.Any()) {
+                    var highestLevel = (from error in errors select error.Level).Max();
+                    var size = r.height;
+                    
+                    var icon = ShiroiStyles.GetIcon(highestLevel);
+                    var totalErrors = errors.Length;
+                    var errorRect = r.SubRect(size, size, -size);                    
+                    GUI.DrawTexture(errorRect, icon);
+                }
                 if (EditorGUI.EndChangeCheck()) {
                     changed = true;
                 }
