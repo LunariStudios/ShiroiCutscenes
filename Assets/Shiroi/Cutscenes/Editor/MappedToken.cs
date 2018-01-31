@@ -69,8 +69,10 @@ namespace Shiroi.Cutscenes.Editor {
 
         public MappedToken(Type type) {
             //Initialize fields
-            Label = type.Name;
-
+            Label = ObjectNames.NicifyVariableName(type.Name);
+            if (Label.EndsWith("Token")) {
+                Label = Label.Substring(0, Label.Length - 5);
+            }
             SerializedFields = SerializationUtil.GetSerializedMembers(type, true);
             TotalElements = (uint) SerializedFields.Length;
             //Initialize with label
@@ -96,11 +98,20 @@ namespace Shiroi.Cutscenes.Editor {
             SelectedColor = Color.HSVToRGB(h, SaturationValue, SelectedBrightnessValue);
         }
 
-        public FieldInfo[] SerializedFields { get; private set; }
+        public FieldInfo[] SerializedFields {
+            get;
+            private set;
+        }
 
-        public float Height { get; private set; }
+        public float Height {
+            get;
+            private set;
+        }
 
-        public uint TotalElements { private set; get; }
+        public uint TotalElements {
+            private set;
+            get;
+        }
 
 
         public void DrawFields(CutsceneEditor editor, Rect rect, int tokenIndex, IToken token, Cutscene cutscene,
@@ -129,10 +140,10 @@ namespace Shiroi.Cutscenes.Editor {
                 if (errors.Any()) {
                     var highestLevel = (from error in errors select error.Level).Max();
                     var size = r.height;
-                    
+
                     var icon = ShiroiStyles.GetIcon(highestLevel);
                     var totalErrors = errors.Length;
-                    var errorRect = r.SubRect(size, size, -size);                    
+                    var errorRect = r.SubRect(size, size, -size);
                     GUI.DrawTexture(errorRect, icon);
                 }
                 if (EditorGUI.EndChangeCheck()) {

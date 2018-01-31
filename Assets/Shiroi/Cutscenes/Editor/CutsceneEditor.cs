@@ -31,6 +31,8 @@ namespace Shiroi.Cutscenes.Editor {
         private static readonly GUIContent PlayerHeader =
             new GUIContent("Player Settings", "All of the info on your Cutscene Player is listed below");
 
+        private static readonly GUIContent PlayerHeaderError = new GUIContent(PlayerHeader);
+
         private static readonly GUIContent PlayerContent =
             new GUIContent("Bound player", "The player that will store the references to the cutscene's scene objects");
 
@@ -100,6 +102,7 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         private void OnEnable() {
+            PlayerHeaderError.image = ShiroiStyles.ErrorIcon;
             SceneView.onSceneGUIDelegate += OnScene;
             Player = LastSelectedPlayer;
             ContextWindow = new ContextWindow(this);
@@ -166,7 +169,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void DrawPlayerSettings() {
             EditorGUILayout.BeginVertical(Player ? ShiroiStyles.DefaultBackground : ShiroiStyles.Error);
-            EditorGUILayout.LabelField(PlayerHeader, ShiroiStyles.Header);
+            EditorGUILayout.LabelField(Player ? PlayerHeader : PlayerHeaderError, ShiroiStyles.Header);
             Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
             if (Player) {
                 ShiroiEditorUtil.DrawReferencesLayout(Player);
@@ -218,7 +221,8 @@ namespace Shiroi.Cutscenes.Editor {
                         color = ShiroiStyles.ErrorBackgroundColor;
                     } else {
                         var token = Cutscene[index];
-                        msg = string.Format("{0} @ {3} (Owner: {1} @ #{2})", future.Name, token.GetType().Name, index,
+                        var tokenName = MappedToken.For(token).Label;
+                        msg = string.Format("{0} @ {3} (Owner: {1} @ #{2})", future.Name, tokenName, index,
                             future.Id);
                         var mappedToken = MappedToken.For(token);
                         color = LastSelected == index ? mappedToken.SelectedColor : mappedToken.Color;
