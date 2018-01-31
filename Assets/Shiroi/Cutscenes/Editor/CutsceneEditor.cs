@@ -116,7 +116,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void OnScene(SceneView sceneview) {
             var index = tokenList.index;
-            if (index < 0) {
+            if (index < 0 || index >= Cutscene.TotalTokens) {
                 return;
             }
             var selectedToken = Cutscene[index] as IScenePreviewable;

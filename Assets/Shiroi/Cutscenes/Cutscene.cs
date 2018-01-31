@@ -20,7 +20,7 @@ namespace Shiroi.Cutscenes {
         [SerializeField, HideInInspector]
         private SerializedToken[] tokens;
 
-        public FutureManager FutureManager;
+        public FutureManager FutureManager = new FutureManager();
 
         public int NotifyFuture<T>(IFutureProvider provider, string futureName) where T : Object {
             return FutureManager.NotifyFuture<T>(this, provider, futureName);
@@ -99,6 +99,7 @@ namespace Shiroi.Cutscenes {
         }
 
         public void Clear() {
+            FutureManager.Clear();
             loadedTokens.Clear();
         }
     }
