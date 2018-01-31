@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Shiroi.Cutscenes.Editor.Config;
 using Shiroi.Cutscenes.Editor.Errors;
 using Shiroi.Cutscenes.Editor.Preview;
 using Shiroi.Cutscenes.Editor.Util;
@@ -15,6 +17,14 @@ namespace Shiroi.Cutscenes.Editor {
     public class CutsceneEditor : UnityEditor.Editor {
         public static readonly Vector2 TokenWindowSize = new Vector2(150, 500);
         public static CutscenePlayer LastSelectedPlayer;
+        private static readonly List<CutsceneEditor> editors = new List<CutsceneEditor>();
+
+
+        public static IEnumerable<CutsceneEditor> Editors {
+            get {
+                return editors;
+            }
+        }
 
         private static int currentKaomoji;
 
@@ -99,9 +109,11 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void OnDisable() {
             SceneView.onSceneGUIDelegate -= OnScene;
+            editors.Remove(this);
         }
 
         private void OnEnable() {
+            editors.Add(this);
             PlayerHeaderError.image = ShiroiStyles.ErrorIcon;
             SceneView.onSceneGUIDelegate += OnScene;
             Player = LastSelectedPlayer;
@@ -141,7 +153,10 @@ namespace Shiroi.Cutscenes.Editor {
 
 
         public override void OnInspectorGUI() {
-            ErrorManager.Clear();
+            var checkErrors = (bool) Configs.CheckErrors;
+            if (checkErrors) {
+                ErrorManager.Clear();
+            }
             var totalTokens = Cutscene.Tokens.Count;
             DrawPlayerSettings();
             GUILayout.Space(ShiroiStyles.SpaceHeight);
@@ -155,7 +170,9 @@ namespace Shiroi.Cutscenes.Editor {
                 futuresRect = GUILayoutUtility.GetRect(0, futuresHeight);
                 GUILayout.Space(ShiroiStyles.SpaceHeight);
             }
-            ErrorManager.DrawErrors(this);
+            if (checkErrors) {
+                ErrorManager.DrawErrors(this);
+            }
             DrawTokens(totalTokens);
 
             if (hasFutures) {

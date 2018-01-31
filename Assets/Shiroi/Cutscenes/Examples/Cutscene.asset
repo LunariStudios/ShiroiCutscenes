@@ -12,18 +12,33 @@ MonoBehaviour:
   m_Name: Cutscene
   m_EditorClassIdentifier: 
   tokens:
-  - TokenType: Shiroi.Cutscenes.Examples.CreateTextToken
+  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken2
     TokenData:
       Booleans: []
       Ints:
-      - Key: textId
-        Value: -1343353333
+      - Key: LayerMask
+        Value: 0
       Floats: []
-      Strings:
-      - Key: TextName
-        Value: 
+      Strings: []
       Objects:
-      - Key: Parent
+      - Key: Rotation
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: z
+            Value: 0
+          - Key: w
+            Value: 1
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
+      - Key: Obj
         Value:
           Booleans: []
           Ints:
@@ -35,118 +50,6 @@ MonoBehaviour:
           UnityObjects:
           - Key: Default
             Value: {fileID: 0}
-          Arrays: []
-      UnityObjects: []
-      Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.FutureToken
-    TokenData:
-      Booleans: []
-      Ints:
-      - Key: Object
-        Value: -1
-      Floats: []
-      Strings: []
-      Objects: []
-      UnityObjects: []
-      Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.WaitForInputToken
-    TokenData:
-      Booleans: []
-      Ints: []
-      Floats: []
-      Strings:
-      - Key: InputKey
-        Value: Submit
-      Objects: []
-      UnityObjects: []
-      Arrays: []
-  - TokenType: Shiroi.Cutscenes.Tokens.SpawnPrefabToken
-    TokenData:
-      Booleans: []
-      Ints:
-      - Key: futureId
-        Value: 754354142
-      Floats: []
-      Strings:
-      - Key: FutureName
-        Value: future_name
-      Objects:
-      - Key: Position
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: Rotation
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          - Key: w
-            Value: 1
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      UnityObjects: []
-      Arrays: []
-  - TokenType: Shiroi.Cutscenes.Tokens.SpawnPrefabToken
-    TokenData:
-      Booleans: []
-      Ints:
-      - Key: futureId
-        Value: 1347221289
-      Floats: []
-      Strings:
-      - Key: FutureName
-        Value: future_name
-      Objects:
-      - Key: Position
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: Rotation
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          - Key: w
-            Value: 1
-          Strings: []
-          Objects: []
-          UnityObjects: []
           Arrays: []
       UnityObjects: []
       Arrays: []
@@ -200,62 +103,18 @@ MonoBehaviour:
           Arrays: []
       UnityObjects: []
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.FutureToken
+  - TokenType: Shiroi.Cutscenes.Tokens.DebugTextToken
     TokenData:
       Booleans: []
       Ints:
-      - Key: Object
-        Value: -1
+      - Key: Type
+        Value: 0
       Floats: []
-      Strings: []
+      Strings:
+      - Key: Text
+        Value: 
       Objects: []
       UnityObjects: []
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.CreateTextToken
-    TokenData:
-      Booleans: []
-      Ints:
-      - Key: textId
-        Value: 363630003
-      Floats: []
-      Strings:
-      - Key: TextName
-        Value: 
-      Objects:
-      - Key: Parent
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: 0
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-          Arrays: []
-      UnityObjects: []
-      Arrays: []
   FutureManager:
-    futures:
-    - type: UnityEngine.UI.Text, UnityEngine.UI, Version=1.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      name: 
-      id: -1343353333
-      provider: 0
-    - type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      name: future_name
-      id: 754354142
-      provider: 3
-    - type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      name: future_name
-      id: 1347221289
-      provider: 4
-    - type: UnityEngine.UI.Text, UnityEngine.UI, Version=1.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      name: 
-      id: 363630003
-      provider: 7
+    futures: []

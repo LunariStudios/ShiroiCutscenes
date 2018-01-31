@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Shiroi.Cutscenes.Editor.Config;
 using Shiroi.Cutscenes.Editor.Drawers;
 using Shiroi.Cutscenes.Editor.Errors;
 using Shiroi.Cutscenes.Editor.Util;
+using Shiroi.Cutscenes.Editor.Windows;
 using Shiroi.Cutscenes.Serialization;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
@@ -83,6 +85,15 @@ namespace Shiroi.Cutscenes.Editor {
                 Height += drawer.GetTotalLines() * ShiroiStyles.SingleLineHeight;
             }
             //Calculate color
+            if (Configs.ColorfulTokens) {
+                CalculateColor(type, out Color, out SelectedColor);
+            } else {
+                Color = Color.HSVToRGB(0, 0, BrightnessValue);
+                SelectedColor = Color.HSVToRGB(0, 0, SelectedBrightnessValue);
+            }
+        }
+
+        private void CalculateColor(Type type, out Color color, out Color selectedColor) {
             var name = type.Name;
             var totalLetters = name.Length;
             var increment = (float) (totalLetters - 1) / 5;
@@ -94,8 +105,8 @@ namespace Shiroi.Cutscenes.Editor {
             float h, s, v;
             Color.RGBToHSV(typeColor, out h, out s, out v);
             //Use hsv to calculate brightness
-            Color = Color.HSVToRGB(h, SaturationValue, BrightnessValue);
-            SelectedColor = Color.HSVToRGB(h, SaturationValue, SelectedBrightnessValue);
+            color = Color.HSVToRGB(h, SaturationValue, BrightnessValue);
+            selectedColor = Color.HSVToRGB(h, SaturationValue, SelectedBrightnessValue);
         }
 
         public FieldInfo[] SerializedFields {
@@ -136,16 +147,19 @@ namespace Shiroi.Cutscenes.Editor {
                 drawer.Draw(editor, player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
                     currentField.GetValue(token),
                     fieldType, currentField, Setter);
-                var errors = editor.ErrorManager.GetErrors(tokenIndex, index).ToArray();
-                if (errors.Any()) {
-                    var highestLevel = (from error in errors select error.Level).Max();
-                    var size = r.height;
+                if ((bool) Configs.CheckErrors) {
+                    var errors = editor.ErrorManager.GetErrors(tokenIndex, index).ToArray();
+                    if (errors.Any()) {
+                        var highestLevel = (from error in errors select error.Level).Max();
+                        var size = r.height;
 
-                    var icon = ShiroiStyles.GetIcon(highestLevel);
-                    var totalErrors = errors.Length;
-                    var errorRect = r.SubRect(size, size, -size);
-                    GUI.DrawTexture(errorRect, icon);
+                        var icon = ShiroiStyles.GetIcon(highestLevel);
+                        var totalErrors = errors.Length;
+                        var errorRect = r.SubRect(size, size, -size);
+                        GUI.DrawTexture(errorRect, icon);
+                    }
                 }
+
                 if (EditorGUI.EndChangeCheck()) {
                     changed = true;
                 }
