@@ -1,17 +1,17 @@
 ﻿using System.Collections;
 using JetBrains.Annotations;
-using Shiroi.Cutscenes.Futures;
+using Shiroi.Cutscenes.Util;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    public class DeleteFutureToken : IToken {
-        public FutureReference<Object> Future;
+    public class DeleteToken : IToken {
+        public Reference<Object> Object;
 
         public IEnumerator Execute(CutscenePlayer player) {
-            var obj = Future.Resolve(player);
+            var obj = Object.Resolve(player);
             if (obj != null) {
-                Object.Destroy(obj);
+                UnityEngine.Object.Destroy(obj);
             }
             yield break;
         }
