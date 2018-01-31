@@ -80,7 +80,11 @@ namespace Shiroi.Cutscenes {
                 return;
             }
             foreach (var serializedToken in tokens) {
-                loadedTokens.Add(serializedToken.Deserialize());
+                var deserialized = serializedToken.Deserialize();
+                if (deserialized == null) {
+                    continue;
+                }
+                loadedTokens.Add(deserialized);
             }
             tokens = null;
         }
@@ -96,33 +100,6 @@ namespace Shiroi.Cutscenes {
 
         public void Clear() {
             loadedTokens.Clear();
-        }
-
-
-        [Serializable]
-        public struct SerializedToken {
-            [SerializeField]
-            public string TokenType;
-
-            [SerializeField]
-            public SerializedObject TokenData;
-
-            private SerializedToken(string tokenType, SerializedObject tokenData) {
-                TokenType = tokenType;
-                TokenData = tokenData;
-            }
-
-            public IToken Deserialize() {
-                var token = (IToken) Activator.CreateInstance(Type.GetType(TokenType));
-                TokenData.Deserialize(token);
-                return token;
-            }
-
-            public static SerializedToken From(IToken loadedToken) {
-                var typeName = loadedToken.GetType().FullName;
-                var obj = SerializedObject.From(loadedToken);
-                return new SerializedToken(typeName, obj);
-            }
         }
     }
 }
