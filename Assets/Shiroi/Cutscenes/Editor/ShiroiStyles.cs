@@ -1,4 +1,5 @@
 ﻿using System;
+using Shiroi.Cutscenes.Editor.Config;
 using Shiroi.Cutscenes.Editor.Errors;
 using UnityEditor;
 using UnityEngine;
@@ -56,6 +57,9 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         public static Color GetColor(ErrorLevel level) {
+            if (!Configs.ErrorColors) {
+                return DefaultBackgroundColor;
+            }
             switch (level) {
                 case ErrorLevel.Low:
                     return LowErrorBackgroundColor;
@@ -79,6 +83,12 @@ namespace Shiroi.Cutscenes.Editor {
                 default:
                     throw new ArgumentOutOfRangeException("level", level, null);
             }
+        }
+
+        public static GUIContent GetErrorLabel(ErrorLevel level, string label) {
+            return new GUIContent(GetContent(level)) {
+                text = label
+            };
         }
 
         public static GUIContent GetContent(ErrorLevel level) {
@@ -114,61 +124,22 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         static ShiroiStyles() {
-            ErrorIcon = LoadIcon(ErrorIconName);
-            WarningIcon = LoadIcon(WarningIconName);
-            InfoIcon = LoadIcon(InfoIconName);
-            ErrorContent = CreateContent(ErrorIcon);
-            WarningContent = CreateContent(WarningIcon);
-            InfoContent = CreateContent(InfoIcon);
-            var kaomojiOffset = new RectOffset(
-                KaomojiHorizontalBorder,
-                KaomojiHorizontalBorder,
-                KaomojiVerticalBorder,
-                KaomojiVerticalBorder
-            );
-            DefaultBackground = CreateGUIStyle(DefaultBackgroundColor);
-            Base = new GUIStyle {
-                alignment = TextAnchor.MiddleCenter
-            };
-            Bold = new GUIStyle {
-                fontStyle = FontStyle.Bold
-            };
-            Header = new GUIStyle(Base) {
-                fontStyle = FontStyle.Bold
-            };
-            HeaderCenter = new GUIStyle(Header) {
-                alignment = TextAnchor.MiddleCenter,
-                fontStyle = FontStyle.Bold,
-            };
-            Error = new GUIStyle(HeaderCenter) {
-                normal = {
-                    background = CreateTexture(ErrorBackgroundColor)
-                }
-            };
-            Warning = new GUIStyle(HeaderCenter) {
-                normal = {
-                    background = CreateTexture(MediumErrorBackgroundColor)
-                }
-            };
-            Info = new GUIStyle(HeaderCenter) {
-                normal = {
-                    background = CreateTexture(LowErrorBackgroundColor)
-                }
-            };
-            Kaomoji = new GUIStyle(Header) {
-                fontSize = KaomojiFontSize,
-                margin = kaomojiOffset,
-            };
+            Reload();
         }
 
 
         private static GUIContent CreateContent(Texture errorIcon) {
-            return new GUIContent {
-                image = errorIcon
-            };
+            var icon = new GUIContent();
+            if (Configs.ErrorIcons) {
+                icon.image = errorIcon;
+            }
+            return icon;
         }
 
         private static Texture2D LoadIcon(string path) {
+            if (!Configs.ErrorIcons) {
+                return CreateTexture(1,1, Color.clear);
+            }
             return EditorGUIUtility.Load("icons/" + path) as Texture2D;
         }
 
@@ -231,5 +202,97 @@ namespace Shiroi.Cutscenes.Editor {
                     throw new ArgumentOutOfRangeException("max", max, null);
             }
         }
+
+        public static void Reload() {
+            ErrorIcon = LoadIcon(ErrorIconName);
+            WarningIcon = LoadIcon(WarningIconName);
+            InfoIcon = LoadIcon(InfoIconName);
+
+            ErrorContent = CreateContent(ErrorIcon);
+            WarningContent = CreateContent(WarningIcon);
+            InfoContent = CreateContent(InfoIcon);
+
+            var kaomojiOffset = new RectOffset(
+                KaomojiHorizontalBorder,
+                KaomojiHorizontalBorder,
+                KaomojiVerticalBorder,
+                KaomojiVerticalBorder
+            );
+            DefaultBackground = CreateGUIStyle(DefaultBackgroundColor);
+            Base = new GUIStyle {
+                alignment = TextAnchor.MiddleCenter
+            };
+            Bold = new GUIStyle {
+                fontStyle = FontStyle.Bold
+            };
+            Header = new GUIStyle(Base) {
+                fontStyle = FontStyle.Bold
+            };
+            HeaderCenter = new GUIStyle(Header) {
+                fontStyle = FontStyle.Bold,
+            };
+            Error = CreateErrorStyle(ErrorBackgroundColor);
+            Warning = CreateErrorStyle(MediumErrorBackgroundColor);
+            Info = CreateErrorStyle(LowErrorBackgroundColor);
+            Kaomoji = new GUIStyle(Header) {
+                fontSize = KaomojiFontSize,
+                margin = kaomojiOffset,
+            };
+            LoadMessages();
+        }
+
+        private static GUIStyle CreateErrorStyle(Color bgColor) {
+            var style = new GUIStyle(HeaderCenter);
+            if ((bool) Configs.ErrorColors) {
+                style.normal.background = CreateTexture(bgColor);
+            } else {
+                style.normal.background = DefaultBackground.normal.background;
+            }
+            return style;
+        }
+
+        private static void LoadMessages() {
+            PlayerHeaderError = new GUIContent(PlayerHeader);
+            if (Configs.ErrorIcons) {
+                PlayerHeaderError.image = ErrorIcon;
+            }
+        }
+
+        public const float FuturesHeaderLines = 2.5F;
+
+        public static readonly GUIContent ClearCutscene =
+            new GUIContent("Clear cutscene", "Removes all tokens");
+
+        public static readonly GUIContent FuturesStats =
+            new GUIContent("Futures Stats", "All of the info on your futures is listed below");
+
+        public static readonly GUIContent PlayerHeader =
+            new GUIContent("Player Settings", "All of the info on your Cutscene Player is listed below");
+
+        public static GUIContent PlayerHeaderError {
+            get;
+            private set;
+        }
+
+        public static readonly GUIContent PlayerContent =
+            new GUIContent("Bound player", "The player that will store the references to the cutscene's scene objects");
+
+        public static readonly GUIContent AddTokenContent =
+            new GUIContent("Choose your flavour", "Adds a token to the cutscene");
+
+        public static readonly GUIContent NoTokenContent =
+            new GUIContent("There aren't any tokens defined!", "There are no tokens in the cutscene for you to edit.");
+
+        public static readonly string[] Kaomojis = {
+            ":(",
+            "(^-^*)",
+            "(;-;)",
+            "(o^^)o",
+            "(>_<)",
+            "\\(^Д^)/",
+            "(≥o≤)",
+            "(·.·)",
+            "╯°□°）╯︵ ┻━┻"
+        };
     }
 }

@@ -4,9 +4,21 @@ namespace Shiroi.Cutscenes.Editor.Config {
     [InitializeOnLoad]
     public static class Configs {
         public static readonly BooleanConfig CheckErrors = new BooleanConfig(
-            "editor.checkErrors",
-            "Check Errors",
+            "editor.checkTokenErrors",
+            "Check Token Errors",
             "Whether or not to check token values for possible errors.",
+            true);
+
+        public static readonly BooleanConfig ErrorColors = new BooleanConfig(
+            "editor.errorColor",
+            "Colorful Errors",
+            "If everything should go colored when an error is detected",
+            true);
+
+        public static readonly BooleanConfig ErrorIcons = new BooleanConfig(
+            "editor.errorIcon",
+            "Error Icon",
+            "If everything should go red when an error is detected",
             true);
 
         public static readonly BooleanConfig ColorfulTokens = new BooleanConfig(
@@ -17,16 +29,30 @@ namespace Shiroi.Cutscenes.Editor.Config {
 
         public static readonly Config[] AllConfigs = {
             CheckErrors,
-            ColorfulTokens
+            ColorfulTokens,
+            ErrorColors,
+            ErrorIcons
         };
 
         static Configs() {
             ColorfulTokens.OnChanged += delegate {
                 MappedToken.Clear();
-                foreach (var editor in CutsceneEditor.Editors) {
-                    editor.Repaint();
-                }
+                RepaintEditors();
             };
+            ErrorColors.OnChanged += delegate {
+                ShiroiStyles.Reload();
+                RepaintEditors();
+            };
+            ErrorIcons.OnChanged += delegate {
+                ShiroiStyles.Reload();
+                RepaintEditors();
+            };
+        }
+
+        private static void RepaintEditors() {
+            foreach (var editor in CutsceneEditor.Editors) {
+                editor.Repaint();
+            }
         }
     }
 }

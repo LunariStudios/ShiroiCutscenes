@@ -12,69 +12,50 @@ MonoBehaviour:
   m_Name: Cutscene
   m_EditorClassIdentifier: 
   tokens:
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken2
+  - TokenType: Shiroi.Cutscenes.Tokens.DeleteToken
     TokenData:
       Booleans: []
-      Ints:
-      - Key: LayerMask
-        Value: 0
+      Ints: []
       Floats: []
       Strings: []
       Objects:
-      - Key: Rotation
+      - Key: Object
         Value:
           Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: z
-            Value: 0
-          - Key: w
+          Ints:
+          - Key: Value
+            Value: -1
+          - Key: Type
             Value: 1
+          Floats: []
           Strings: []
           Objects: []
           UnityObjects: []
           Arrays: []
-      - Key: Obj
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: 0
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-          Arrays: []
       UnityObjects: []
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.SetExposedTextToken
+  - TokenType: Shiroi.Cutscenes.Examples.WaitForInputToken
     TokenData:
       Booleans: []
       Ints: []
       Floats: []
       Strings:
+      - Key: InputKey
+        Value: Submit
+      Objects: []
+      UnityObjects: []
+      Arrays: []
+  - TokenType: Shiroi.Cutscenes.Examples.SetFutureTextToken
+    TokenData:
+      Booleans: []
+      Ints:
+      - Key: Text
+        Value: -1
+      Floats: []
+      Strings:
       - Key: Content
         Value: Hello from ShiroiCutscenes!
       Objects:
-      - Key: Text
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: 0
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-          Arrays: []
       - Key: Position
         Value:
           Booleans: []
@@ -103,6 +84,79 @@ MonoBehaviour:
           Arrays: []
       UnityObjects: []
       Arrays: []
+  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken3
+    TokenData:
+      Booleans: []
+      Ints: []
+      Floats: []
+      Strings: []
+      Objects:
+      - Key: Camera
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: 0
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+          Arrays: []
+      - Key: Collider
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: 0
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+          Arrays: []
+      - Key: Bounds
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: z
+            Value: 0
+          - Key: w
+            Value: 0
+          - Key: h
+            Value: 0
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
+      - Key: BoundsInt
+        Value:
+          Booleans: []
+          Ints:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          - Key: z
+            Value: 0
+          - Key: w
+            Value: 0
+          - Key: h
+            Value: 0
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
+      UnityObjects: []
+      Arrays: []
   - TokenType: Shiroi.Cutscenes.Tokens.DebugTextToken
     TokenData:
       Booleans: []
@@ -114,6 +168,89 @@ MonoBehaviour:
       - Key: Text
         Value: 
       Objects: []
+      UnityObjects: []
+      Arrays: []
+  - TokenType: Shiroi.Cutscenes.Tokens.ExecuteCutsceneToken
+    TokenData:
+      Booleans: []
+      Ints: []
+      Floats: []
+      Strings: []
+      Objects: []
+      UnityObjects: []
+      Arrays: []
+  - TokenType: Shiroi.Cutscenes.Tokens.SetParentToken
+    TokenData:
+      Booleans: []
+      Ints: []
+      Floats: []
+      Strings: []
+      Objects:
+      - Key: Object
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: 0
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+          Arrays: []
+      - Key: NewParent
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: 0
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
+          Arrays: []
+      UnityObjects: []
+      Arrays: []
+  - TokenType: Shiroi.Cutscenes.Examples.SetFutureTextToken
+    TokenData:
+      Booleans: []
+      Ints:
+      - Key: Text
+        Value: -1
+      Floats: []
+      Strings:
+      - Key: Content
+        Value: Hello from ShiroiCutscenes!
+      Objects:
+      - Key: Position
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
+      - Key: Size
+        Value:
+          Booleans: []
+          Ints: []
+          Floats:
+          - Key: x
+            Value: 0
+          - Key: y
+            Value: 0
+          Strings: []
+          Objects: []
+          UnityObjects: []
+          Arrays: []
       UnityObjects: []
       Arrays: []
   FutureManager:

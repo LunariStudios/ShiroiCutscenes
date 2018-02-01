@@ -15,7 +15,6 @@ using Random = UnityEngine.Random;
 namespace Shiroi.Cutscenes.Editor {
     [CustomEditor(typeof(Cutscene))]
     public class CutsceneEditor : UnityEditor.Editor {
-        public static readonly Vector2 TokenWindowSize = new Vector2(150, 500);
         public static CutscenePlayer LastSelectedPlayer;
         private static readonly List<CutsceneEditor> editors = new List<CutsceneEditor>();
 
@@ -28,44 +27,8 @@ namespace Shiroi.Cutscenes.Editor {
 
         private static int currentKaomoji;
 
-
-        private static readonly GUIContent ClearCutscene =
-            new GUIContent("Clear cutscene", "Removes all tokens");
-
-        public const float FuturesHeaderLines = 2.5F;
-
-
-        private static readonly GUIContent FuturesStats =
-            new GUIContent("Futures Stats", "All of the info on your futures is listed below");
-
-        private static readonly GUIContent PlayerHeader =
-            new GUIContent("Player Settings", "All of the info on your Cutscene Player is listed below");
-
-        private static readonly GUIContent PlayerHeaderError = new GUIContent(PlayerHeader);
-
-        private static readonly GUIContent PlayerContent =
-            new GUIContent("Bound player", "The player that will store the references to the cutscene's scene objects");
-
-        private static readonly GUIContent AddTokenContent =
-            new GUIContent("Choose your flavour", "Adds a token to the cutscene");
-
-        private static readonly GUIContent NoTokenContent =
-            new GUIContent("There aren't any tokens defined!", "There are no tokens in the cutscene for you to edit.");
-
-        private static readonly string[] Kaomojis = {
-            ":(",
-            "(^-^*)",
-            "(;-;)",
-            "(o^^)o",
-            "(>_<)",
-            "\\(^Д^)/",
-            "(≥o≤)",
-            "(·.·)",
-            "╯°□°）╯︵ ┻━┻"
-        };
-
         private static string GetKaomoji() {
-            return Kaomojis[currentKaomoji];
+            return ShiroiStyles.Kaomojis[currentKaomoji];
         }
 
 
@@ -114,7 +77,6 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void OnEnable() {
             editors.Add(this);
-            PlayerHeaderError.image = ShiroiStyles.ErrorIcon;
             SceneView.onSceneGUIDelegate += OnScene;
             Player = LastSelectedPlayer;
             ContextWindow = new ContextWindow(this);
@@ -165,8 +127,7 @@ namespace Shiroi.Cutscenes.Editor {
             var hasFutures = totalFutures > 0;
             var futuresRect = default(Rect);
             if (hasFutures) {
-                var futuresHeight = totalFutures * ShiroiStyles.IconSize +
-                                    FuturesHeaderLines * EditorGUIUtility.singleLineHeight;
+                var futuresHeight = totalFutures * ShiroiStyles.IconSize + ShiroiStyles.FuturesHeaderLines * EditorGUIUtility.singleLineHeight;
                 futuresRect = GUILayoutUtility.GetRect(0, futuresHeight);
                 GUILayout.Space(ShiroiStyles.SpaceHeight);
             }
@@ -186,8 +147,8 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void DrawPlayerSettings() {
             EditorGUILayout.BeginVertical(Player ? ShiroiStyles.DefaultBackground : ShiroiStyles.Error);
-            EditorGUILayout.LabelField(Player ? PlayerHeader : PlayerHeaderError, ShiroiStyles.Header);
-            Player = (CutscenePlayer) EditorGUILayout.ObjectField(PlayerContent, Player, typeof(CutscenePlayer), true);
+            EditorGUILayout.LabelField(Player ? ShiroiStyles.PlayerHeader : ShiroiStyles.PlayerHeaderError, ShiroiStyles.Header);
+            Player = (CutscenePlayer) EditorGUILayout.ObjectField(ShiroiStyles.PlayerContent, Player, typeof(CutscenePlayer), true);
             if (Player) {
                 ShiroiEditorUtil.DrawReferencesLayout(Player);
             }
@@ -213,7 +174,7 @@ namespace Shiroi.Cutscenes.Editor {
             GUI.Box(rect, GUIContent.none, ShiroiStyles.DefaultBackground);
             var futures = Cutscene.FutureManager.GetFutures();
             var totalFutures = futures.Count;
-            EditorGUI.LabelField(rect.GetLine(0), FuturesStats, ShiroiStyles.Header);
+            EditorGUI.LabelField(rect.GetLine(0), ShiroiStyles.FuturesStats, ShiroiStyles.Header);
             var labelRect = rect.GetLine(1);
             if (totalFutures == 0) {
                 EditorGUI.LabelField(labelRect, "No futures registered.");
@@ -222,7 +183,7 @@ namespace Shiroi.Cutscenes.Editor {
                 EditorGUI.LabelField(labelRect, totalFutures + " futures found!",
                     ShiroiStyles.Header);
                 const int iconSize = ShiroiStyles.IconSize;
-                var yOffset = EditorGUIUtility.singleLineHeight * FuturesHeaderLines;
+                var yOffset = EditorGUIUtility.singleLineHeight * ShiroiStyles.FuturesHeaderLines;
                 var initColor = GUI.backgroundColor;
                 var totalTokens = Cutscene.TotalTokens;
                 for (var i = 0; i < futures.Count; i++) {
@@ -264,12 +225,12 @@ namespace Shiroi.Cutscenes.Editor {
             EditorGUILayout.LabelField("Tokens", ShiroiStyles.Header);
             var isEmpty = totalLines == 0;
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button(AddTokenContent)) {
+            if (GUILayout.Button(ShiroiStyles.AddTokenContent)) {
                 var rect = new Rect(Event.current.mousePosition, TokenSelectorWindow.Size);
                 PopupWindow.Show(rect, SelectorWindow);
             }
             if (!isEmpty) {
-                if (GUILayout.Button(ClearCutscene)) {
+                if (GUILayout.Button(ShiroiStyles.ClearCutscene)) {
                     Cutscene.Clear();
                 }
             }
@@ -277,12 +238,12 @@ namespace Shiroi.Cutscenes.Editor {
             EditorGUILayout.EndHorizontal();
             //No token in cutscene
             if (isEmpty) {
-                EditorGUILayout.LabelField(NoTokenContent, ShiroiStyles.HeaderCenter);
+                EditorGUILayout.LabelField(ShiroiStyles.NoTokenContent, ShiroiStyles.HeaderCenter);
                 GUI.enabled = false;
                 EditorGUILayout.LabelField(GetKaomoji(), ShiroiStyles.Kaomoji, GUILayout.ExpandHeight(true));
             } else {
                 //Reload kaomojis
-                currentKaomoji = Random.Range(0, Kaomojis.Length - 1);
+                currentKaomoji = Random.Range(0, ShiroiStyles.Kaomojis.Length - 1);
             }
         }
 

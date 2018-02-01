@@ -35,7 +35,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             }
             var max = (from message in errors select message.Level).Max();
             ShowErrors = GUILayout.Toggle(ShowErrors, GetErrorContent(totalErrors, max),
-                ShiroiStyles.GetErrorStyle(max));
+                ShiroiStyles.GetErrorStyle(max), GUILayout.MinHeight(ShiroiStyles.SingleLineHeight * 2));
             if (!ShowErrors) {
                 GUILayout.Space(ShiroiStyles.SpaceHeight);
                 return;
