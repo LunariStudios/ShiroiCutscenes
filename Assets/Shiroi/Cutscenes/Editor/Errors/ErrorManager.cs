@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Shiroi.Cutscenes.Editor.Config;
 using Shiroi.Cutscenes.Editor.Util;
+using Shiroi.Cutscenes.Tokens;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Editor.Errors {
@@ -14,6 +17,26 @@ namespace Shiroi.Cutscenes.Editor.Errors {
 
         public void Clear() {
             errors.Clear();
+        }
+
+        public ErrorManager() {
+            MappedToken.OnDrawn += OnDrawn;
+        }
+
+        private void OnDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token, int tokenIndex,
+            FieldInfo field, int fieldIndex) {
+            if (!Configs.CheckErrors) {
+                return;
+            }
+            var foundErrors = GetErrors(tokenIndex, fieldIndex).ToArray();
+            if (!foundErrors.Any()) {
+                return;
+            }
+            var highestLevel = (from error in foundErrors select error.Level).Max();
+            var size = rect.height;
+            var icon = ShiroiStyles.GetIcon(highestLevel);
+            var errorRect = rect.SubRect(size, size, -size);
+            GUI.DrawTexture(errorRect, icon);
         }
 
         public void NotifyError(int tokenIndex, int fieldIndex, ErrorLevel level, params string[] message) {

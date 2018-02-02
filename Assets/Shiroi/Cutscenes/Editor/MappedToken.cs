@@ -124,6 +124,10 @@ namespace Shiroi.Cutscenes.Editor {
             get;
         }
 
+        public delegate void DrawDelegate(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
+            int tokenIndex, FieldInfo field, int fieldIndex);
+
+        public static event DrawDelegate OnDrawn;
 
         public void DrawFields(CutsceneEditor editor, Rect rect, int tokenIndex, IToken token, Cutscene cutscene,
             CutscenePlayer player,
@@ -147,23 +151,19 @@ namespace Shiroi.Cutscenes.Editor {
                 drawer.Draw(editor, player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
                     currentField.GetValue(token),
                     fieldType, currentField, Setter);
-                if ((bool) Configs.CheckErrors) {
-                    var errors = editor.ErrorManager.GetErrors(tokenIndex, index).ToArray();
-                    if (errors.Any()) {
-                        var highestLevel = (from error in errors select error.Level).Max();
-                        var size = r.height;
-
-                        var icon = ShiroiStyles.GetIcon(highestLevel);
-                        var totalErrors = errors.Length;
-                        var errorRect = r.SubRect(size, size, -size);
-                        GUI.DrawTexture(errorRect, icon);
-                    }
-                }
+                InvokeOnDrawn(r, cutscene, player, token, tokenIndex, currentField, index);
 
                 if (EditorGUI.EndChangeCheck()) {
                     changed = true;
                 }
             }
+        }
+
+        protected virtual void InvokeOnDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
+            int tokenindex, FieldInfo field, int fieldindex) {
+            var handler = OnDrawn;
+            if (handler != null)
+                handler(rect, cutscene, player, token, tokenindex, field, fieldindex);
         }
     }
 }
