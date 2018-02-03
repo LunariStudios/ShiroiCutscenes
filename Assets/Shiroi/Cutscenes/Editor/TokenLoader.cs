@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Shiroi.Cutscenes.Editor.Config;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
 using UnityEngine;
@@ -53,7 +54,7 @@ namespace Shiroi.Cutscenes.Editor {
                 KnownTokenTypes.Add(type);
                 total++;
             }
-            if (total > 0) {
+            if (Configs.ShowDebug && total > 0) {
                 Debug.LogFormat("[ShiroiCutscenes] Loaded '{0}' tokens from '{1}'", total, assembly);
             }
         }
