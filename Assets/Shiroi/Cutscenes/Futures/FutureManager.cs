@@ -10,7 +10,7 @@ namespace Shiroi.Cutscenes.Futures {
     [Serializable]
     public sealed class FutureManager {
         private static readonly RandomNumberGenerator FutureIDGenerator = RandomNumberGenerator.Create();
-
+        public const string DefaultFutureName = "unnamed_future";
 
         public int TotalFutures {
             get {
@@ -63,6 +63,9 @@ namespace Shiroi.Cutscenes.Futures {
         }
 
         public int NotifyFuture(Cutscene cutscene, Type type, IFutureProvider provider, string futureName) {
+            if (string.IsNullOrEmpty(futureName)) {
+                futureName = DefaultFutureName;
+            }
             var array = new byte[sizeof(int)];
             FutureIDGenerator.GetBytes(array);
             var id = BitConverter.ToInt32(array, 0);
