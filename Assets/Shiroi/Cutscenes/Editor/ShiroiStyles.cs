@@ -274,6 +274,8 @@ namespace Shiroi.Cutscenes.Editor {
             private set;
         }
 
+        public const string NullSupportedMessage = "Please assign it or annotate the field as NullSupported.";
+
         public static readonly GUIContent PlayerContent =
             new GUIContent("Bound player", "The player that will store the references to the cutscene's scene objects");
 

@@ -1,13 +1,76 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Tokens;
 using Shiroi.Cutscenes.Util;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Editor.Errors {
+    public class MissingExposedReferenceChecker : ErrorChecker {
+        private static readonly Type ExposedReferenceType = typeof(ExposedReference<>);
+        public const string PropertyNameFieldName = "exposedName";
+        public const string DefaultValueFieldName = "defaultValue";
+        private static Dictionary<Type, FieldInfo> propertyNameCache = new Dictionary<Type, FieldInfo>();
+        private static Dictionary<Type, FieldInfo> defaultNameCache = new Dictionary<Type, FieldInfo>();
+
+        public static FieldInfo GetInfo(Dictionary<Type, FieldInfo> dict, Type generic, string fieldName) {
+            if (dict.ContainsKey(generic)) {
+                return dict[generic];
+            }
+            var info = ExposedReferenceType.MakeGenericType(generic).GetField(fieldName);
+            return dict[generic] = info;
+        }
+
+        public static FieldInfo GetPropertyNameInfo(Type generic) {
+            return GetInfo(propertyNameCache, generic, PropertyNameFieldName);
+        }
+
+        public static FieldInfo GetDefaultValueInfo(Type generic) {
+            return GetInfo(defaultNameCache, generic, DefaultValueFieldName);
+        }
+
+        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token,
+            object value, int fieldIndex,
+            FieldInfo info) {
+            if (Attribute.GetCustomAttribute(info, typeof(NullSupportedAttribute)) != null) {
+                return;
+            }
+            var fieldType = info.FieldType;
+            if (!fieldType.IsGenericType || fieldType.GetGenericTypeDefinition() != ExposedReferenceType) {
+                return;
+            }
+            var generic = fieldType.GetGenericArguments()[0];
+            var propertyNameInfo = GetPropertyNameInfo(generic);
+            var defaultValueInfo = GetDefaultValueInfo(generic);
+            var propertyName = (PropertyName) propertyNameInfo.GetValue(value);
+            var defaultObject = defaultValueInfo.GetValue(value) as Object;
+            if (MimicExposedResolve(editor.Player, propertyName, defaultObject) != null) {
+                return;
+            }
+            var msg = string.Format("Couldn't resolve exposed reference of id {0} in field {1}.", propertyName,
+                info.Name);
+            manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, ShiroiStyles.NullSupportedMessage);
+        }
+
+        private static Object MimicExposedResolve(CutscenePlayer resolver, PropertyName exposedName,
+            Object defaultValue) {
+            if (resolver == null) {
+                return defaultValue;
+            }
+            bool idValid;
+            var referenceValue = resolver.GetReferenceValue(exposedName, out idValid);
+            return idValid ? referenceValue : defaultValue;
+        }
+    }
+
     public class MissingFutureChecker : ErrorChecker {
         public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token,
             object value, int fieldIndex, FieldInfo info) {
+            if (Attribute.GetCustomAttribute(info, typeof(NullSupportedAttribute)) != null) {
+                return;
+            }
             var reference = value as FutureReference;
             if (reference == null) {
                 return;
@@ -17,7 +80,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
                 return;
             }
             var msg = string.Format("Couldn't find future of id {0} in field {1}.", id, info.Name);
-            manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, "You probably didn't assign it.");
+            manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, ShiroiStyles.NullSupportedMessage);
         }
     }
 
@@ -35,7 +98,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
                 return;
             }
             var msg = string.Format("Couldn't resolve reference of id {0} in field {1}.", id, info.Name);
-            manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, "You probably didn't assign it.");
+            manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, ShiroiStyles.NullSupportedMessage);
         }
 
         private bool Resolve(Reference reference, Cutscene cutscene, CutscenePlayer player) {
@@ -60,9 +123,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
                 return;
             }
             var msg = string.Format("Field {0} is null!", info.Name);
-            manager.NotifyError(tokenIndex, fieldIndex,
-                ErrorLevel.High,
-                msg, "Please assign it or annotate the field as NullSupported.");
+            manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, ShiroiStyles.NullSupportedMessage);
         }
     }
 
