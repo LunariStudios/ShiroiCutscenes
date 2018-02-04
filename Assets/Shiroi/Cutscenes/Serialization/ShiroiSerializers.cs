@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Serialization {
     public class FutureReferenceSerializer<T> : Serializer<FutureReference<T>> where T : Object {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return new FutureReference<T>(obj.GetInt(key));
         }
 
@@ -18,7 +18,7 @@ namespace Shiroi.Cutscenes.Serialization {
         public const string ReferenceTypeKey = "Type";
         public const string ReferenceValueKey = "Value";
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedReference = obj.GetObject(key);
             var type = (Reference.ReferenceType) serializedReference.GetInt(ReferenceTypeKey);
             var value = serializedReference.GetInt(ReferenceValueKey);

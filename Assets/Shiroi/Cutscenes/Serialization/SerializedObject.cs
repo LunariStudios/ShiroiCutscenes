@@ -10,61 +10,6 @@ using Object = UnityEngine.Object;
 namespace Shiroi.Cutscenes.Serialization {
     [Serializable]
     public sealed class SerializedObject {
-        //Pairs
-        [Serializable]
-        public class BooleanPair : Pair<bool> {
-            public BooleanPair() { }
-            public BooleanPair(string key, bool value) : base(key, value) { }
-        }
-
-        [Serializable]
-        public class IntPair : Pair<int> {
-            public IntPair() { }
-            public IntPair(string key, int value) : base(key, value) { }
-        }
-
-        [Serializable]
-        public class FloatPair : Pair<float> {
-            public FloatPair() { }
-            public FloatPair(string key, float value) : base(key, value) { }
-        }
-
-        [Serializable]
-        public class StringPair : Pair<string> {
-            public StringPair() { }
-            public StringPair(string key, string value) : base(key, value) { }
-        }
-
-        [Serializable]
-        public class ObjectPair : Pair<SerializedObject> {
-            public ObjectPair() { }
-            public ObjectPair(string key, SerializedObject value) : base(key, value) { }
-        }
-
-        [Serializable]
-        public class ArrayPair : Pair<SerializedObject[]> {
-            public ArrayPair() { }
-            public ArrayPair(string key, SerializedObject[] value) : base(key, value) { }
-        }
-
-        [Serializable]
-        public class UnityPair : Pair<Object> {
-            public UnityPair() { }
-            public UnityPair(string key, Object value) : base(key, value) { }
-        }
-
-        public abstract class Pair<T> {
-            protected Pair() { }
-
-            protected Pair(string key, T value) {
-                Key = key;
-                Value = value;
-            }
-
-            public string Key;
-            public T Value;
-        }
-
         //Lists
         public List<BooleanPair> Booleans = new List<BooleanPair>();
 
@@ -238,8 +183,11 @@ namespace Shiroi.Cutscenes.Serialization {
                         fieldType.FullName);
                     continue;
                 }
-                var value = serializer.Deserialize(name, this);
+                var value = serializer.Deserialize(name, this, fieldType);
                 if (!fieldType.IsInstanceOfType(value)) {
+                    if (!AllowsNull(fieldType) && value == null) {
+                        continue;
+                    }
                     Debug.LogWarningFormat(
                         "[ShiroiCutscenes] Expected type '{1}' for member '{0}', but serializer returned ({2})!",
                         name,
@@ -250,6 +198,10 @@ namespace Shiroi.Cutscenes.Serialization {
                 }
                 member.SetValue(token, value);
             }
+        }
+
+        private static bool AllowsNull(Type type) {
+            return type.IsAssignableFrom(typeof(Object));
         }
 
         public static SerializedObject From(object loadedToken) {
@@ -267,6 +219,10 @@ namespace Shiroi.Cutscenes.Serialization {
                 serializer.Serialize(value, member.Name, obj);
             }
             return obj;
+        }
+
+        public bool HasUnityObject(string key) {
+            return UnityObjects.Any(pair => pair.Key == key);
         }
     }
 }

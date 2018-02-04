@@ -2,7 +2,7 @@
 
 namespace Shiroi.Cutscenes.Serialization {
     public class ByteSerializer : Serializer<byte> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return (byte) obj.GetInt(key);
         }
 
@@ -20,13 +20,13 @@ namespace Shiroi.Cutscenes.Serialization {
             destination.SetInt(name, (int) value);
         }
 
-        public override object Deserialize(string key, SerializedObject obj) {
-            return obj.GetInt(key);
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
+            return Enum.GetValues(fieldType).GetValue(obj.GetInt(key));
         }
     }
 
     public class SignedByteSerializer : Serializer<sbyte> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return (sbyte) obj.GetInt(key);
         }
 
@@ -36,7 +36,7 @@ namespace Shiroi.Cutscenes.Serialization {
     }
 
     public class ShortSerializer : Serializer<short> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return (short) obj.GetInt(key);
         }
 
@@ -46,7 +46,7 @@ namespace Shiroi.Cutscenes.Serialization {
     }
 
     public class UnsignedShortSerializer : Serializer<ushort> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return (ushort) obj.GetInt(key);
         }
 
@@ -57,7 +57,7 @@ namespace Shiroi.Cutscenes.Serialization {
 
 
     public class UnsignedIntSerializer : Serializer<uint> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return (uint) obj.GetInt(key);
         }
 
@@ -67,7 +67,7 @@ namespace Shiroi.Cutscenes.Serialization {
     }
 
     public class LongSerializer : Serializer<long> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return (long) obj.GetInt(key);
         }
 
@@ -77,7 +77,7 @@ namespace Shiroi.Cutscenes.Serialization {
     }
 
     public class UnsignedLongSerializer : Serializer<ulong> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return (ulong) obj.GetInt(key);
         }
 
@@ -87,7 +87,7 @@ namespace Shiroi.Cutscenes.Serialization {
     }
 
     public class DoubleSerializer : Serializer<double> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return (float) obj.GetInt(key);
         }
 
@@ -98,7 +98,7 @@ namespace Shiroi.Cutscenes.Serialization {
 
 
     public class BooleanSerializer : Serializer<bool> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return obj.GetBoolean(key);
         }
 
@@ -108,7 +108,7 @@ namespace Shiroi.Cutscenes.Serialization {
     }
 
     public class IntSerializer : Serializer<int> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return obj.GetInt(key);
         }
 
@@ -118,7 +118,7 @@ namespace Shiroi.Cutscenes.Serialization {
     }
 
     public class FloatSerializer : Serializer<float> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return obj.GetFloat(key);
         }
 
@@ -128,7 +128,7 @@ namespace Shiroi.Cutscenes.Serialization {
     }
 
     public class StringSerializer : Serializer<string> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return obj.GetString(key);
         }
 

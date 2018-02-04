@@ -4,7 +4,7 @@ namespace Shiroi.Cutscenes.Serialization {
     public abstract class Serializer : IComparable<Serializer> {
         public abstract bool Supports(Type type);
         public abstract void Serialize(object value, string name, SerializedObject destination);
-        public abstract object Deserialize(string key, SerializedObject obj);
+        public abstract object Deserialize(string key, SerializedObject obj, Type fieldType);
 
         public virtual int GetPriority() {
             return 0;

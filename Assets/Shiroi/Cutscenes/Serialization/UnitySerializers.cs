@@ -34,7 +34,7 @@ json = JsonUtility.ToJson(value);
             destination.SetObject(name, obj);
         }
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var data = obj.GetObject(key);
             if (data == null) {
                 Debug.LogWarningFormat("Couldn't find data for object '{0}'", key);
@@ -63,7 +63,7 @@ json = JsonUtility.ToJson(value);
             return 1;
         }
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedReference = obj.GetObject(key);
             var id = serializedReference.GetInt(IdKey);
             var property = new PropertyName(id);
@@ -84,8 +84,8 @@ json = JsonUtility.ToJson(value);
     }
 
     public class ObjectSerializer : Serializer<Object> {
-        public override object Deserialize(string key, SerializedObject obj) {
-            return obj.GetUnityObject(key);
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
+            return obj.HasUnityObject(key) ? obj.GetUnityObject(key) : null;
         }
 
         public override void Serialize(Object value, string name, SerializedObject destination) {
@@ -97,7 +97,7 @@ json = JsonUtility.ToJson(value);
         public const string XKey = "x";
         public const string YKey = "y";
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedVector = obj.GetObject(key);
             var x = serializedVector.GetFloat(XKey);
             var y = serializedVector.GetFloat(YKey);
@@ -115,7 +115,7 @@ json = JsonUtility.ToJson(value);
     public class Vector3Serializer : Serializer<Vector3> {
         public const string ZKey = "z";
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedVector = obj.GetObject(key);
             var x = serializedVector.GetFloat(Vector2Serializer.XKey);
             var y = serializedVector.GetFloat(Vector2Serializer.YKey);
@@ -135,7 +135,7 @@ json = JsonUtility.ToJson(value);
     public class Vector4Serializer : Serializer<Vector4> {
         public const string WKey = "w";
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedVector = obj.GetObject(key);
             var x = serializedVector.GetFloat(Vector2Serializer.XKey);
             var y = serializedVector.GetFloat(Vector2Serializer.YKey);
@@ -155,7 +155,7 @@ json = JsonUtility.ToJson(value);
     }
 
     public class Vector2IntSerializer : Serializer<Vector2Int> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedVector = obj.GetObject(key);
             var x = serializedVector.GetInt(Vector2Serializer.XKey);
             var y = serializedVector.GetInt(Vector2Serializer.YKey);
@@ -171,7 +171,7 @@ json = JsonUtility.ToJson(value);
     }
 
     public class Vector3IntSerializer : Serializer<Vector3Int> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedVector = obj.GetObject(key);
             var x = serializedVector.GetInt(Vector2Serializer.XKey);
             var y = serializedVector.GetInt(Vector2Serializer.YKey);
@@ -194,7 +194,7 @@ json = JsonUtility.ToJson(value);
         public const string ZKey = "z";
         public const string WKey = "w";
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedQuaternion = obj.GetObject(key);
             float x, y, z, w;
             x = serializedQuaternion.GetFloat(XKey);
@@ -220,7 +220,7 @@ json = JsonUtility.ToJson(value);
         public const string BKey = "b";
         public const string AKey = "a";
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedColor = obj.GetObject(key);
             float r, g, b, a;
             r = serializedColor.GetFloat(RKey);
@@ -247,7 +247,7 @@ json = JsonUtility.ToJson(value);
         public const string InTangentKey = "InTangent";
         public const string OutTangentKey = "OutTangent";
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedFrames = obj.GetArray(KeyFramesKey);
             var frames = from frame in serializedFrames select DeserializeFrame(frame);
             return new AnimationCurve(frames.ToArray());
@@ -282,7 +282,7 @@ json = JsonUtility.ToJson(value);
         public const string WKey = "w";
         public const string HKey = "h";
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedRect = obj.GetObject(key);
             var x = serializedRect.GetFloat(XKey);
             var y = serializedRect.GetFloat(YKey);
@@ -302,7 +302,7 @@ json = JsonUtility.ToJson(value);
     }
 
     public class RectIntSerializer : Serializer<RectInt> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedRect = obj.GetObject(key);
             var x = serializedRect.GetInt(RectSerializer.XKey);
             var y = serializedRect.GetInt(RectSerializer.YKey);
@@ -329,7 +329,7 @@ json = JsonUtility.ToJson(value);
         public const string HKey = "h";
         public const string LKey = "h";
 
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedBounds = obj.GetObject(key);
             float x, y, z, w, h, l;
             x = serializedBounds.GetFloat(XKey);
@@ -356,7 +356,7 @@ json = JsonUtility.ToJson(value);
     }
 
     public class BoundsIntSerializer : Serializer<BoundsInt> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             var serializedBounds = obj.GetObject(key);
             int x, y, z, w, h, l;
             x = serializedBounds.GetInt(BoundsSerializer.XKey);
@@ -383,7 +383,7 @@ json = JsonUtility.ToJson(value);
     }
 
     public class LayerMaskSerializer : Serializer<LayerMask> {
-        public override object Deserialize(string key, SerializedObject obj) {
+        public override object Deserialize(string key, SerializedObject obj, Type fieldType) {
             return (LayerMask) obj.GetInt(key);
         }
 
