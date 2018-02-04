@@ -145,4 +145,48 @@ namespace Shiroi.Cutscenes.Editor.Errors {
                 "Please assign it or annotate the field as EmptyStringSupported.");
         }
     }
+
+    public class UnusedFutureChecker : ErrorChecker, IOnBeginCheckListener, IOnEndCheckListener {
+        private readonly Dictionary<int, int> uses = new Dictionary<int, int>();
+
+        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token,
+            object value, int fieldIndex,
+            FieldInfo info) {
+            if (!(value is Reference) && !(value is FutureReference)) {
+                return;
+            }
+            Increment(ReferenceUtility.GetID(value));
+        }
+
+        private void Increment(int futureId) {
+            if (uses.ContainsKey(futureId)) {
+                uses[futureId]++;
+            } else {
+                uses[futureId] = 1;
+            }
+        }
+
+        private int GetUses(int futureId) {
+            return uses.ContainsKey(futureId) ? uses[futureId] : 0;
+        }
+
+
+        public void OnEnd(ErrorManager obj, CutsceneEditor editor) {
+            var cutscene = editor.Cutscene;
+            foreach (var future in cutscene.FutureManager.Futures) {
+                var pIndex = future.Provider;
+                var provider = cutscene[pIndex];
+                var id = future.Id;
+                if (GetUses(id) > 0) {
+                    continue;
+                }
+                var msg = string.Format("Future {0} ({1}) is never used!", future.Name, id);
+                obj.NotifyError(pIndex, -1, ErrorLevel.Medium, msg);
+            }
+        }
+
+        public void OnBegin(ErrorManager manager, CutsceneEditor editor) {
+            uses.Clear();
+        }
+    }
 }

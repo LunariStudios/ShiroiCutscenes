@@ -271,9 +271,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void DrawToken(Rect rect, int index, bool isactive, bool isfocused) {
             var token = Cutscene[index];
-            var labelRect = GetRect(rect, 0);
             var mappedToken = MappedToken.For(token);
-            EditorGUI.LabelField(labelRect, string.Format("#{0} - {1}", index, mappedToken.Label), ShiroiStyles.Bold);
             bool changed;
             mappedToken.DrawFields(this, rect, index, token, Cutscene, Player, out changed);
             if (!changed) {
@@ -284,14 +282,6 @@ namespace Shiroi.Cutscenes.Editor {
             if (l != null) {
                 l.OnChanged(Cutscene);
             }
-        }
-
-
-        public static Rect GetRect(Rect rect, int index) {
-            var x = rect.x;
-            var y = rect.y;
-            return new Rect(x, y + index * EditorGUIUtility.singleLineHeight, rect.width,
-                EditorGUIUtility.singleLineHeight);
         }
 
         public void AddToken(Type type) {

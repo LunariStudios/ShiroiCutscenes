@@ -4,7 +4,7 @@ using UnityEditor;
 namespace Shiroi.Cutscenes.Editor.Errors {
     [InitializeOnLoad]
     public static class ErrorCheckers {
-        private static readonly List<ErrorChecker> Checkers = new List<ErrorChecker>();
+        public static readonly List<ErrorChecker> Checkers = new List<ErrorChecker>();
 
         static ErrorCheckers() {
             RegisterBuiltIn();
@@ -16,6 +16,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             RegisterChecker(new MissingExposedReferenceChecker());
             RegisterChecker(new MissingReferenceChecker());
             RegisterChecker(new EmptyStringChecker());
+            RegisterChecker(new UnusedFutureChecker());
         }
 
         private static void RegisterChecker(ErrorChecker nullChecker) {

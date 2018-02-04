@@ -93,7 +93,7 @@ namespace Shiroi.Cutscenes.Editor {
             }
         }
 
-        private void CalculateColor(Type type, out Color color, out Color selectedColor) {
+        private static void CalculateColor(Type type, out Color color, out Color selectedColor) {
             var name = type.Name;
             var totalLetters = name.Length;
             var increment = (float) (totalLetters - 1) / 5;
@@ -124,14 +124,22 @@ namespace Shiroi.Cutscenes.Editor {
             get;
         }
 
-        public delegate void DrawDelegate(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
+        public delegate void FieldDrawnListener(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
             int tokenIndex, FieldInfo field, int fieldIndex);
 
-        public static event DrawDelegate OnDrawn;
+        public delegate void TokenDrawnListener(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
+            int tokenIndex, ref GUIContent tokenLabel);
+
+        public static event FieldDrawnListener OnFieldDrawn;
+        public static event TokenDrawnListener OnTokenDrawn;
 
         public void DrawFields(CutsceneEditor editor, Rect rect, int tokenIndex, IToken token, Cutscene cutscene,
             CutscenePlayer player,
             out bool changed) {
+            var labelRect = rect.GetLine(0);
+            var content = new GUIContent(string.Format("#{0} - {1}", tokenIndex, Label));
+            InvokeOnTokenDrawn(rect, cutscene, player, token, tokenIndex, ref content);
+            EditorGUI.LabelField(labelRect, content, ShiroiStyles.Bold);
             changed = false;
             currentToken = token;
             //Start at 1 because label
@@ -151,7 +159,7 @@ namespace Shiroi.Cutscenes.Editor {
                 drawer.Draw(editor, player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
                     currentField.GetValue(token),
                     fieldType, currentField, Setter);
-                InvokeOnDrawn(r, cutscene, player, token, tokenIndex, currentField, index);
+                InvokeOnFieldDrawn(r, cutscene, player, token, tokenIndex, currentField, index);
 
                 if (EditorGUI.EndChangeCheck()) {
                     changed = true;
@@ -159,11 +167,18 @@ namespace Shiroi.Cutscenes.Editor {
             }
         }
 
-        protected virtual void InvokeOnDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
+        protected virtual void InvokeOnFieldDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
             int tokenindex, FieldInfo field, int fieldindex) {
-            var handler = OnDrawn;
+            var handler = OnFieldDrawn;
             if (handler != null)
                 handler(rect, cutscene, player, token, tokenindex, field, fieldindex);
+        }
+
+        private static void InvokeOnTokenDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
+            int tokenindex, ref GUIContent tokenlabel) {
+            var handler = OnTokenDrawn;
+            if (handler != null)
+                handler(rect, cutscene, player, token, tokenindex, ref tokenlabel);
         }
     }
 }

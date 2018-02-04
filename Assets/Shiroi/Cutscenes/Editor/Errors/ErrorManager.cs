@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Shiroi.Cutscenes.Editor.Config;
@@ -20,10 +21,25 @@ namespace Shiroi.Cutscenes.Editor.Errors {
         }
 
         public ErrorManager() {
-            MappedToken.OnDrawn += OnDrawn;
+            MappedToken.OnFieldDrawn += OnFieldDrawn;
+            MappedToken.OnTokenDrawn += OnTokenDrawn;
         }
 
-        private void OnDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token, int tokenIndex,
+        private void OnTokenDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token, int tokenIndex,
+            ref GUIContent tokenlabel) {
+            if (!Configs.CheckErrors) {
+                return;
+            }
+            var foundErrors = GetErrors(tokenIndex, -1).ToArray();
+            if (!foundErrors.Any()) {
+                return;
+            }
+            var highestLevel = (from error in foundErrors select error.Level).Max();
+            var icon = ShiroiStyles.GetIcon(highestLevel);
+            tokenlabel.image = icon;
+        }
+
+        private void OnFieldDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token, int tokenIndex,
             FieldInfo field, int fieldIndex) {
             if (!Configs.CheckErrors) {
                 return;
@@ -50,7 +66,9 @@ namespace Shiroi.Cutscenes.Editor.Errors {
         }
 
         public void DrawErrors(CutsceneEditor editor) {
+            InvokeOnBeginErrorChecking(editor);
             ErrorCheckers.CheckErrors(editor, errors);
+            InvokeOnEndErrorChecking(editor);
             var cutscene = editor.Cutscene;
             var totalErrors = errors.Count;
             if (totalErrors <= 0) {
@@ -95,6 +113,24 @@ namespace Shiroi.Cutscenes.Editor.Errors {
                 msg += string.Format(" ({0})", totalErrors);
             }
             return new GUIContent(msg, ShiroiStyles.GetIcon(maxLevel));
+        }
+
+        private void InvokeOnBeginErrorChecking(CutsceneEditor editor) {
+            foreach (var checker in ErrorCheckers.Checkers) {
+                var listener = checker as IOnBeginCheckListener;
+                if (listener != null) {
+                    listener.OnBegin(this, editor);
+                }
+            }
+        }
+
+        protected virtual void InvokeOnEndErrorChecking(CutsceneEditor editor) {
+            foreach (var checker in ErrorCheckers.Checkers) {
+                var listener = checker as IOnEndCheckListener;
+                if (listener != null) {
+                    listener.OnEnd(this, editor);
+                }
+            }
         }
     }
 }

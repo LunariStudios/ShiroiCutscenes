@@ -35,7 +35,7 @@ namespace Shiroi.Cutscenes.Editor.Windows {
         private string filter = string.Empty;
 
         public override void OnGUI(Rect rect) {
-            EditorGUI.LabelField(CutsceneEditor.GetRect(rect, 0), "Select a token to add");
+            EditorGUI.LabelField(rect.GetLine(0), "Select a token to add");
             EditorGUI.BeginChangeCheck();
             filter = EditorGUI.TextField(rect.GetLine(1), FilterLabel, filter);
             if (EditorGUI.EndChangeCheck()) {
@@ -49,7 +49,7 @@ namespace Shiroi.Cutscenes.Editor.Windows {
                     continue;
                 }
                 GUI.color = MappedToken.For(type).Color;
-                if (GUI.Button(CutsceneEditor.GetRect(rect, i + BuiltInLines), type.Name)) {
+                if (GUI.Button(rect.GetLine((uint) (i + BuiltInLines)), type.Name)) {
                     CurrentEditor.AddToken(type);
                 }
                 i++;
