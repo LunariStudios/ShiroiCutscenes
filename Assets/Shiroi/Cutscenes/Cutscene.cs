@@ -102,5 +102,23 @@ namespace Shiroi.Cutscenes {
             FutureManager.Clear();
             loadedTokens.Clear();
         }
+
+        public void Swap(int a, int b) {
+            if (a == b) {
+                return;
+            }
+            var element = loadedTokens[a];
+            for (var i = 0; i < loadedTokens.Count - 1; ++i) {
+                if (i >= a) {
+                    loadedTokens[i] = loadedTokens[i + 1];
+                }
+            }
+            for (var i = loadedTokens.Count - 1; i > 0; --i) {
+                if (i > b) {
+                    loadedTokens[i] = loadedTokens[i - 1];
+                }
+            }
+            loadedTokens[b] = element;
+        }
     }
 }
