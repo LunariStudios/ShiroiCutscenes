@@ -125,7 +125,7 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         public delegate void FieldDrawnListener(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
-            int tokenIndex, FieldInfo field, int fieldIndex);
+            int tokenIndex, FieldInfo field, int fieldIndex, ref GUIContent fieldLabel);
 
         public delegate void TokenDrawnListener(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
             int tokenIndex, ref GUIContent tokenLabel);
@@ -154,12 +154,13 @@ namespace Shiroi.Cutscenes.Editor {
                 var totalLines = drawer.GetTotalLines();
                 var r = rect.GetLine((uint) currentLine, totalLines);
                 currentLine += (int) totalLines;
-
+                var fieldLabel = new GUIContent(ObjectNames.NicifyVariableName(fieldName));
+                InvokeOnFieldDrawn(r, cutscene, player, token, tokenIndex, currentField, index, ref fieldLabel);
                 EditorGUI.BeginChangeCheck();
-                drawer.Draw(editor, player, cutscene, r, tokenIndex, ObjectNames.NicifyVariableName(fieldName),
+
+                drawer.Draw(editor, player, cutscene, r, tokenIndex, fieldLabel,
                     currentField.GetValue(token),
                     fieldType, currentField, Setter);
-                InvokeOnFieldDrawn(r, cutscene, player, token, tokenIndex, currentField, index);
 
                 if (EditorGUI.EndChangeCheck()) {
                     changed = true;
@@ -168,10 +169,10 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         protected virtual void InvokeOnFieldDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
-            int tokenindex, FieldInfo field, int fieldindex) {
+            int tokenindex, FieldInfo field, int fieldindex, ref GUIContent label) {
             var handler = OnFieldDrawn;
             if (handler != null)
-                handler(rect, cutscene, player, token, tokenindex, field, fieldindex);
+                handler(rect, cutscene, player, token, tokenindex, field, fieldindex, ref label);
         }
 
         private static void InvokeOnTokenDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,

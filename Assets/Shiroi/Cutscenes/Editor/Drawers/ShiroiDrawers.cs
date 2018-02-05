@@ -19,8 +19,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         }
 
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
-            int tokenIndex, string name,
-            object value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            int tokenIndex, GUIContent name, object value, Type valueType, FieldInfo fieldInfo, Setter setter) {
             EditorGUI.LabelField(rect,
                 string.Format("Couldn't find drawer for field '{0}' of type '{1}'", name, valueType.Name));
         }
@@ -32,12 +31,11 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
 
         //TODO: Make this less horrible
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
-            int tokenIndex, string name,
-            Reference<T> value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            int tokenIndex, GUIContent name, Reference<T> value, Type valueType, FieldInfo fieldInfo, Setter setter) {
             if (value == null) {
                 value = new Reference<T>(Reference.ReferenceType.Exposed, -1);
             }
-            string label;
+            GUIContent label;
             var found = player == null ? null : value.Resolve(player);
             switch (value.Type) {
                 case Reference.ReferenceType.Future:
@@ -63,11 +61,11 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             setter(value);
         }
 
-        private int DrawExposed(Reference<T> value, CutscenePlayer cutscene, Rect rect, string name) {
+        private int DrawExposed(Reference<T> value, CutscenePlayer cutscene, Rect rect, GUIContent name) {
             return ExposedReferenceDrawer<T>.DrawExposed(cutscene, value, name, rect).exposedName.GetHashCode();
         }
 
-        private int DrawFuture(Reference<T> value, Cutscene cutscene, Rect rect, string name, int tokenIndex) {
+        private int DrawFuture(Reference<T> value, Cutscene cutscene, Rect rect, GUIContent name, int tokenIndex) {
             return FutureDrawer<T>.DrawFuture(cutscene, tokenIndex, rect, name, value.Id);
         }
     }
@@ -76,7 +74,8 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         private static readonly Type FutureType = typeof(T);
 
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
-            int tokenIndex, string name, FutureReference<T> value, Type valueType, FieldInfo fieldInfo, Setter setter) {
+            int tokenIndex, GUIContent name, FutureReference<T> value, Type valueType, FieldInfo fieldInfo,
+            Setter setter) {
             if (value == null) {
                 value = new FutureReference<T>(-1);
             }
@@ -84,11 +83,11 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             setter(value);
         }
 
-        public static int DrawFuture(Cutscene cutscene, int tokenIndex, Rect rect, string name, int id) {
+        public static int DrawFuture(Cutscene cutscene, int tokenIndex, Rect rect, GUIContent name, int id) {
             var futures = cutscene.FutureManager.Futures.ToList();
             futures.RemoveAll(future => !FutureType.IsAssignableFrom(future.Type));
             futures.RemoveAll(future => future.Provider >= tokenIndex);
-            var optionNames = futures.Select(future => future.Name).ToArray();
+            var optionNames = futures.Select(future => new GUIContent(future.Name)).ToArray();
             var possibleOptions = futures.Select(future => future.Id).ToArray();
 
             return EditorGUI.IntPopup(rect, name, id, optionNames, possibleOptions);

@@ -33,7 +33,7 @@ namespace Shiroi.Cutscenes.Editor {
 
 
         //Instance Fields
-        private ReorderableList tokenList;
+        private TokenList tokenList;
 
         private bool hasAnyFocused;
 
@@ -82,13 +82,14 @@ namespace Shiroi.Cutscenes.Editor {
             ContextWindow = new ContextWindow(this);
             SelectorWindow = new TokenSelectorWindow(this);
             Cutscene = (Cutscene) target;
-            tokenList = new ReorderableList(Cutscene.Tokens, typeof(IToken), true, false, false, true) {
+            tokenList = new TokenList(this);
+            /*tokenList = new ReorderableList(Cutscene.Tokens, typeof(IToken), true, false, false, true) {
                 drawElementCallback = DrawToken,
                 drawElementBackgroundCallback = DrawBackground,
                 elementHeightCallback = CalculateHeight,
                 onRemoveCallback = OnRemoveCallback,
                 onReorderCallback = OnReorderCallback
-            };
+            };*/
         }
 
         private void OnScene(SceneView sceneview) {
@@ -127,7 +128,8 @@ namespace Shiroi.Cutscenes.Editor {
             var hasFutures = totalFutures > 0;
             var futuresRect = default(Rect);
             if (hasFutures) {
-                var futuresHeight = totalFutures * ShiroiStyles.IconSize + ShiroiStyles.FuturesHeaderLines * EditorGUIUtility.singleLineHeight;
+                var futuresHeight = totalFutures * ShiroiStyles.IconSize +
+                                    ShiroiStyles.FuturesHeaderLines * EditorGUIUtility.singleLineHeight;
                 futuresRect = GUILayoutUtility.GetRect(0, futuresHeight);
                 GUILayout.Space(ShiroiStyles.SpaceHeight);
             }
@@ -135,7 +137,6 @@ namespace Shiroi.Cutscenes.Editor {
                 ErrorManager.DrawErrors(this);
             }
             DrawTokens(totalTokens);
-
             if (hasFutures) {
                 DrawFutures(futuresRect);
             }
@@ -147,8 +148,10 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void DrawPlayerSettings() {
             EditorGUILayout.BeginVertical(Player ? ShiroiStyles.DefaultBackground : ShiroiStyles.Error);
-            EditorGUILayout.LabelField(Player ? ShiroiStyles.PlayerHeader : ShiroiStyles.PlayerHeaderError, ShiroiStyles.Header);
-            Player = (CutscenePlayer) EditorGUILayout.ObjectField(ShiroiStyles.PlayerContent, Player, typeof(CutscenePlayer), true);
+            EditorGUILayout.LabelField(Player ? ShiroiStyles.PlayerHeader : ShiroiStyles.PlayerHeaderError,
+                ShiroiStyles.Header);
+            Player = (CutscenePlayer) EditorGUILayout.ObjectField(ShiroiStyles.PlayerContent, Player,
+                typeof(CutscenePlayer), true);
             if (Player) {
                 ShiroiEditorUtil.DrawReferencesLayout(Player);
             }
@@ -161,7 +164,7 @@ namespace Shiroi.Cutscenes.Editor {
             DrawCutsceneHeader(totalTokens);
             if (totalTokens > 0) {
                 hasAnyFocused = false;
-                tokenList.DoLayoutList();
+                tokenList.Draw();
                 if (!hasAnyFocused) {
                     LastSelected = -1;
                 }
@@ -293,7 +296,7 @@ namespace Shiroi.Cutscenes.Editor {
             }
             EditorUtility.SetDirty(this);
             SetCutsceneDirty();
-            tokenList.GrabKeyboardFocus();
+            //tokenList.GrabKeyboardFocus();
             tokenList.index = Cutscene.Tokens.Count - 1;
         }
 

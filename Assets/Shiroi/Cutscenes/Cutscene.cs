@@ -119,6 +119,7 @@ namespace Shiroi.Cutscenes {
                 }
             }
             loadedTokens[b] = element;
+            FutureManager.OnReorder(b, a);
         }
     }
 }

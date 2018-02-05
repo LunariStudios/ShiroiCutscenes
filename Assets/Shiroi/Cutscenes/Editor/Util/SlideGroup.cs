@@ -4,47 +4,49 @@ using UnityEngine;
 
 namespace Shiroi.Cutscenes.Editor.Util {
     public class SlideGroup {
-        private static SlideGroup current = (SlideGroup) null;
         private Dictionary<int, Rect> animIDs = new Dictionary<int, Rect>();
 
 
         public void Reset() {
-            current = null;
             animIDs.Clear();
         }
 
 
-        public Rect GetRect(int id, Rect r) {
+        public Rect GetRect(UnityEditor.Editor editor, int id, Rect current) {
             if (Event.current.type != EventType.Repaint)
-                return r;
+                return current;
             bool changed;
-            return GetRect(id, r, out changed);
+            return GetRect(editor, id, current, out changed);
         }
 
-        private Rect GetRect(int id, Rect r, out bool changed) {
+        private Rect GetRect(UnityEditor.Editor editor, int id, Rect current, out bool changed) {
             if (!animIDs.ContainsKey(id)) {
-                animIDs.Add(id, r);
+                animIDs.Add(id, current);
                 changed = false;
-                return r;
+                return current;
             }
             var animId = animIDs[id];
-            if ((double) animId.y != (double) r.y || (double) animId.height != (double) r.height ||
-                ((double) animId.x != (double) r.x || (double) animId.width != (double) r.width)) {
-                var t = 0.1f;
-                if ((double) Mathf.Abs(animId.y - r.y) > 0.5)
-                    r.y = Mathf.Lerp(animId.y, r.y, t);
-                if ((double) Mathf.Abs(animId.height - r.height) > 0.5)
-                    r.height = Mathf.Lerp(animId.height, r.height, t);
-                if ((double) Mathf.Abs(animId.x - r.x) > 0.5)
-                    r.x = Mathf.Lerp(animId.x, r.x, t);
-                if ((double) Mathf.Abs(animId.width - r.width) > 0.5)
-                    r.width = Mathf.Lerp(animId.width, r.width, t);
-                animIDs[id] = r;
+            if (animId != current) {
+                const float t = 0.1f;
+                if (Mathf.Abs(animId.y - current.y) > 0.5) {
+                    current.y = Mathf.Lerp(animId.y, current.y, t);
+                }
+                if (Mathf.Abs(animId.height - current.height) > 0.5) {
+                    current.height = Mathf.Lerp(animId.height, current.height, t);
+                }
+                if (Mathf.Abs(animId.x - current.x) > 0.5) {
+                    current.x = Mathf.Lerp(animId.x, current.x, t);
+                }
+                if (Mathf.Abs(animId.width - current.width) > 0.5) {
+                    current.width = Mathf.Lerp(animId.width, current.width, t);
+                }
+                animIDs[id] = current;
                 changed = true;
-                HandleUtility.Repaint();
-            } else
+                editor.Repaint();
+            } else {
                 changed = false;
-            return r;
+            }
+            return current;
         }
     }
 }

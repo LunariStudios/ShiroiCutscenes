@@ -2,6 +2,7 @@
 using System.Linq;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Editor.Util {
@@ -16,13 +17,12 @@ namespace Shiroi.Cutscenes.Editor.Util {
     }
 
     public class TokenList {
-        public static readonly GUIStyle DraggingHandle = "RL DragHandle";
         public CutsceneEditor Editor;
         private float dragOffset;
         private readonly SlideGroup slideGroup = new SlideGroup();
         private float draggedY;
         private bool dragging;
-        private List<int> nonDragTargetIndices;
+        private readonly List<int> nonDragTargetIndices = new List<int>();
         private readonly TokenStateTuple[] states;
 
         public TokenList(CutsceneEditor editor) {
@@ -43,14 +43,10 @@ namespace Shiroi.Cutscenes.Editor.Util {
 
         public int index;
 
-        public bool draggable;
 
-        private Rect GetContentRect(Rect rect) {
-            Rect rect1 = rect;
-            if (draggable)
-                rect1.xMin += 20f;
-            else
-                rect1.xMin += 6f;
+        private static Rect GetContentRect(Rect rect) {
+            var rect1 = rect;
+            rect1.xMin += 20f;
             rect1.xMax -= 6f;
             return rect1;
         }
@@ -118,32 +114,36 @@ namespace Shiroi.Cutscenes.Editor.Util {
         private void DrawDragging(Rect listRect) {
             var rowIndex = GetDraggedRowIndex();
             nonDragTargetIndices.Clear();
-            for (var i = 0; i < count; ++i) {
-                //-1 means it is selected
-                nonDragTargetIndices.Add(i != index ? i : -1);
+            for (int i = 0; i < count; ++i) {
+                if (i != this.index)
+                    nonDragTargetIndices.Add(i);
             }
+            nonDragTargetIndices.Insert(rowIndex, -1);
             var rect1 = listRect;
-            var flag = false;
+
+            var pastBeingDragged = false;
             //Draw not selected elements
             for (var i = 0; i < nonDragTargetIndices.Count; ++i) {
                 if (nonDragTargetIndices[i] != -1) {
                     rect1.height = GetTokenHeight(i);
 
                     rect1.y = listRect.y + GetElementYOffset(nonDragTargetIndices[i], index);
-                    if (flag) {
+                    if (pastBeingDragged) {
                         rect1.y += GetTokenHeight(index);
                     }
-                    rect1 = slideGroup.GetRect(nonDragTargetIndices[i], rect1);
+                    rect1 = slideGroup.GetRect(Editor, nonDragTargetIndices[i], rect1);
                     DrawBackground(rect1, i, false, false);
                     DrawDraggingHandle(rect1);
                     var contentRect = GetContentRect(rect1);
                     DrawToken(contentRect, nonDragTargetIndices[i], false, false);
                 } else {
-                    flag = true;
+                    pastBeingDragged = true;
                 }
             }
-            rect1.y = draggedY - dragOffset + listRect.y;
+
             //Draw selected token
+            rect1.y = draggedY - dragOffset + listRect.y;
+            //rect1.height = GetTokenHeight(index);
             DrawBackground(rect1, index, true, true);
             DrawDraggingHandle(rect1);
             var contentRect1 = GetContentRect(rect1);
@@ -169,7 +169,9 @@ namespace Shiroi.Cutscenes.Editor.Util {
             if (Event.current.type != EventType.Repaint) {
                 return;
             }
-            DraggingHandle.Draw(new Rect(rect.x + 5f, rect.y + 7f, 10f, rect.height - (rect.height - 7f)), false, false,
+            GUIStyle DraggingHandle = "RL DragHandle";
+            DraggingHandle.Draw(new Rect(rect.x + 5f, rect.y + 7f, 10f, rect.height - (rect.height - 7f)),
+                false, false,
                 false, false);
         }
 
@@ -211,7 +213,6 @@ namespace Shiroi.Cutscenes.Editor.Util {
                 dragOffset = Event.current.mousePosition.y - listRect.y - GetElementYOffset(index);
                 UpdateDraggedY(listRect);
                 slideGroup.Reset();
-                nonDragTargetIndices = new List<int>();
                 e.Use();
             }
         }
@@ -285,6 +286,11 @@ namespace Shiroi.Cutscenes.Editor.Util {
 
         private bool IsDragging() {
             return dragging;
+        }
+
+        public void Draw() {
+            var rect = GUILayoutUtility.GetRect(10f, GetListElementHeight(), GUILayout.ExpandWidth(true));
+            DoListElements(rect);
         }
     }
 }

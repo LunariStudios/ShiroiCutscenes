@@ -40,7 +40,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
         }
 
         private void OnFieldDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token, int tokenIndex,
-            FieldInfo field, int fieldIndex) {
+            FieldInfo field, int fieldIndex, ref GUIContent label) {
             if (!Configs.CheckErrors) {
                 return;
             }

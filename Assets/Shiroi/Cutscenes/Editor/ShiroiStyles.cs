@@ -147,7 +147,7 @@ namespace Shiroi.Cutscenes.Editor {
             get;
             private set;
         }
-
+        
         public static GUIStyle Header {
             get;
             private set;
