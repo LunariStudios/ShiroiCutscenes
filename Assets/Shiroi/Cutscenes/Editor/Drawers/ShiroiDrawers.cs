@@ -42,7 +42,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
                     label = name;
                     break;
                 case Reference.ReferenceType.Exposed:
-                    label = ExposedReferenceDrawer<T>.GetLabel(found, value.PropertyName, name);
+                    label = ExposedReferenceDrawer<T>.GetLabel(found, value.PropertyName, new GUIContent(name));
                     break;
                 default:
                     return;

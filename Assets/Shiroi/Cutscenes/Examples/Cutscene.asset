@@ -118,7 +118,7 @@ MonoBehaviour:
           Booleans: []
           Ints:
           - Key: Id
-            Value: 0
+            Value: -1539803051
           Floats: []
           Strings: []
           Objects: []
@@ -131,7 +131,7 @@ MonoBehaviour:
           Booleans: []
           Ints:
           - Key: Id
-            Value: 0
+            Value: -1631865675
           Floats: []
           Strings: []
           Objects: []
@@ -153,7 +153,7 @@ MonoBehaviour:
           Booleans: []
           Ints:
           - Key: Value
-            Value: -1
+            Value: 653226527
           - Key: Type
             Value: 1
           Floats: []
