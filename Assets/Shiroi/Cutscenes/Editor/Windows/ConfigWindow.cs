@@ -18,7 +18,7 @@ namespace Shiroi.Cutscenes.Editor.Windows {
             position = pos;
         }
 
-        [MenuItem("ShiroiCutscenes/Configs")]
+        [MenuItem("Tools/ShiroiCutscenes/Configs")]
         public static void ShowWindow() {
             GetWindow(typeof(ConfigWindow)).Show();
         }
