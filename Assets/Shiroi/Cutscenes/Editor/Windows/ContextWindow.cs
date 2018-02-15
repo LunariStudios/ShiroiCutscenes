@@ -27,27 +27,30 @@ namespace Shiroi.Cutscenes.Editor.Windows {
         }
 
         public override void OnGUI(Rect rect) {
-            var hasSelected = CurrentEditor.HasSelected;
+            var list = CurrentEditor.TokenList;
+            var hasSelected = list.HasSelected;
+            var lastSelected = list.index;
             var labelRect = rect.GetLine(0);
-            var lastSelected = CurrentEditor.LastSelected;
             if (hasSelected) {
                 GUI.Label(labelRect, "Editing token #" + lastSelected, ShiroiStyles.Header);
             } else {
                 GUI.Label(labelRect, NoTokenSelectedContent, ShiroiStyles.Error);
             }
+
             GUI.enabled = hasSelected;
             if (GUI.Button(rect.GetLine(1), AddTokenAbove)) {
                 var selector = CurrentEditor.SelectorWindow;
                 PopupWindow.Show(rect, selector);
             }
+
             var initColor = GUI.backgroundColor;
             GUI.backgroundColor = ShiroiStyles.ErrorBackgroundColor;
             if (GUI.Button(rect.GetLine(2), RemoveTokenContent)) {
                 CurrentEditor.Cutscene.RemoveToken(lastSelected);
                 editorWindow.Close();
             }
-            GUI.backgroundColor = initColor;
 
+            GUI.backgroundColor = initColor;
         }
     }
 }

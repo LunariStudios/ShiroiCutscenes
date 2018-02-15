@@ -74,6 +74,10 @@ namespace Shiroi.Cutscenes.Editor.Util {
             get { return Cutscene.TotalTokens; }
         }
 
+        public bool HasSelected {
+            get { return index >= 0; }
+        }
+
         private float GetListElementHeight() {
             return (float) (GetElementYOffset(Count - 1) + (double) GetTokenHeight(Count - 1) + 7.0);
         }
@@ -249,8 +253,10 @@ namespace Shiroi.Cutscenes.Editor.Util {
             for (var i = 0; i < Count; ++i) {
                 var num2 = GetTokenHeight(i);
                 var num3 = num1 + num2;
-                if (localY >= (double) num1 && localY < (double) num3)
+                if (localY >= (double) num1 && localY < (double) num3) {
                     return i;
+                }
+
                 num1 += num2;
             }
 

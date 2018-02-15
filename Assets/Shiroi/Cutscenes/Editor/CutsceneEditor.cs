@@ -8,7 +8,6 @@ using Shiroi.Cutscenes.Editor.Windows;
 using Shiroi.Cutscenes.Preview;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,9 +19,7 @@ namespace Shiroi.Cutscenes.Editor {
 
 
         public static IEnumerable<CutsceneEditor> Editors {
-            get {
-                return editors;
-            }
+            get { return editors; }
         }
 
         private static int currentKaomoji;
@@ -33,42 +30,25 @@ namespace Shiroi.Cutscenes.Editor {
 
 
         //Instance Fields
-        private TokenList tokenList;
+        public TokenList TokenList;
 
         private bool hasAnyFocused;
 
-        [SerializeField]
-        private CutscenePlayer player;
+        [SerializeField] private CutscenePlayer player;
 
         public ContextWindow ContextWindow;
         public TokenSelectorWindow SelectorWindow;
         public readonly ErrorManager ErrorManager = new ErrorManager();
 
         public CutscenePlayer Player {
-            get {
-                return player;
-            }
+            get { return player; }
             private set {
                 player = value;
                 LastSelectedPlayer = value;
             }
         }
 
-        public bool HasSelected {
-            get {
-                return LastSelected >= 0;
-            }
-        }
-
-        public int LastSelected {
-            get;
-            private set;
-        }
-
-        public Cutscene Cutscene {
-            get;
-            private set;
-        }
+        public Cutscene Cutscene { get; private set; }
 
         private void OnDisable() {
             SceneView.onSceneGUIDelegate -= OnScene;
@@ -82,30 +62,20 @@ namespace Shiroi.Cutscenes.Editor {
             ContextWindow = new ContextWindow(this);
             SelectorWindow = new TokenSelectorWindow(this);
             Cutscene = (Cutscene) target;
-            tokenList = new TokenList(this);
+            TokenList = new TokenList(this);
         }
 
         private void OnScene(SceneView sceneview) {
-            var index = tokenList.index;
+            var index = TokenList.index;
             if (index < 0 || index >= Cutscene.TotalTokens) {
                 return;
             }
+
             var selectedToken = Cutscene[index] as IScenePreviewable;
             if (selectedToken != null) {
                 selectedToken.OnPreview(EditorSceneHandle.Instance, sceneview);
             }
         }
-
-        private void OnReorderCallback(ReorderableList list) {
-            Cutscene.FutureManager.OnReorder(list.index, LastSelected);
-        }
-
-        private void OnRemoveCallback(ReorderableList list) {
-            Cutscene.RemoveToken(list.index);
-        }
-
-
-        //Errors
 
 
         public override void OnInspectorGUI() {
@@ -113,6 +83,7 @@ namespace Shiroi.Cutscenes.Editor {
             if (checkErrors) {
                 ErrorManager.Clear();
             }
+
             var totalTokens = Cutscene.Tokens.Count;
             DrawPlayerSettings();
             GUILayout.Space(ShiroiStyles.SpaceHeight);
@@ -126,14 +97,18 @@ namespace Shiroi.Cutscenes.Editor {
                 futuresRect = GUILayoutUtility.GetRect(0, futuresHeight);
                 GUILayout.Space(ShiroiStyles.SpaceHeight);
             }
+
             if (checkErrors) {
                 ErrorManager.DrawErrors(this);
             }
+
             DrawTokens(totalTokens);
             if (hasFutures) {
                 DrawFutures(futuresRect);
             }
-            if (Event.current.type == EventType.ContextClick) {
+
+            var e = Event.current;
+            if (e.type == EventType.ContextClick || e.isMouse && e.button == 1) {
                 var rect = new Rect(Event.current.mousePosition, ContextWindow.Size);
                 PopupWindow.Show(rect, ContextWindow);
             }
@@ -148,6 +123,7 @@ namespace Shiroi.Cutscenes.Editor {
             if (Player) {
                 ShiroiEditorUtil.DrawReferencesLayout(Player);
             }
+
             EditorGUILayout.EndVertical();
         }
 
@@ -157,11 +133,9 @@ namespace Shiroi.Cutscenes.Editor {
             DrawCutsceneHeader(totalTokens);
             if (totalTokens > 0) {
                 hasAnyFocused = false;
-                tokenList.Draw();
-                if (!hasAnyFocused) {
-                    LastSelected = -1;
-                }
+                TokenList.Draw();
             }
+
             EditorGUILayout.EndVertical();
         }
 
@@ -199,7 +173,7 @@ namespace Shiroi.Cutscenes.Editor {
                         msg = string.Format("{0} @ {3} (Owner: {1} @ #{2})", future.Name, tokenName, index,
                             future.Id);
                         var mappedToken = MappedToken.For(token);
-                        color = LastSelected == index ? mappedToken.SelectedColor : mappedToken.Color;
+                        color = TokenList.index == index ? mappedToken.SelectedColor : mappedToken.Color;
                     }
 
                     var content = EditorGUIUtility.ObjectContent(null, future.Type);
@@ -213,6 +187,7 @@ namespace Shiroi.Cutscenes.Editor {
                     GUI.Box(iconRect, content);
                     EditorGUI.LabelField(msgRect, msg);
                 }
+
                 GUI.backgroundColor = initColor;
             }
         }
@@ -225,6 +200,7 @@ namespace Shiroi.Cutscenes.Editor {
                 var rect = new Rect(Event.current.mousePosition, TokenSelectorWindow.Size);
                 PopupWindow.Show(rect, SelectorWindow);
             }
+
             if (!isEmpty) {
                 if (GUILayout.Button(ShiroiStyles.ClearCutscene)) {
                     Cutscene.Clear();
@@ -245,15 +221,16 @@ namespace Shiroi.Cutscenes.Editor {
 
         public void AddToken(Type type) {
             var instance = (IToken) Activator.CreateInstance(type);
-            if (Cutscene.IsEmpty || LastSelected < 0) {
+            if (Cutscene.IsEmpty || TokenList.index < 0) {
                 Cutscene.AddToken(instance);
             } else {
-                Cutscene.AddToken(LastSelected, instance);
+                Cutscene.AddToken(TokenList.index, instance);
             }
+
             EditorUtility.SetDirty(this);
             SetCutsceneDirty();
             //tokenList.GrabKeyboardFocus();
-            tokenList.index = Cutscene.Tokens.Count - 1;
+            TokenList.index = Cutscene.Tokens.Count - 1;
         }
 
         private void SetCutsceneDirty() {
