@@ -12,156 +12,16 @@ MonoBehaviour:
   m_Name: Cutscene
   m_EditorClassIdentifier: 
   tokens:
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken1
+  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken2
     TokenData:
       Booleans: []
-      Ints: []
-      Floats: []
-      Strings:
-      - Key: String
-        Value: 
-      Objects:
-      - Key: CharacterColor
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: r
-            Value: 1
-          - Key: g
-            Value: 0
-          - Key: b
-            Value: 0
-          - Key: a
-            Value: 1
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: Rect
-        Value:
-          Booleans: []
-          Ints: []
-          Floats:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: w
-            Value: 0
-          - Key: h
-            Value: 0
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: RectInt
-        Value:
-          Booleans: []
-          Ints:
-          - Key: x
-            Value: 0
-          - Key: y
-            Value: 0
-          - Key: w
-            Value: 0
-          - Key: h
-            Value: 0
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      UnityObjects: []
-      Arrays:
-      - Key: KeyFrames
-        Value:
-        - Booleans: []
-          Ints: []
-          Floats:
-          - Key: Time
-            Value: 0
-          - Key: Value
-            Value: 0
-          - Key: InTangent
-            Value: 0
-          - Key: OutTangent
-            Value: 0
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-        - Booleans: []
-          Ints: []
-          Floats:
-          - Key: Time
-            Value: 1
-          - Key: Value
-            Value: 1
-          - Key: InTangent
-            Value: 0
-          - Key: OutTangent
-            Value: 0
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-  - TokenType: Shiroi.Cutscenes.Tokens.SetParentToken
-    TokenData:
-      Booleans: []
-      Ints: []
+      Ints:
+      - Key: LayerMask
+        Value: 0
       Floats: []
       Strings: []
       Objects:
-      - Key: Object
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: -1539803051
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-          Arrays: []
-      - Key: NewParent
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Id
-            Value: -1631865675
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects:
-          - Key: Default
-            Value: {fileID: 0}
-          Arrays: []
-      UnityObjects: []
-      Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.MyToken
-    TokenData:
-      Booleans: []
-      Ints: []
-      Floats: []
-      Strings: []
-      Objects:
-      - Key: System
-        Value:
-          Booleans: []
-          Ints:
-          - Key: Value
-            Value: 653226527
-          - Key: Type
-            Value: 1
-          Floats: []
-          Strings: []
-          Objects: []
-          UnityObjects: []
-          Arrays: []
-      - Key: Position
+      - Key: Rotation
         Value:
           Booleans: []
           Ints: []
@@ -172,9 +32,24 @@ MonoBehaviour:
             Value: 0
           - Key: z
             Value: 0
+          - Key: w
+            Value: 1
           Strings: []
           Objects: []
           UnityObjects: []
+          Arrays: []
+      - Key: Obj
+        Value:
+          Booleans: []
+          Ints:
+          - Key: Id
+            Value: 1114314452
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - Key: Default
+            Value: {fileID: 0}
           Arrays: []
       UnityObjects: []
       Arrays: []

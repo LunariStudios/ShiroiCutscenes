@@ -83,13 +83,6 @@ namespace Shiroi.Cutscenes.Editor {
             SelectorWindow = new TokenSelectorWindow(this);
             Cutscene = (Cutscene) target;
             tokenList = new TokenList(this);
-            /*tokenList = new ReorderableList(Cutscene.Tokens, typeof(IToken), true, false, false, true) {
-                drawElementCallback = DrawToken,
-                drawElementBackgroundCallback = DrawBackground,
-                elementHeightCallback = CalculateHeight,
-                onRemoveCallback = OnRemoveCallback,
-                onReorderCallback = OnReorderCallback
-            };*/
         }
 
         private void OnScene(SceneView sceneview) {
@@ -247,43 +240,6 @@ namespace Shiroi.Cutscenes.Editor {
             } else {
                 //Reload kaomojis
                 currentKaomoji = Random.Range(0, ShiroiStyles.Kaomojis.Length - 1);
-            }
-        }
-
-        private void DrawBackground(Rect rect, int index, bool isactive, bool isfocused) {
-            if (isfocused) {
-                hasAnyFocused = true;
-                LastSelected = index;
-            }
-            if (index == -1) {
-                return;
-            }
-
-            var m = MappedToken.For(Cutscene[index]);
-            var initColor = GUI.backgroundColor;
-            GUI.backgroundColor = isfocused ? m.SelectedColor : m.Color;
-            GUI.Box(rect, GUIContent.none);
-            GUI.backgroundColor = initColor;
-        }
-
-        private float CalculateHeight(int index) {
-            var token = Cutscene[index];
-            return MappedToken.For(token).Height;
-        }
-
-
-        private void DrawToken(Rect rect, int index, bool isactive, bool isfocused) {
-            var token = Cutscene[index];
-            var mappedToken = MappedToken.For(token);
-            bool changed;
-            mappedToken.DrawFields(this, rect, index, token, Cutscene, Player, out changed);
-            if (!changed) {
-                return;
-            }
-            EditorUtility.SetDirty(Cutscene);
-            var l = token as ITokenChangedListener;
-            if (l != null) {
-                l.OnChanged(Cutscene);
             }
         }
 

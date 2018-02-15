@@ -17,18 +17,22 @@ namespace Shiroi.Cutscenes.Editor.Util {
     }
 
     public class TokenList {
-        public CutsceneEditor Editor;
+        private readonly CutsceneEditor editor;
+
+        public const float FooterHeight = 14F;
+
         //How further down from the start of the selected token box we are dragging 
         private float dragOffset;
         private readonly SlideGroup slideGroup = new SlideGroup();
-        //
         private float draggedY;
         private bool dragging;
         private readonly List<int> nonDragTargetIndices = new List<int>();
         private readonly TokenStateTuple[] states;
 
+        public delegate void TokenListState(Rect listRect, Event e);
+
         public TokenList(CutsceneEditor editor) {
-            Editor = editor;
+            this.editor = editor;
             states = new[] {
                 new TokenStateTuple(EventType.MouseDown, OnMouseDown),
                 new TokenStateTuple(EventType.MouseUp, OnMouseUp),
@@ -38,9 +42,7 @@ namespace Shiroi.Cutscenes.Editor.Util {
         }
 
         public Cutscene Cutscene {
-            get {
-                return Editor.Cutscene;
-            }
+            get { return editor.Cutscene; }
         }
 
         public int index;
@@ -64,43 +66,22 @@ namespace Shiroi.Cutscenes.Editor.Util {
                     num += GetTokenHeight(i);
                 }
             }
+
             return num;
         }
 
-
-        private Rect GetRowRect(int index, Rect listRect) {
-            return new Rect(listRect.x, listRect.y + GetElementYOffset(index), listRect.width,
-                GetTokenHeight(index));
-        }
-
-        public int count {
-            get {
-                return Cutscene.TotalTokens;
-            }
+        public int Count {
+            get { return Cutscene.TotalTokens; }
         }
 
         private float GetListElementHeight() {
-            return (float) (GetElementYOffset(count - 1) + (double) GetTokenHeight(count - 1) + 7.0);
+            return (float) (GetElementYOffset(Count - 1) + (double) GetTokenHeight(Count - 1) + 7.0);
         }
 
-        private void DoListElements(Rect listRect) {
-            listRect.yMin += 2f;
-            listRect.yMax -= 5f;
-
-            if (Cutscene.IsEmpty) {
-                return;
-            }
-            if (dragging && Event.current.type == EventType.Repaint) {
-                DrawDragging(listRect);
-            } else {
-                DrawNormal(listRect);
-            }
-            DoDraggingAndSelection(listRect);
-        }
 
         private void DrawNormal(Rect listRect) {
             var rect1 = listRect;
-            for (var i = 0; i < count; ++i) {
+            for (var i = 0; i < Count; ++i) {
                 var isSelected = i == index;
                 var flag2 = i == index; //&& HasKeyboardControl();
                 rect1.height = GetTokenHeight(i);
@@ -115,11 +96,12 @@ namespace Shiroi.Cutscenes.Editor.Util {
         private void DrawDragging(Rect listRect) {
             var rowIndex = GetDraggedRowIndex();
             nonDragTargetIndices.Clear();
-            for (var i = 0; i < count; ++i) {
+            for (var i = 0; i < Count; ++i) {
                 if (i != index) {
                     nonDragTargetIndices.Add(i);
                 }
             }
+
             nonDragTargetIndices.Insert(rowIndex, -1);
             var rect1 = listRect;
 
@@ -134,7 +116,8 @@ namespace Shiroi.Cutscenes.Editor.Util {
                     if (pastBeingDragged) {
                         rect1.y += GetTokenHeight(index);
                     }
-                    rect1 = slideGroup.GetRect(Editor, i2, rect1);
+
+                    rect1 = slideGroup.GetRect(editor, i2, rect1);
                     rect1.height = GetTokenHeight(i2);
                     DrawBackground(rect1, i2, false, false);
                     DrawDraggingHandle(rect1);
@@ -144,6 +127,7 @@ namespace Shiroi.Cutscenes.Editor.Util {
                     pastBeingDragged = true;
                 }
             }
+
             //Draw selected token
             rect1.y = draggedY - dragOffset + listRect.y;
             //rect1.height = GetTokenHeight(index);
@@ -157,10 +141,11 @@ namespace Shiroi.Cutscenes.Editor.Util {
             var token = Cutscene[index];
             var mappedToken = MappedToken.For(token);
             bool changed;
-            mappedToken.DrawFields(Editor, rect, index, token, Cutscene, Editor.Player, out changed);
+            mappedToken.DrawFields(editor, rect, index, token, Cutscene, editor.Player, out changed);
             if (!changed) {
                 return;
             }
+
             EditorUtility.SetDirty(Cutscene);
             var l = token as ITokenChangedListener;
             if (l != null) {
@@ -172,8 +157,9 @@ namespace Shiroi.Cutscenes.Editor.Util {
             if (Event.current.type != EventType.Repaint) {
                 return;
             }
-            GUIStyle DraggingHandle = "RL DragHandle";
-            DraggingHandle.Draw(new Rect(rect.x + 5f, rect.y + 7f, 10f, rect.height - (rect.height - 7f)),
+
+            GUIStyle draggingHandle = "RL DragHandle";
+            draggingHandle.Draw(new Rect(rect.x + 5f, rect.y + 7f, 10f, rect.height - (rect.height - 7f)),
                 false, false,
                 false, false);
         }
@@ -190,20 +176,6 @@ namespace Shiroi.Cutscenes.Editor.Util {
             GUI.backgroundColor = initColor;
         }
 
-        private void DrawEmpty(Rect rect) {
-            /*  rect1.y = listRect.y;
-              if (this.drawElementBackgroundCallback == null)
-                  ReorderableList.s_Defaults.DrawElementBackground(rect1, -1, false, false, false);
-              else
-                  this.drawElementBackgroundCallback(rect1, -1, false, false);
-              ReorderableList.s_Defaults.DrawElementDraggingHandle(rect1, -1, false, false, false);
-              Rect rect2 = rect1;
-              rect2.xMin += 6f;
-              rect2.xMax -= 6f;
-              ReorderableList.s_Defaults.DrawNoneElement(rect2, this.m_Draggable);*/
-        }
-
-        public delegate void TokenListState(Rect listRect, Event e);
 
         private TokenListState GetState(EventType type) {
             var found = states.FirstOrDefault(tuple => tuple.Type == type);
@@ -239,15 +211,18 @@ namespace Shiroi.Cutscenes.Editor.Util {
                 index++;
                 e.Use();
             }
+
             if (e.keyCode == KeyCode.UpArrow) {
                 index--;
                 e.Use();
             }
+
             if (e.keyCode == KeyCode.Escape) {
                 GUIUtility.hotControl = 0;
                 dragging = false;
                 e.Use();
             }
+
             index = Mathf.Clamp(index, 0, Cutscene.TotalTokens - 1);
         }
 
@@ -260,12 +235,6 @@ namespace Shiroi.Cutscenes.Editor.Util {
         }
 
 
-        /*  private bool IsMouseInsideActiveElement(Rect listRect) {
-              int rowIndex = GetRowIndex(Event.current.mousePosition.y - listRect.y);
-              return rowIndex == this.m_ActiveElement &&
-                     GetRowRect(rowIndex, listRect).Contains(Event.current.mousePosition);
-          }*/
-
         private void UpdateDraggedY(Rect listRect) {
             draggedY = Mathf.Clamp(Event.current.mousePosition.y - listRect.y, dragOffset,
                 listRect.height - (GetTokenHeight(index) - dragOffset));
@@ -277,19 +246,44 @@ namespace Shiroi.Cutscenes.Editor.Util {
 
         private int GetRowIndex(float localY) {
             var num1 = 0.0f;
-            for (var i = 0; i < count; ++i) {
+            for (var i = 0; i < Count; ++i) {
                 var num2 = GetTokenHeight(i);
                 var num3 = num1 + num2;
                 if (localY >= (double) num1 && localY < (double) num3)
                     return i;
                 num1 += num2;
             }
-            return count - 1;
+
+            return Count - 1;
         }
 
         public void Draw() {
             var rect = GUILayoutUtility.GetRect(10f, GetListElementHeight(), GUILayout.ExpandWidth(true));
-            DoListElements(rect);
+            var footerRect = GUILayoutUtility.GetRect(10f, FooterHeight, GUILayout.ExpandWidth(true));
+            if (Cutscene.IsEmpty) {
+                return;
+            }
+
+            if (dragging && Event.current.type == EventType.Repaint) {
+                DrawDragging(rect);
+            } else {
+                DrawNormal(rect);
+            }
+
+            DrawFooter(footerRect);
+            DoDraggingAndSelection(rect);
+        }
+
+        private void DrawFooter(Rect rect) {
+            var position = new Rect(rect.xMax - 29f, rect.y - 3f, 25f, 13f);
+
+            var iconToolbarMinus = EditorGUIUtility.IconContent("Toolbar Minus", "|Remove selection from list");
+            var preButton = (GUIStyle) "RL FooterButton";
+            using (new EditorGUI.DisabledScope(index < 0 || index >= Count)) {
+                if (GUI.Button(position, iconToolbarMinus, preButton)) {
+                    editor.Cutscene.RemoveToken(index);
+                }
+            }
         }
     }
 }

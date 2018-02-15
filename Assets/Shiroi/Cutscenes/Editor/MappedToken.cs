@@ -23,7 +23,7 @@ namespace Shiroi.Cutscenes.Editor {
         private static readonly Setter Setter = value => currentField.SetValue(currentToken, value);
 
         //Const value
-        private const float SaturationValue = 0.7F;
+        private const float SaturationValue = 0.5F;
 
         private const float BrightnessValue = 0.7F;
         private const float BrightnessDifference = 0.2F;
