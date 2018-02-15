@@ -9,6 +9,7 @@ using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Editor.Windows;
 using Shiroi.Cutscenes.Serialization;
 using Shiroi.Cutscenes.Tokens;
+using Shiroi.Serialization;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;

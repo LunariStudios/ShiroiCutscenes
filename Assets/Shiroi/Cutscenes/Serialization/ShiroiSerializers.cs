@@ -1,6 +1,7 @@
 ﻿using System;
 using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Util;
+using Shiroi.Serialization;
 using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Serialization {

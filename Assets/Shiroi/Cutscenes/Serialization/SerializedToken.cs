@@ -1,15 +1,14 @@
 ﻿using System;
 using Shiroi.Cutscenes.Tokens;
+using Shiroi.Serialization;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Serialization {
     [Serializable]
     public struct SerializedToken {
-        [SerializeField]
-        public string TokenType;
+        [SerializeField] public string TokenType;
 
-        [SerializeField]
-        public SerializedObject TokenData;
+        [SerializeField] public SerializedObject TokenData;
 
         private SerializedToken(string tokenType, SerializedObject tokenData) {
             TokenType = tokenType;
@@ -22,8 +21,9 @@ namespace Shiroi.Cutscenes.Serialization {
                 Debug.LogFormat("[ShiroiCutscenes] Couldn't find type of token '{0}'! Skipping.", TokenType);
                 return null;
             }
+
             var token = (IToken) Activator.CreateInstance(type);
-            TokenData.Deserialize(token);
+            TokenData.DeserializeOnto(token);
             return token;
         }
 
