@@ -1,0 +1,8 @@
+{
+    "name": "ShiroiCutscenes-Examples",
+    "references": [
+        "ShiroiCutscenes"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}

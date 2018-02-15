@@ -1,0 +1,8 @@
+{
+    "name": "ShiroiCutscenes-Editor",
+    "references": [
+        "ShiroiCutscenes"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}
