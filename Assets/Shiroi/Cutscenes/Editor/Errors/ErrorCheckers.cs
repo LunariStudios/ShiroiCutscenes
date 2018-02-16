@@ -17,6 +17,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             RegisterChecker(new MissingReferenceChecker());
             RegisterChecker(new EmptyStringChecker());
             RegisterChecker(new UnusedFutureChecker());
+            RegisterChecker(new InvalidFutureProviderChecker());
         }
 
         private static void RegisterChecker(ErrorChecker nullChecker) {

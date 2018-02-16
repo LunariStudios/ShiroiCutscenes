@@ -31,8 +31,13 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             return GetInfo(defaultNameCache, generic, DefaultValueFieldName);
         }
 
-        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token,
-            object value, int fieldIndex,
+        public override void Check(
+            CutsceneEditor editor,
+            ErrorManager manager,
+            int tokenIndex,
+            IToken token,
+            object value,
+            int fieldIndex,
             FieldInfo info) {
             if (Attribute.GetCustomAttribute(info, typeof(NullSupportedAttribute)) != null) {
                 return;
@@ -49,12 +54,16 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (MimicExposedResolve(editor.Player, propertyName, defaultObject) != null) {
                 return;
             }
-            var msg = string.Format("Couldn't resolve exposed reference of id {0} in field {1}.", propertyName,
+            var msg = string.Format(
+                "Couldn't resolve exposed reference of id {0} in field {1}.",
+                propertyName,
                 info.Name);
             manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, ShiroiStyles.NullSupportedMessage);
         }
 
-        private static Object MimicExposedResolve(CutscenePlayer resolver, PropertyName exposedName,
+        private static Object MimicExposedResolve(
+            CutscenePlayer resolver,
+            PropertyName exposedName,
             Object defaultValue) {
             if (resolver == null) {
                 return defaultValue;
@@ -66,8 +75,14 @@ namespace Shiroi.Cutscenes.Editor.Errors {
     }
 
     public class MissingFutureChecker : ErrorChecker {
-        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token,
-            object value, int fieldIndex, FieldInfo info) {
+        public override void Check(
+            CutsceneEditor editor,
+            ErrorManager manager,
+            int tokenIndex,
+            IToken token,
+            object value,
+            int fieldIndex,
+            FieldInfo info) {
             if (Attribute.GetCustomAttribute(info, typeof(NullSupportedAttribute)) != null) {
                 return;
             }
@@ -86,8 +101,14 @@ namespace Shiroi.Cutscenes.Editor.Errors {
 
 
     public class MissingReferenceChecker : ErrorChecker {
-        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token,
-            object value, int fieldIndex, FieldInfo info) {
+        public override void Check(
+            CutsceneEditor editor,
+            ErrorManager manager,
+            int tokenIndex,
+            IToken token,
+            object value,
+            int fieldIndex,
+            FieldInfo info) {
             var reference = value as Reference;
             var player = editor.Player;
             if (reference == null || player == null) {
@@ -114,8 +135,14 @@ namespace Shiroi.Cutscenes.Editor.Errors {
     }
 
     public class NullChecker : ErrorChecker {
-        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token,
-            object value, int fieldIndex, FieldInfo info) {
+        public override void Check(
+            CutsceneEditor editor,
+            ErrorManager manager,
+            int tokenIndex,
+            IToken token,
+            object value,
+            int fieldIndex,
+            FieldInfo info) {
             if (Attribute.GetCustomAttribute(info, typeof(NullSupportedAttribute)) != null) {
                 return;
             }
@@ -128,8 +155,14 @@ namespace Shiroi.Cutscenes.Editor.Errors {
     }
 
     public class EmptyStringChecker : ErrorChecker {
-        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token,
-            object value, int fieldIndex, FieldInfo info) {
+        public override void Check(
+            CutsceneEditor editor,
+            ErrorManager manager,
+            int tokenIndex,
+            IToken token,
+            object value,
+            int fieldIndex,
+            FieldInfo info) {
             if (Attribute.GetCustomAttribute(info, typeof(EmptyStringSupportedAttribute)) != null) {
                 return;
             }
@@ -141,16 +174,38 @@ namespace Shiroi.Cutscenes.Editor.Errors {
                 return;
             }
             var msg = string.Format("Field {0} has an empty string.", info.Name);
-            manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.Medium, msg,
+            manager.NotifyError(
+                tokenIndex,
+                fieldIndex,
+                ErrorLevel.Medium,
+                msg,
                 "Please assign it or annotate the field as EmptyStringSupported.");
+        }
+    }
+
+    public class InvalidFutureProviderChecker : ErrorChecker {
+        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token, object value, int fieldIndex, FieldInfo info) {
+            var cutscene = editor.Cutscene;
+            foreach (var future in cutscene.FutureManager.Futures) {
+                var provider = future.Provider;
+                if (provider >= cutscene.TotalTokens || provider < 0) {
+                    var msg = string.Format("Future {0}'s provider ({1}) doesn't exist!", future, provider);
+                    manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg);
+                }
+            }
         }
     }
 
     public class UnusedFutureChecker : ErrorChecker, IOnBeginCheckListener, IOnEndCheckListener {
         private readonly Dictionary<int, int> uses = new Dictionary<int, int>();
 
-        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token,
-            object value, int fieldIndex,
+        public override void Check(
+            CutsceneEditor editor,
+            ErrorManager manager,
+            int tokenIndex,
+            IToken token,
+            object value,
+            int fieldIndex,
             FieldInfo info) {
             if (!(value is Reference) && !(value is FutureReference)) {
                 return;
@@ -175,6 +230,9 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             var cutscene = editor.Cutscene;
             foreach (var future in cutscene.FutureManager.Futures) {
                 var pIndex = future.Provider;
+                if (pIndex >= cutscene.TotalTokens) {
+                    continue;
+                }
                 var provider = cutscene[pIndex];
                 var id = future.Id;
                 if (GetUses(id) > 0) {
