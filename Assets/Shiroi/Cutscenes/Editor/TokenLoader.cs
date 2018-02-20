@@ -43,22 +43,24 @@ namespace Shiroi.Cutscenes.Editor {
 
         private static void RegisterAssembly(Assembly assembly) {
             ushort total = 0;
-            foreach (var type in assembly.GetTypes()) {
-                if (type == TokenType || !TokenType.IsAssignableFrom(type)) {
-                    continue;
+            try {
+                foreach (var type in assembly.GetTypes()) {
+                    if (type == TokenType || !TokenType.IsAssignableFrom(type)) {
+                        continue;
+                    }
+                    if (KnownTokenTypes.Contains(type)) {
+                        continue;
+                    }
+                    var name = type.Name;
+                    KnownTokenTypes.Add(type);
+                    total++;
                 }
-                if (KnownTokenTypes.Contains(type)) {
-                    continue;
+                if (Configs.ShowDebug && total > 0) {
+                    Debug.LogFormat("[ShiroiCutscenes] Loaded '{0}' tokens from '{1}'", total, assembly);
                 }
-                var name = type.Name;
-                KnownTokenTypes.Add(type);
-                total++;
-            }
-            if (Configs.ShowDebug && total > 0) {
-                Debug.LogFormat("[ShiroiCutscenes] Loaded '{0}' tokens from '{1}'", total, assembly);
+            } catch (ReflectionTypeLoadException) {
+                //expected
             }
         }
-
-        private static void Func(object userData) { }
     }
 }
