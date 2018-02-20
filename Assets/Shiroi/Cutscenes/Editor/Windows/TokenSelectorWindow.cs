@@ -9,12 +9,12 @@ namespace Shiroi.Cutscenes.Editor.Windows {
         // Filter
         public const int BuiltInLines = 2;
 
-        public const string FilterLabel = "Filter";
         public const float WindowWidth = 300;
 
         public static Vector2 Size {
             get {
-                return new Vector2(WindowWidth,
+                return new Vector2(
+                    WindowWidth,
                     (TokenLoader.KnownTokenTypes.Count + BuiltInLines) * ShiroiStyles.SingleLineHeight);
             }
         }
@@ -37,7 +37,7 @@ namespace Shiroi.Cutscenes.Editor.Windows {
         public override void OnGUI(Rect rect) {
             EditorGUI.LabelField(rect.GetLine(0), "Select a token to add");
             EditorGUI.BeginChangeCheck();
-            filter = EditorGUI.TextField(rect.GetLine(1), FilterLabel, filter);
+            filter = SearchTextField(rect.GetLine(1), filter);
             if (EditorGUI.EndChangeCheck()) {
                 editorWindow.Repaint();
                 return;
@@ -54,6 +54,20 @@ namespace Shiroi.Cutscenes.Editor.Windows {
                 }
                 i++;
             }
+        }
+
+        public static string SearchTextField(Rect rect, string searchString) {
+            var changed = GUI.changed;
+            var text = rect;
+            text.xMax -= ShiroiStyles.SingleLineHeight;
+            searchString = GUI.TextField(rect, searchString, GUI.skin.FindStyle("ToolbarSeachTextField"));
+            var button = rect;
+            button.xMin = text.xMax;
+            if (GUI.Button(button, string.Empty, GUI.skin.FindStyle("ToolbarSeachCancelButton"))) {
+                searchString = string.Empty;
+            }
+            GUI.changed = changed;
+            return searchString;
         }
     }
 }
