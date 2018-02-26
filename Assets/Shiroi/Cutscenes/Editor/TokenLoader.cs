@@ -42,7 +42,6 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         private static void RegisterAssembly(Assembly assembly) {
-            ushort total = 0;
             try {
                 foreach (var type in assembly.GetTypes()) {
                     if (type == TokenType || !TokenType.IsAssignableFrom(type)) {
@@ -51,9 +50,7 @@ namespace Shiroi.Cutscenes.Editor {
                     if (KnownTokenTypes.Contains(type)) {
                         continue;
                     }
-                    var name = type.Name;
                     KnownTokenTypes.Add(type);
-                    total++;
                 }
             } catch (ReflectionTypeLoadException) {
                 //expected
