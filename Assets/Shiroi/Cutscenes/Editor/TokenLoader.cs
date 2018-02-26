@@ -55,9 +55,6 @@ namespace Shiroi.Cutscenes.Editor {
                     KnownTokenTypes.Add(type);
                     total++;
                 }
-                if (Configs.ShowDebug && total > 0) {
-                    Debug.LogFormat("[ShiroiCutscenes] Loaded '{0}' tokens from '{1}'", total, assembly);
-                }
             } catch (ReflectionTypeLoadException) {
                 //expected
             }
