@@ -42,7 +42,9 @@ namespace Shiroi.Cutscenes.Editor.Util {
         }
 
         public Cutscene Cutscene {
-            get { return editor.Cutscene; }
+            get {
+                return editor.Cutscene;
+            }
         }
 
         public int index;
@@ -56,7 +58,13 @@ namespace Shiroi.Cutscenes.Editor.Util {
         }
 
         private float GetTokenHeight(int tokenIndex) {
-            return MappedToken.For(Cutscene[tokenIndex]).Height;
+            if (tokenIndex >= Cutscene.TotalTokens) {
+                Debug.LogWarningFormat("[ShiroiCutscenes] Token index '{0}' is out of range in cutscenes {1}!",
+                    tokenIndex, Cutscene.name);
+                return ShiroiStyles.SingleLineHeight;
+            }
+            var token = Cutscene[tokenIndex];
+            return MappedToken.For(token).Height;
         }
 
         private float GetElementYOffset(int tokenIndex, int skipIndex = -1) {
@@ -71,11 +79,15 @@ namespace Shiroi.Cutscenes.Editor.Util {
         }
 
         public int Count {
-            get { return Cutscene.TotalTokens; }
+            get {
+                return Cutscene.TotalTokens;
+            }
         }
 
         public bool HasSelected {
-            get { return index >= 0; }
+            get {
+                return index >= 0;
+            }
         }
 
         private float GetListElementHeight() {

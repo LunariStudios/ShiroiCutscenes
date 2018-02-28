@@ -6,9 +6,11 @@ using UnityEngine;
 namespace Shiroi.Cutscenes.Serialization {
     [Serializable]
     public struct SerializedToken {
-        [SerializeField] public string TokenType;
+        [SerializeField]
+        public string TokenType;
 
-        [SerializeField] public SerializedObject TokenData;
+        [SerializeField]
+        public SerializedObject TokenData;
 
         private SerializedToken(string tokenType, SerializedObject tokenData) {
             TokenType = tokenType;

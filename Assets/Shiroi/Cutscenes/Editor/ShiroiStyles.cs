@@ -14,7 +14,7 @@ namespace Shiroi.Cutscenes.Editor {
         public const float SpaceHeight = 10F;
 
         public const float SingleLineHeight = 16;
-
+        public const float DefaultAlpha = 0.7F;
         public static readonly Color ErrorBackgroundColor = new Color(0.9f, 0.22f, 0.21f);
         public static readonly Color MediumErrorBackgroundColor = new Color(0.99f, 0.85f, 0.21f);
         public static readonly Color LowErrorBackgroundColor = new Color(0.33f, 0.43f, 0.48f);

@@ -24,9 +24,9 @@ namespace Shiroi.Cutscenes.Editor {
         private static readonly Setter Setter = value => currentField.SetValue(currentToken, value);
 
         //Const value
-        private const float SaturationValue = 0.5F;
+        private const float SaturationValue = 0.8F;
 
-        private const float BrightnessValue = 0.7F;
+        private const float BrightnessValue = 0.8F;
         private const float BrightnessDifference = 0.2F;
         private const float SelectedBrightnessValue = BrightnessValue + BrightnessDifference;
 
@@ -95,6 +95,9 @@ namespace Shiroi.Cutscenes.Editor {
                 Color = Color.HSVToRGB(0, 0, BrightnessValue);
                 SelectedColor = Color.HSVToRGB(0, 0, SelectedBrightnessValue);
             }
+
+            Color.a = ShiroiStyles.DefaultAlpha;
+            SelectedColor.a = ShiroiStyles.DefaultAlpha;
         }
 
         private static void CalculateColor(Type type, out Color color, out Color selectedColor) {

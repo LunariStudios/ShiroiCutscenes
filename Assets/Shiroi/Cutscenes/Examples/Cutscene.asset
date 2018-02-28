@@ -21,33 +21,27 @@ MonoBehaviour:
       Objects: []
       UnityObjects: []
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken2
+  - TokenType: Shiroi.Cutscenes.Tokens.SetParentToken
     TokenData:
       Booleans: []
-      Ints:
-      - key: LayerMask
-        value: 0
+      Ints: []
       Floats: []
       Strings: []
       Objects:
-      - key: Rotation
+      - key: Object
         value:
           Booleans: []
-          Ints: []
-          Floats:
-          - key: x
+          Ints:
+          - key: Id
             value: 0
-          - key: y
-            value: 0
-          - key: z
-            value: 0
-          - key: w
-            value: 1
+          Floats: []
           Strings: []
           Objects: []
-          UnityObjects: []
+          UnityObjects:
+          - key: Default
+            value: {fileID: 0}
           Arrays: []
-      - key: Obj
+      - key: NewParent
         value:
           Booleans: []
           Ints:
@@ -62,16 +56,53 @@ MonoBehaviour:
           Arrays: []
       UnityObjects: []
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Examples.SetFutureTextToken
+  - TokenType: Shiroi.Cutscenes.Tokens.DebugTextToken
+    TokenData:
+      Booleans: []
+      Ints:
+      - key: Type
+        value: 0
+      Floats: []
+      Strings:
+      - key: Text
+        value: 
+      Objects: []
+      UnityObjects: []
+      Arrays: []
+  - TokenType: Shiroi.Cutscenes.Examples.ExampleToken3
     TokenData:
       Booleans: []
       Ints: []
       Floats: []
-      Strings:
-      - key: Content
-        value: Hello from ShiroiCutscenes!
+      Strings: []
       Objects:
-      - key: Position
+      - key: Camera
+        value:
+          Booleans: []
+          Ints:
+          - key: Id
+            value: 0
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - key: Default
+            value: {fileID: 0}
+          Arrays: []
+      - key: Collider
+        value:
+          Booleans: []
+          Ints:
+          - key: Id
+            value: 0
+          Floats: []
+          Strings: []
+          Objects: []
+          UnityObjects:
+          - key: Default
+            value: {fileID: 0}
+          Arrays: []
+      - key: Bounds
         value:
           Booleans: []
           Ints: []
@@ -79,20 +110,36 @@ MonoBehaviour:
           - key: x
             value: 0
           - key: y
+            value: 0
+          - key: z
+            value: 0
+          - key: w
+            value: 0
+          - key: h
+            value: 0
+          - key: h
             value: 0
           Strings: []
           Objects: []
           UnityObjects: []
           Arrays: []
-      - key: Size
+      - key: BoundsInt
         value:
           Booleans: []
-          Ints: []
-          Floats:
+          Ints:
           - key: x
             value: 0
           - key: y
             value: 0
+          - key: z
+            value: 0
+          - key: w
+            value: 0
+          - key: h
+            value: 0
+          - key: h
+            value: 0
+          Floats: []
           Strings: []
           Objects: []
           UnityObjects: []
@@ -112,16 +159,25 @@ MonoBehaviour:
       Objects: []
       UnityObjects: []
       Arrays: []
-  - TokenType: Shiroi.Cutscenes.Tokens.DebugTextToken
+  - TokenType: Shiroi.Cutscenes.Tokens.DeleteToken
     TokenData:
       Booleans: []
-      Ints:
-      - key: Type
-        value: 0
+      Ints: []
       Floats: []
-      Strings:
-      - key: Text
-        value: 
+      Strings: []
+      Objects: []
+      UnityObjects: []
+      Arrays: []
+  - TokenType: Shiroi.Cutscenes.Tokens.WaitForSecondsToken
+    TokenData:
+      Booleans:
+      - key: Realtime
+        value: 0
+      Ints: []
+      Floats:
+      - key: Duration
+        value: 9.6
+      Strings: []
       Objects: []
       UnityObjects: []
       Arrays: []

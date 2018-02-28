@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using JetBrains.Annotations;
+using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Util;
 using UnityEngine;
 
