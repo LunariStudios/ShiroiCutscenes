@@ -46,6 +46,7 @@ namespace Shiroi.Cutscenes.Editor {
             if (Cache.TryGetValue(type, out t)) {
                 return t;
             }
+
             return Cache[type] = new MappedToken(type);
         }
 
@@ -76,6 +77,7 @@ namespace Shiroi.Cutscenes.Editor {
             if (Label.EndsWith("Token")) {
                 Label = Label.Substring(0, Label.Length - 5);
             }
+
             SerializedFields = SerializationUtil.GetSerializedMembers(type, true);
             TotalElements = (uint) SerializedFields.Length;
             //Initialize with label
@@ -85,6 +87,7 @@ namespace Shiroi.Cutscenes.Editor {
                 drawers.Add(drawer);
                 Height += drawer.GetTotalLines() * ShiroiStyles.SingleLineHeight;
             }
+
             //Calculate color
             if (Configs.ColorfulTokens) {
                 CalculateColor(type, out Color, out SelectedColor);

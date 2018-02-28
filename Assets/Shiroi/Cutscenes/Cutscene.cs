@@ -11,9 +11,8 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes {
-    [CreateAssetMenu(menuName = CreateCutsceneMenuPath), Serializable]
+    [Serializable]
     public class Cutscene : ScriptableObject, ISerializationCallbackReceiver {
-        public const string CreateCutsceneMenuPath = "Shiroi/Cutscenes/Cutscene";
         private readonly List<IToken> loadedTokens = new List<IToken>();
 
 

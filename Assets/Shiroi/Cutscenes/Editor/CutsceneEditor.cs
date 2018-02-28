@@ -19,7 +19,9 @@ namespace Shiroi.Cutscenes.Editor {
 
 
         public static IEnumerable<CutsceneEditor> Editors {
-            get { return editors; }
+            get {
+                return editors;
+            }
         }
 
         private static int currentKaomoji;
@@ -34,21 +36,27 @@ namespace Shiroi.Cutscenes.Editor {
 
         private bool hasAnyFocused;
 
-        [SerializeField] private CutscenePlayer player;
+        [SerializeField]
+        private CutscenePlayer player;
 
         public ContextWindow ContextWindow;
         public TokenSelectorWindow SelectorWindow;
         public readonly ErrorManager ErrorManager = new ErrorManager();
 
         public CutscenePlayer Player {
-            get { return player; }
+            get {
+                return player;
+            }
             private set {
                 player = value;
                 LastSelectedPlayer = value;
             }
         }
 
-        public Cutscene Cutscene { get; private set; }
+        public Cutscene Cutscene {
+            get;
+            private set;
+        }
 
         private void OnDisable() {
             SceneView.onSceneGUIDelegate -= OnScene;
@@ -163,7 +171,7 @@ namespace Shiroi.Cutscenes.Editor {
                     Color color;
                     var futureRect = rect.GetLine((uint) i, collumHeight: iconSize,
                         yOffset: yOffset);
-                    if (index < 0) {
+                    if (index < 0 || index >= totalTokens) {
                         msg = string.Format("{0} #{1} (Error! Owner not found)", future.Name, index);
                         EditorGUI.LabelField(futureRect, msg);
                         color = ShiroiStyles.ErrorBackgroundColor;
