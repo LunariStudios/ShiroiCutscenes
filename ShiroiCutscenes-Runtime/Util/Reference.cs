@@ -10,10 +10,6 @@ namespace Shiroi.Cutscenes.Util {
         public ReferenceType Type;
         public int Id;
 
-        public Reference(ReferenceType type, int id)  {
-            Type = type;
-            Id = id;
-        }
         public Object Resolve(CutscenePlayer player) {
             switch (Type) {
                 case ReferenceType.Exposed:
@@ -37,10 +33,9 @@ namespace Shiroi.Cutscenes.Util {
         }
     }
     
-    public sealed class Reference<T> : Reference where T : Object{
-        public Reference(ReferenceType type, int id) : base(type, id) { }
+    public class Reference<T> : Reference where T : Object{
 
-        public T Resolve(CutscenePlayer player) {
+        public new T Resolve(CutscenePlayer player) {
             switch (Type) {
                 case ReferenceType.Exposed:
                     bool idValid;

@@ -142,8 +142,9 @@ namespace Shiroi.Cutscenes.Editor {
         private void DrawTokens(int totalTokens) {
             var empty = totalTokens == 0;
             EditorGUILayout.BeginVertical(empty ? ShiroiStyles.Error : ShiroiStyles.DefaultBackground);
-            DrawCutsceneHeader(totalTokens);
-            if (totalTokens > 0) {
+            bool cleared;
+            DrawCutsceneHeader(totalTokens, out cleared);
+            if (!cleared && totalTokens > 0) {
                 hasAnyFocused = false;
                 TokenList.Draw();
             }
@@ -212,7 +213,7 @@ namespace Shiroi.Cutscenes.Editor {
             }
         }
 
-        private void DrawCutsceneHeader(int totalLines) {
+        private void DrawCutsceneHeader(int totalLines, out bool cleared) {
             EditorGUILayout.LabelField("Tokens", ShiroiStyles.Header);
             var isEmpty = totalLines == 0;
             EditorGUILayout.BeginHorizontal();
@@ -221,8 +222,10 @@ namespace Shiroi.Cutscenes.Editor {
                 PopupWindow.Show(rect, SelectorWindow);
             }
 
+            cleared = false;
             if (!isEmpty) {
                 if (GUILayout.Button(ShiroiStyles.ClearCutscene)) {
+                    cleared = true;
                     Clear(Cutscene);
                 }
             }

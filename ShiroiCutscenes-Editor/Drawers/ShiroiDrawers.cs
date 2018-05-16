@@ -33,7 +33,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
         public override void Draw(CutsceneEditor editor, CutscenePlayer player, Cutscene cutscene, Rect rect,
             int tokenIndex, GUIContent name, Reference<T> value, Type valueType, FieldInfo fieldInfo, Setter setter) {
             if (value == null) {
-                value = new Reference<T>(Reference.ReferenceType.Exposed, -1);
+                value = new Reference<T>();
             }
             GUIContent label;
             var found = player == null ? null : value.Resolve(player);
