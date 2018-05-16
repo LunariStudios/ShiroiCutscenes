@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Playables;
 using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Util {
@@ -20,4 +21,7 @@ namespace Shiroi.Cutscenes.Util {
 
     [Serializable]
     public class ObjectReference : Reference<Object> { }
+
+    [Serializable]
+    public class DirectorReference : Reference<PlayableDirector> { }
 }
