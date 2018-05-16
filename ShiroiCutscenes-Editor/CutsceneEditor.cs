@@ -75,7 +75,7 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void OnScene(SceneView sceneview) {
             var index = TokenList.index;
-            if (index < 0 || index >= Cutscene.TotalTokens) {
+            if (index < 0 || index >= Cutscene.Count) {
                 return;
             }
 
@@ -92,7 +92,7 @@ namespace Shiroi.Cutscenes.Editor {
                 ErrorManager.Clear();
             }
 
-            var totalTokens = Cutscene.Tokens.Count;
+            var totalTokens = Cutscene.Count;
             DrawPlayerSettings();
             GUILayout.Space(ShiroiStyles.SpaceHeight);
             //Reserve futures rect
@@ -170,7 +170,7 @@ namespace Shiroi.Cutscenes.Editor {
                 const int iconSize = ShiroiStyles.IconSize;
                 var yOffset = EditorGUIUtility.singleLineHeight * ShiroiStyles.FuturesHeaderLines;
                 var initColor = GUI.backgroundColor;
-                var totalTokens = Cutscene.TotalTokens;
+                var totalTokens = Cutscene.Count;
                 for (var i = 0; i < futures.Count; i++) {
                     var future = futures[i];
                     var index = future.Provider;
@@ -243,7 +243,7 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         private void Clear(Cutscene cutscene) {
-            foreach (var token in cutscene.Tokens) {
+            foreach (var token in cutscene) {
                 DestroyImmediate(token, true);
             }
 
@@ -255,9 +255,9 @@ namespace Shiroi.Cutscenes.Editor {
             var instance = (Token) CreateInstance(type);
             instance.name = type.Name;
             if (Cutscene.IsEmpty || TokenList.index < 0) {
-                Cutscene.AddToken(instance);
+                Cutscene.Add(instance);
             } else {
-                Cutscene.AddToken(TokenList.index, instance);
+                Cutscene.Add(TokenList.index, instance);
             }
 
             AssetDatabase.AddObjectToAsset(instance, Cutscene);
@@ -266,7 +266,7 @@ namespace Shiroi.Cutscenes.Editor {
             EditorUtility.SetDirty(this);
             SetCutsceneDirty();
             //tokenList.GrabKeyboardFocus();
-            TokenList.index = Cutscene.Tokens.Count - 1;
+            TokenList.index = Cutscene.Count - 1;
         }
 
         private void SetCutsceneDirty() {

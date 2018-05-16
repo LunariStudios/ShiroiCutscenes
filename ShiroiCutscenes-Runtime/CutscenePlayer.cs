@@ -21,6 +21,7 @@ namespace Shiroi.Cutscenes {
             if (TryGetFuture(reference, out future)) {
                 return (T) future;
             }
+
             return null;
         }
 
@@ -29,13 +30,16 @@ namespace Shiroi.Cutscenes {
             if (TryGetFuture(reference, out future)) {
                 return (T) future;
             }
+
             return null;
         }
+
         public Object RequestFuture(int reference) {
             Object future;
             if (TryGetFuture(reference, out future)) {
                 return future;
             }
+
             return null;
         }
 
@@ -45,6 +49,7 @@ namespace Shiroi.Cutscenes {
                 future = providedFutures[id];
                 return true;
             }
+
             future = null;
             return false;
         }
@@ -54,6 +59,7 @@ namespace Shiroi.Cutscenes {
                 future = providedFutures[id];
                 return true;
             }
+
             future = null;
             return false;
         }
@@ -63,7 +69,7 @@ namespace Shiroi.Cutscenes {
         }
 
         public IEnumerator YieldPlay(Cutscene cutscene) {
-            foreach (var token in cutscene.Tokens) {
+            foreach (var token in cutscene) {
                 yield return token.Execute(this);
             }
         }
@@ -72,7 +78,9 @@ namespace Shiroi.Cutscenes {
         private List<SceneReference> references = new List<SceneReference>();
 
         public List<SceneReference> References {
-            get { return references; }
+            get {
+                return references;
+            }
         }
 
         public Object GetReferenceValue(PropertyName id, out bool idValid) {
@@ -88,6 +96,7 @@ namespace Shiroi.Cutscenes {
                 if (value == null) {
                     return;
                 }
+
                 reference = new SceneReference(id.GetHashCode(), value);
                 references.Add(reference);
             }
@@ -113,6 +122,7 @@ namespace Shiroi.Cutscenes {
             if (!references.Contains(reference)) {
                 return;
             }
+
             references.Remove(reference);
         }
 

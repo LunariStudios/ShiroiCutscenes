@@ -7,6 +7,10 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Futures {
+    /// <summary>
+    /// A manager that handles all the futures that are expected to be used by a <see cref="Cutscene"/>'s
+    /// <see cref="Token"/>s. 
+    /// </summary>
     [Serializable]
     public sealed class FutureManager {
         private static readonly RandomNumberGenerator FutureIDGenerator = RandomNumberGenerator.Create();
@@ -42,19 +46,21 @@ namespace Shiroi.Cutscenes.Futures {
                     future.Provider = newIndex;
                     continue;
                 }
+
                 if (provider >= min && provider <= max) {
                     future.Provider += toModify;
                 }
             }
         }
 
-        private static int FindIndexOfProvider(IFutureProvider provider, List<Token> loadedTokens) {
+        private static int FindIndexOfProvider(IFutureProvider provider, IList<Token> loadedTokens) {
             for (var i = 0; i < loadedTokens.Count; i++) {
                 var token = loadedTokens[i];
-                if (token == provider) {
+                if (token == (Token) provider) {
                     return i;
                 }
             }
+
             return -1;
         }
 
@@ -66,10 +72,11 @@ namespace Shiroi.Cutscenes.Futures {
             if (string.IsNullOrEmpty(futureName)) {
                 futureName = DefaultFutureName;
             }
+
             var array = new byte[sizeof(int)];
             FutureIDGenerator.GetBytes(array);
             var id = BitConverter.ToInt32(array, 0);
-            var providerId = FindIndexOfProvider(provider, cutscene.Tokens);
+            var providerId = FindIndexOfProvider(provider, cutscene);
             var future = new ExpectedFuture(providerId, id, type, futureName);
             futures.Add(future);
             return id;
@@ -96,6 +103,7 @@ namespace Shiroi.Cutscenes.Futures {
                     future.Provider--;
                 }
             }
+
             foreach (var future in toBeRemoved) {
                 futures.Remove(future);
             }
@@ -172,7 +180,11 @@ namespace Shiroi.Cutscenes.Futures {
         }
 
         public override string ToString() {
-            return string.Format("ExpectedFuture(Type: {0}, Name: {1}, ID: {2}, Provider: {3})", type, name, id,
+            return string.Format(
+                "ExpectedFuture(Type: {0}, Name: {1}, ID: {2}, Provider: {3})",
+                type,
+                name,
+                id,
                 provider);
         }
     }

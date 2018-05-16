@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Tokens;
@@ -6,10 +7,14 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes {
+    /// <summary>
+    /// A collection of <see cref="Token"/>s executed in sequence in order to create a cinematic effect.
+    /// </summary>
     [Serializable]
-    public class Cutscene : ScriptableObject {
+    public class Cutscene : ScriptableObject, IList<Token> {
         [SerializeField, HideInInspector]
         private List<Token> tokens = new List<Token>();
+
 
         public FutureManager FutureManager = new FutureManager();
 
@@ -17,35 +22,20 @@ namespace Shiroi.Cutscenes {
             return FutureManager.NotifyFuture<T>(this, provider, futureName);
         }
 
-        public List<Token> Tokens {
-            get {
-                return tokens;
-            }
-        }
 
         public bool IsEmpty {
             get {
-                return Tokens.Count == 0;
+                return tokens.Count == 0;
             }
         }
 
-        public int TotalTokens {
-            get {
-                return Tokens.Count;
-            }
+        public void Add(int index, Token token) {
+            FutureManager.OnReorder(index, tokens.Count);
+            tokens.Insert(index, token);
+            CheckFutureProvider(token);
         }
 
-        public void AddToken(int index, Token instance) {
-            FutureManager.OnReorder(index, Tokens.Count);
-            tokens.Insert(index, instance);
-            var provider = instance as IFutureProvider;
-            if (provider != null) {
-                provider.RegisterFutures(this);
-            }
-        }
-
-        public void AddToken(Token token) {
-            tokens.Add(token);
+        private void CheckFutureProvider(Token token) {
             var provider = token as IFutureProvider;
             if (provider != null) {
                 provider.RegisterFutures(this);
@@ -58,6 +48,18 @@ namespace Shiroi.Cutscenes {
             tokens.RemoveAt(tokenIndex);
         }
 
+        public int IndexOf(Token item) {
+            return tokens.IndexOf(item);
+        }
+
+        public void Insert(int index, Token item) {
+            tokens.Insert(index, item);
+        }
+
+        public void RemoveAt(int index) {
+            tokens.RemoveAt(index);
+        }
+
         public Token this[int index] {
             get {
                 return tokens[index];
@@ -67,9 +69,38 @@ namespace Shiroi.Cutscenes {
             }
         }
 
+        public void Add(Token item) {
+            tokens.Add(item);
+            CheckFutureProvider(item);
+        }
+
         public void Clear() {
             FutureManager.Clear();
             tokens.Clear();
+        }
+
+        public bool Contains(Token item) {
+            return tokens.Contains(item);
+        }
+
+        public void CopyTo(Token[] array, int arrayIndex) {
+            tokens.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(Token item) {
+            return tokens.Remove(item);
+        }
+
+        public int Count {
+            get {
+                return tokens.Count;
+            }
+        }
+
+        public bool IsReadOnly {
+            get {
+                return false;
+            }
         }
 
         public void Swap(int a, int b) {
@@ -92,6 +123,14 @@ namespace Shiroi.Cutscenes {
 
             tokens[b] = element;
             FutureManager.OnReorder(b, a);
+        }
+
+        public IEnumerator<Token> GetEnumerator() {
+            return tokens.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
         }
     }
 }

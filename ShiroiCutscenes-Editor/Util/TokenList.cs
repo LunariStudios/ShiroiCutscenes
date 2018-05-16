@@ -61,7 +61,7 @@ namespace Shiroi.Cutscenes.Editor.Util {
         }
 
         private float GetTokenHeight(int tokenIndex) {
-            if (tokenIndex >= Cutscene.TotalTokens) {
+            if (tokenIndex >= Cutscene.Count) {
                 Debug.LogWarningFormat(
                     "[ShiroiCutscenes] Token index '{0}' is out of range in cutscenes {1}!",
                     tokenIndex,
@@ -87,7 +87,7 @@ namespace Shiroi.Cutscenes.Editor.Util {
 
         public int Count {
             get {
-                return Cutscene.TotalTokens;
+                return Cutscene.Count;
             }
         }
 
@@ -267,7 +267,7 @@ namespace Shiroi.Cutscenes.Editor.Util {
                 e.Use();
             }
 
-            index = Mathf.Clamp(index, 0, Cutscene.TotalTokens - 1);
+            index = Mathf.Clamp(index, 0, Cutscene.Count - 1);
         }
 
         private void DoDraggingAndSelection(Rect listRect) {

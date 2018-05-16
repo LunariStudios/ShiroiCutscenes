@@ -188,7 +188,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             var cutscene = editor.Cutscene;
             foreach (var future in cutscene.FutureManager.Futures) {
                 var provider = future.Provider;
-                if (provider >= cutscene.TotalTokens || provider < 0) {
+                if (provider >= cutscene.Count || provider < 0) {
                     var msg = string.Format("Future {0}'s provider ({1}) doesn't exist!", future, provider);
                     manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg);
                 }
@@ -230,7 +230,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             var cutscene = editor.Cutscene;
             foreach (var future in cutscene.FutureManager.Futures) {
                 var pIndex = future.Provider;
-                if (pIndex >= cutscene.TotalTokens) {
+                if (pIndex >= cutscene.Count) {
                     continue;
                 }
                 var provider = cutscene[pIndex];

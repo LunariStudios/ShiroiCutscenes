@@ -26,7 +26,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
 
         public static void CheckErrors(CutsceneEditor editor, List<ErrorMessage> errors) {
             var cutscene = editor.Cutscene;
-            var total = cutscene.TotalTokens;
+            var total = cutscene.Count;
             for (var i = 0; i < total; i++) {
                 var token = cutscene[i];
                 var mapped = MappedToken.For(token);
