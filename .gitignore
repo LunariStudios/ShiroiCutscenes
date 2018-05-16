@@ -27,3 +27,5 @@ ExportedObj/
 sysinfo.txt
 *.apk
 *.unitypackage
+bin
+obj
