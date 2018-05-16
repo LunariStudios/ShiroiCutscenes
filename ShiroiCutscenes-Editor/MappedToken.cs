@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Shiroi.Cutscenes.Editor.Config;
 using Shiroi.Cutscenes.Editor.Drawers;
 using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Tokens;
-using Shiroi.Serialization;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,7 +14,7 @@ namespace Shiroi.Cutscenes.Editor {
         //Setter things
         private static FieldInfo currentField;
 
-        private static IToken currentToken;
+        private static Token currentToken;
 
         private static readonly Setter Setter = value => currentField.SetValue(currentToken, value);
 
@@ -32,7 +32,7 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
 
-        public static MappedToken For(IToken token) {
+        public static MappedToken For(Token token) {
             return For(token.GetType());
         }
 
@@ -66,6 +66,18 @@ namespace Shiroi.Cutscenes.Editor {
         public readonly string Label;
         private readonly List<TypeDrawer> drawers = new List<TypeDrawer>();
 
+        private static bool ShouldSerialize(FieldInfo memberInfo) {
+            if (memberInfo.IsPrivate)
+                return Attribute.GetCustomAttribute((MemberInfo) memberInfo, typeof(SerializeField)) != null;
+            return true;
+        }
+
+        public static FieldInfo[] GetSerializedMembers(System.Type type, bool publicOnly = false) {
+            var bindingAttr = !publicOnly ? BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic : BindingFlags.Instance | BindingFlags.Public;
+            var fields = type.GetFields(bindingAttr);
+            return fields.Where(ShouldSerialize).ToArray();
+        }
+
         public MappedToken(Type type) {
             //Initialize fields
             Label = ObjectNames.NicifyVariableName(type.Name);
@@ -73,10 +85,8 @@ namespace Shiroi.Cutscenes.Editor {
                 Label = Label.Substring(0, Label.Length - 5);
             }
 
-            SerializedFields = SerializationUtil.GetSerializedMembers(type, true);
+            SerializedFields = GetSerializedMembers(type, true);
             TotalElements = (uint) SerializedFields.Length;
-            //Initialize with label
-            Height = ShiroiStyles.SingleLineHeight;
             foreach (var field in SerializedFields) {
                 var drawer = TypeDrawers.GetDrawerFor(field.FieldType);
                 drawers.Add(drawer);
@@ -126,22 +136,37 @@ namespace Shiroi.Cutscenes.Editor {
             get;
         }
 
-        public delegate void FieldDrawnListener(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
-            int tokenIndex, FieldInfo field, int fieldIndex, ref GUIContent fieldLabel);
+        public delegate void FieldDrawnListener(
+            Rect rect,
+            Cutscene cutscene,
+            CutscenePlayer player,
+            Token token,
+            int tokenIndex,
+            FieldInfo field,
+            int fieldIndex,
+            ref GUIContent fieldLabel);
 
-        public delegate void TokenDrawnListener(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
-            int tokenIndex, ref GUIContent tokenLabel);
+        public delegate void TokenDrawnListener(
+            Rect rect,
+            Cutscene cutscene,
+            CutscenePlayer player,
+            Token token,
+            int tokenIndex,
+            ref GUIContent tokenLabel);
 
         public static event FieldDrawnListener OnFieldDrawn;
         public static event TokenDrawnListener OnTokenDrawn;
 
-        public void DrawFields(CutsceneEditor editor, Rect rect, int tokenIndex, IToken token, Cutscene cutscene,
+        public void DrawFields(
+            CutsceneEditor editor,
+            Rect rect,
+            int tokenIndex,
+            Token token,
+            Cutscene cutscene,
             CutscenePlayer player,
+            GUIContent label,
             out bool changed) {
-            var labelRect = rect.GetLine(0);
-            var content = new GUIContent(string.Format("#{0} - {1}", tokenIndex, Label));
-            InvokeOnTokenDrawn(rect, cutscene, player, token, tokenIndex, ref content);
-            EditorGUI.LabelField(labelRect, content, ShiroiStyles.Bold);
+            InvokeOnTokenDrawn(rect, cutscene, player, token, tokenIndex, ref label);
             changed = false;
             currentToken = token;
             //Start at 1 because label
@@ -160,9 +185,17 @@ namespace Shiroi.Cutscenes.Editor {
                 InvokeOnFieldDrawn(r, cutscene, player, token, tokenIndex, currentField, index, ref fieldLabel);
                 EditorGUI.BeginChangeCheck();
 
-                drawer.Draw(editor, player, cutscene, r, tokenIndex, fieldLabel,
+                drawer.Draw(
+                    editor,
+                    player,
+                    cutscene,
+                    r,
+                    tokenIndex,
+                    fieldLabel,
                     currentField.GetValue(token),
-                    fieldType, currentField, Setter);
+                    fieldType,
+                    currentField,
+                    Setter);
 
                 if (EditorGUI.EndChangeCheck()) {
                     changed = true;
@@ -170,15 +203,27 @@ namespace Shiroi.Cutscenes.Editor {
             }
         }
 
-        protected virtual void InvokeOnFieldDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
-            int tokenindex, FieldInfo field, int fieldindex, ref GUIContent label) {
+        protected virtual void InvokeOnFieldDrawn(
+            Rect rect,
+            Cutscene cutscene,
+            CutscenePlayer player,
+            Token token,
+            int tokenindex,
+            FieldInfo field,
+            int fieldindex,
+            ref GUIContent label) {
             var handler = OnFieldDrawn;
             if (handler != null)
                 handler(rect, cutscene, player, token, tokenindex, field, fieldindex, ref label);
         }
 
-        private static void InvokeOnTokenDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token,
-            int tokenindex, ref GUIContent tokenlabel) {
+        private static void InvokeOnTokenDrawn(
+            Rect rect,
+            Cutscene cutscene,
+            CutscenePlayer player,
+            Token token,
+            int tokenindex,
+            ref GUIContent tokenlabel) {
             var handler = OnTokenDrawn;
             if (handler != null)
                 handler(rect, cutscene, player, token, tokenindex, ref tokenlabel);

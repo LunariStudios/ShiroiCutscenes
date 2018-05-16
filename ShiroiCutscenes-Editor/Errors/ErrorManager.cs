@@ -24,7 +24,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             MappedToken.OnTokenDrawn += OnTokenDrawn;
         }
 
-        private void OnTokenDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token, int tokenIndex,
+        private void OnTokenDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, Token token, int tokenIndex,
             ref GUIContent tokenlabel) {
             if (!Configs.CheckErrors) {
                 return;
@@ -38,7 +38,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             tokenlabel.image = icon;
         }
 
-        private void OnFieldDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, IToken token, int tokenIndex,
+        private void OnFieldDrawn(Rect rect, Cutscene cutscene, CutscenePlayer player, Token token, int tokenIndex,
             FieldInfo field, int fieldIndex, ref GUIContent label) {
             if (!Configs.CheckErrors) {
                 return;

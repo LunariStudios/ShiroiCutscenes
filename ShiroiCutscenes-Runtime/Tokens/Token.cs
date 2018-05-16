@@ -1,8 +1,9 @@
 ﻿using System.Collections;
+using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
-    public interface IToken {
-        IEnumerator Execute(CutscenePlayer player);
+    public abstract class Token : ScriptableObject {
+        public abstract IEnumerator Execute(CutscenePlayer player);
     }
 
     public interface ITokenChangedListener {

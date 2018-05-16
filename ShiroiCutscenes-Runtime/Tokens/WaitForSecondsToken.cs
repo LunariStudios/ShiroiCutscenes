@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    public class WaitForSecondsToken : IToken {
+    public class WaitForSecondsToken : Token {
         public float Duration;
         public bool Realtime;
 
-        public IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player) {
             if (Realtime) {
                 yield return new WaitForSecondsRealtime(Duration);
             } else {

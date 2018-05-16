@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    public class DebugTextToken : IToken {
+    public class DebugTextToken : Token {
         public enum DebugType {
             Info,
             Warning,
@@ -14,7 +14,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public string Text;
         public DebugType Type = DebugType.Info;
 
-        public IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player) {
             Debug.Log(Text);
             yield break;
         }

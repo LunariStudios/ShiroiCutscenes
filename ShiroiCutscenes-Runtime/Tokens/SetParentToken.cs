@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    public class SetParentToken : IToken {
+    public class SetParentToken : Token {
         public ExposedReference<GameObject> Object;
         public ExposedReference<GameObject> NewParent;
 
-        public IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player) {
             var obj = Object.Resolve(player);
             var p = NewParent.Resolve(player);
             if (!obj) {

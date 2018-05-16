@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    public class SpawnPrefabToken : IToken, IFutureProvider, ITokenChangedListener, IScenePreviewable {
+    public class SpawnPrefabToken : Token, IFutureProvider, ITokenChangedListener, IScenePreviewable {
         public GameObject Obj;
         public string FutureName = "future_name";
         public Vector3 Position;
         public Quaternion Rotation;
 
-        public IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player) {
             var obj = Object.Instantiate(Obj, Position, Rotation);
             player.ProvideFuture(obj, futureId);
             yield break;

@@ -7,7 +7,7 @@ using UnityEditor;
 namespace Shiroi.Cutscenes.Editor {
     [InitializeOnLoad]
     public static class TokenLoader {
-        public static readonly Type TokenType = typeof(IToken);
+        public static readonly Type TokenType = typeof(Token);
         public static List<Type> KnownTokenTypes;
 
         private static void Reload() {

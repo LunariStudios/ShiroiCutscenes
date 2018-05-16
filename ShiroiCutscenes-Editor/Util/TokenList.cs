@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Shiroi.Cutscenes.Editor.Windows;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
 using UnityEngine;
@@ -16,6 +17,9 @@ namespace Shiroi.Cutscenes.Editor.Util {
     }
 
     public class TokenList {
+        //Label, Delete
+        //Name
+        private const byte TotalExtraFields = 2;
         private readonly CutsceneEditor editor;
 
         public const float FooterHeight = 14F;
@@ -58,12 +62,16 @@ namespace Shiroi.Cutscenes.Editor.Util {
 
         private float GetTokenHeight(int tokenIndex) {
             if (tokenIndex >= Cutscene.TotalTokens) {
-                Debug.LogWarningFormat("[ShiroiCutscenes] Token index '{0}' is out of range in cutscenes {1}!",
-                    tokenIndex, Cutscene.name);
+                Debug.LogWarningFormat(
+                    "[ShiroiCutscenes] Token index '{0}' is out of range in cutscenes {1}!",
+                    tokenIndex,
+                    Cutscene.name);
                 return ShiroiStyles.SingleLineHeight;
             }
+
             var token = Cutscene[tokenIndex];
-            return MappedToken.For(token).Height;
+
+            return MappedToken.For(token).Height + EditorGUIUtility.singleLineHeight * TotalExtraFields;
         }
 
         private float GetElementYOffset(int tokenIndex, int skipIndex = -1) {
@@ -156,12 +164,30 @@ namespace Shiroi.Cutscenes.Editor.Util {
             var token = Cutscene[index];
             var mappedToken = MappedToken.For(token);
             bool changed;
-            mappedToken.DrawFields(editor, rect, index, token, Cutscene, editor.Player, out changed);
+            var content = new GUIContent(string.Format("#{0} - {1}", index, mappedToken.Label));
+            var headerRect = rect.GetLine(0);
+            var buttonRect = rect.SubRectFarRight(ContextWindow.RemoveTokenContent);
+            EditorGUI.LabelField(headerRect, content, ShiroiStyles.Bold);
+            var initColor = GUI.backgroundColor;
+            GUI.backgroundColor = ShiroiStyles.ErrorBackgroundColor;
+            var remove = GUI.Button(buttonRect, ContextWindow.RemoveTokenContent);
+            GUI.backgroundColor = initColor;
+            token.name = EditorGUI.TextField(rect.GetLine(1), "Token Name", token.name);
+            var subRect = rect.SubRectLine(TotalExtraFields);
+            mappedToken.DrawFields(editor, subRect, index, token, Cutscene, editor.Player, content, out changed);
+
+            if (remove) {
+                editor.RemoveToken(index);
+            }
+
+            if (changed || remove) {
+                EditorUtility.SetDirty(Cutscene);
+            }
+
             if (!changed) {
                 return;
             }
 
-            EditorUtility.SetDirty(Cutscene);
             var l = token as ITokenChangedListener;
             if (l != null) {
                 l.OnChanged(Cutscene);
@@ -174,9 +200,12 @@ namespace Shiroi.Cutscenes.Editor.Util {
             }
 
             GUIStyle draggingHandle = "RL DragHandle";
-            draggingHandle.Draw(new Rect(rect.x + 5f, rect.y + 7f, 10f, rect.height - (rect.height - 7f)),
-                false, false,
-                false, false);
+            draggingHandle.Draw(
+                new Rect(rect.x + 5f, rect.y + 7f, 10f, rect.height - (rect.height - 7f)),
+                false,
+                false,
+                false,
+                false);
         }
 
         private void DrawBackground(Rect rect, int index, bool isactive, bool isfocused) {
@@ -251,7 +280,9 @@ namespace Shiroi.Cutscenes.Editor.Util {
 
 
         private void UpdateDraggedY(Rect listRect) {
-            draggedY = Mathf.Clamp(Event.current.mousePosition.y - listRect.y, dragOffset,
+            draggedY = Mathf.Clamp(
+                Event.current.mousePosition.y - listRect.y,
+                dragOffset,
                 listRect.height - (GetTokenHeight(index) - dragOffset));
         }
 

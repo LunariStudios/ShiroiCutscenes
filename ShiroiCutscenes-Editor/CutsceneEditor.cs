@@ -124,10 +124,14 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void DrawPlayerSettings() {
             EditorGUILayout.BeginVertical(Player ? ShiroiStyles.DefaultBackground : ShiroiStyles.Error);
-            EditorGUILayout.LabelField(Player ? ShiroiStyles.PlayerHeader : ShiroiStyles.PlayerHeaderError,
+            EditorGUILayout.LabelField(
+                Player ? ShiroiStyles.PlayerHeader : ShiroiStyles.PlayerHeaderError,
                 ShiroiStyles.Header);
-            Player = (CutscenePlayer) EditorGUILayout.ObjectField(ShiroiStyles.PlayerContent, Player,
-                typeof(CutscenePlayer), true);
+            Player = (CutscenePlayer) EditorGUILayout.ObjectField(
+                ShiroiStyles.PlayerContent,
+                Player,
+                typeof(CutscenePlayer),
+                true);
             if (Player) {
                 ShiroiEditorUtil.DrawReferencesLayout(Player);
             }
@@ -158,7 +162,9 @@ namespace Shiroi.Cutscenes.Editor {
                 EditorGUI.LabelField(labelRect, "No futures registered.");
             } else {
                 futures.Sort();
-                EditorGUI.LabelField(labelRect, totalFutures + " futures found!",
+                EditorGUI.LabelField(
+                    labelRect,
+                    totalFutures + " futures found!",
                     ShiroiStyles.Header);
                 const int iconSize = ShiroiStyles.IconSize;
                 var yOffset = EditorGUIUtility.singleLineHeight * ShiroiStyles.FuturesHeaderLines;
@@ -169,7 +175,9 @@ namespace Shiroi.Cutscenes.Editor {
                     var index = future.Provider;
                     string msg;
                     Color color;
-                    var futureRect = rect.GetLine((uint) i, collumHeight: iconSize,
+                    var futureRect = rect.GetLine(
+                        (uint) i,
+                        collumHeight: iconSize,
                         yOffset: yOffset);
                     if (index < 0 || index >= totalTokens) {
                         msg = string.Format("{0} #{1} (Error! Owner not found)", future.Name, index);
@@ -178,7 +186,11 @@ namespace Shiroi.Cutscenes.Editor {
                     } else {
                         var token = Cutscene[index];
                         var tokenName = MappedToken.For(token).Label;
-                        msg = string.Format("{0} @ {3} (Owner: {1} @ #{2})", future.Name, tokenName, index,
+                        msg = string.Format(
+                            "{0} @ {3} (Owner: {1} @ #{2})",
+                            future.Name,
+                            tokenName,
+                            index,
                             future.Id);
                         var mappedToken = MappedToken.For(token);
                         color = TokenList.index == index ? mappedToken.SelectedColor : mappedToken.Color;
@@ -211,7 +223,7 @@ namespace Shiroi.Cutscenes.Editor {
 
             if (!isEmpty) {
                 if (GUILayout.Button(ShiroiStyles.ClearCutscene)) {
-                    Cutscene.Clear();
+                    Clear(Cutscene);
                 }
             }
 
@@ -227,14 +239,27 @@ namespace Shiroi.Cutscenes.Editor {
             }
         }
 
+        private void Clear(Cutscene cutscene) {
+            foreach (var token in cutscene.Tokens) {
+                DestroyImmediate(token, true);
+            }
+
+            AssetDatabase.SaveAssets();
+            Cutscene.Clear();
+        }
+
         public void AddToken(Type type) {
-            var instance = (IToken) Activator.CreateInstance(type);
+            var instance = (Token) CreateInstance(type);
+            instance.name = type.Name;
             if (Cutscene.IsEmpty || TokenList.index < 0) {
                 Cutscene.AddToken(instance);
             } else {
                 Cutscene.AddToken(TokenList.index, instance);
             }
 
+            AssetDatabase.AddObjectToAsset(instance, Cutscene);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
             EditorUtility.SetDirty(this);
             SetCutsceneDirty();
             //tokenList.GrabKeyboardFocus();
@@ -243,6 +268,14 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void SetCutsceneDirty() {
             EditorUtility.SetDirty(Cutscene);
+        }
+
+        public void RemoveToken(int lastSelected) {
+            var t = Cutscene[lastSelected];
+            Cutscene.RemoveToken(lastSelected);
+            DestroyImmediate(t, true);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
     }
 }

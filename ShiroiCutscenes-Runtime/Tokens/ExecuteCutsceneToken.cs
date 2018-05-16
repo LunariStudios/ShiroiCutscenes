@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 
 namespace Shiroi.Cutscenes.Tokens {
-    public class ExecuteCutsceneToken : IToken {
+    public class ExecuteCutsceneToken : Token {
         public Cutscene Cutscene;
 
-        public IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player) {
             yield break;
         }
     }

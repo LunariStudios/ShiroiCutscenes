@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    public class DeleteToken : IToken {
+    public class DeleteToken : Token {
         public Reference<Object> Object;
 
-        public IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player) {
             var obj = Object.Resolve(player);
             if (obj != null) {
                 UnityEngine.Object.Destroy(obj);

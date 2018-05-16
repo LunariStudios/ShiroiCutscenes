@@ -1,10 +1,9 @@
 C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\ShiroiCutscenes-Editor.dll
 C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\ShiroiCutscenes-Editor.pdb
-C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\ShiroiCutscenes_Runtime.dll
-C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\ShiroiSerialization.dll
+C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\ShiroiCutscenes-Runtime.dll
 C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\UnityEditor.dll
 C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\UnityEngine.dll
-C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\ShiroiCutscenes_Runtime.pdb
+C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\ShiroiCutscenes-Runtime.pdb
 C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\UnityEditor.xml
 C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\bin\Debug\UnityEngine.xml
 C:\Work\Unity\ShiroiCutscenes\ShiroiCutscenes-Editor\obj\Debug\ShiroiCutscenes-Editor.csprojResolveAssemblyReference.cache

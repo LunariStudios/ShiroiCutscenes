@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Shiroi.Cutscenes.Futures;
-using Shiroi.Cutscenes.Serialization;
 using Shiroi.Cutscenes.Tokens;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes {
     [Serializable]
-    public class Cutscene : ScriptableObject, ISerializationCallbackReceiver {
-        private readonly List<IToken> loadedTokens = new List<IToken>();
-
-
+    public class Cutscene : ScriptableObject {
         [SerializeField, HideInInspector]
-        private SerializedToken[] tokens;
+        private List<Token> tokens = new List<Token>();
 
         public FutureManager FutureManager = new FutureManager();
 
@@ -21,9 +17,9 @@ namespace Shiroi.Cutscenes {
             return FutureManager.NotifyFuture<T>(this, provider, futureName);
         }
 
-        public List<IToken> Tokens {
+        public List<Token> Tokens {
             get {
-                return loadedTokens;
+                return tokens;
             }
         }
 
@@ -39,17 +35,17 @@ namespace Shiroi.Cutscenes {
             }
         }
 
-        public void AddToken(int index, IToken instance) {
+        public void AddToken(int index, Token instance) {
             FutureManager.OnReorder(index, Tokens.Count);
-            loadedTokens.Insert(index, instance);
+            tokens.Insert(index, instance);
             var provider = instance as IFutureProvider;
             if (provider != null) {
                 provider.RegisterFutures(this);
             }
         }
 
-        public void AddToken(IToken token) {
-            loadedTokens.Add(token);
+        public void AddToken(Token token) {
+            tokens.Add(token);
             var provider = token as IFutureProvider;
             if (provider != null) {
                 provider.RegisterFutures(this);
@@ -58,62 +54,43 @@ namespace Shiroi.Cutscenes {
 
         public void RemoveToken(int tokenIndex) {
             FutureManager.ReorderFutures(tokenIndex);
-            var token = loadedTokens[tokenIndex];
-            loadedTokens.RemoveAt(tokenIndex);
+            var token = tokens[tokenIndex];
+            tokens.RemoveAt(tokenIndex);
         }
 
-
-        public void OnBeforeSerialize() {
-            tokens = new SerializedToken[loadedTokens.Count];
-            for (var i = 0; i < loadedTokens.Count; i++) {
-                tokens[i] = SerializedToken.From(loadedTokens[i]);
-            }
-        }
-
-        public void OnAfterDeserialize() {
-            if (tokens == null) {
-                return;
-            }
-            foreach (var serializedToken in tokens) {
-                var deserialized = serializedToken.Deserialize();
-                if (deserialized == null) {
-                    continue;
-                }
-                loadedTokens.Add(deserialized);
-            }
-            tokens = null;
-        }
-
-        public IToken this[int index] {
+        public Token this[int index] {
             get {
-                return loadedTokens[index];
+                return tokens[index];
             }
             set {
-                loadedTokens[index] = value;
+                tokens[index] = value;
             }
         }
 
         public void Clear() {
             FutureManager.Clear();
-            loadedTokens.Clear();
+            tokens.Clear();
         }
 
         public void Swap(int a, int b) {
             if (a == b) {
                 return;
             }
-            var element = loadedTokens[a];
-            for (var i = 0; i < loadedTokens.Count - 1; ++i) {
+
+            var element = tokens[a];
+            for (var i = 0; i < tokens.Count - 1; ++i) {
                 if (i >= a) {
-                    loadedTokens[i] = loadedTokens[i + 1];
+                    tokens[i] = tokens[i + 1];
                 }
             }
-            for (var i = loadedTokens.Count - 1; i > 0; --i) {
+
+            for (var i = tokens.Count - 1; i > 0; --i) {
                 if (i > b) {
-                    loadedTokens[i] = loadedTokens[i - 1];
+                    tokens[i] = tokens[i - 1];
                 }
             }
-            loadedTokens[b] = element;
+
+            tokens[b] = element;
             FutureManager.OnReorder(b, a);
         }
     }

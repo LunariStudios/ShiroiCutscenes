@@ -35,7 +35,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             CutsceneEditor editor,
             ErrorManager manager,
             int tokenIndex,
-            IToken token,
+            Token token,
             object value,
             int fieldIndex,
             FieldInfo info) {
@@ -79,7 +79,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             CutsceneEditor editor,
             ErrorManager manager,
             int tokenIndex,
-            IToken token,
+            Token token,
             object value,
             int fieldIndex,
             FieldInfo info) {
@@ -105,7 +105,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             CutsceneEditor editor,
             ErrorManager manager,
             int tokenIndex,
-            IToken token,
+            Token token,
             object value,
             int fieldIndex,
             FieldInfo info) {
@@ -139,7 +139,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             CutsceneEditor editor,
             ErrorManager manager,
             int tokenIndex,
-            IToken token,
+            Token token,
             object value,
             int fieldIndex,
             FieldInfo info) {
@@ -159,7 +159,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             CutsceneEditor editor,
             ErrorManager manager,
             int tokenIndex,
-            IToken token,
+            Token token,
             object value,
             int fieldIndex,
             FieldInfo info) {
@@ -184,7 +184,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
     }
 
     public class InvalidFutureProviderChecker : ErrorChecker {
-        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, IToken token, object value, int fieldIndex, FieldInfo info) {
+        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, Token token, object value, int fieldIndex, FieldInfo info) {
             var cutscene = editor.Cutscene;
             foreach (var future in cutscene.FutureManager.Futures) {
                 var provider = future.Provider;
@@ -203,7 +203,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             CutsceneEditor editor,
             ErrorManager manager,
             int tokenIndex,
-            IToken token,
+            Token token,
             object value,
             int fieldIndex,
             FieldInfo info) {

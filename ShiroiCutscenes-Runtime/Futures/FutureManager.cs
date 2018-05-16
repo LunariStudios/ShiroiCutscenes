@@ -48,7 +48,7 @@ namespace Shiroi.Cutscenes.Futures {
             }
         }
 
-        private static int FindIndexOfProvider(IFutureProvider provider, List<IToken> loadedTokens) {
+        private static int FindIndexOfProvider(IFutureProvider provider, List<Token> loadedTokens) {
             for (var i = 0; i < loadedTokens.Count; i++) {
                 var token = loadedTokens[i];
                 if (token == provider) {

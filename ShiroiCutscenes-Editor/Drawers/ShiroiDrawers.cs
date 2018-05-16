@@ -77,7 +77,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             int tokenIndex, GUIContent name, FutureReference<T> value, Type valueType, FieldInfo fieldInfo,
             Setter setter) {
             if (value == null) {
-                value = new FutureReference<T>(-1);
+                value = new FutureReference<T>();
             }
             value.Id = DrawFuture(cutscene, tokenIndex, rect, name, value.Id);
             setter(value);

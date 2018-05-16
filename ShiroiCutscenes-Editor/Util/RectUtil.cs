@@ -2,14 +2,36 @@
 
 namespace Shiroi.Cutscenes.Editor.Util {
     public static class RectUtil {
-        public static Rect GetLine(this Rect rect, uint collum, uint totalLines = 1,
+        public static Rect SubRectLine(this Rect rect, uint lines) {
+            var toRemove = ShiroiStyles.SingleLineHeight * lines;
+            var newStartY = rect.yMax - toRemove;
+            return new Rect(rect.x, newStartY, rect.width, rect.height - toRemove);
+        }
+
+        public static Rect GetLine(
+            this Rect rect,
+            uint collum,
+            uint totalLines = 1,
             float collumHeight = ShiroiStyles.SingleLineHeight,
             float yOffset = 0F) {
             var height = totalLines * collumHeight;
             return rect.GetLine(collum, height, collumHeight, yOffset);
         }
 
-        private static Rect GetLine(this Rect rect, uint collum, float height,
+        public static Rect SubRectFarRight(this Rect rect, GUIContent content) {
+            return rect.SubRectFarRight(content, ShiroiStyles.SingleLineHeight, 5);
+        }
+
+        public static Rect SubRectFarRight(this Rect rect, GUIContent content, float height, float xPadding) {
+            var width = GUIStyle.none.CalcSize(content).x + 2 * xPadding;
+            var newX = rect.x + rect.width - width;
+            return new Rect(newX, rect.y, width, height);
+        }
+
+        private static Rect GetLine(
+            this Rect rect,
+            uint collum,
+            float height,
             float collumHeight = ShiroiStyles.SingleLineHeight,
             float yOffset = 0F) {
             return rect.SubRect(rect.width, height, yOffset: collum * collumHeight + yOffset);
