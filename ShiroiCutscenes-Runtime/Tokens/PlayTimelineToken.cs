@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using Shiroi.Cutscenes.Util;
+using UnityEngine;
 using UnityEngine.Playables;
 
 namespace Shiroi.Cutscenes.Tokens {
     public class PlayTimelineToken : Token {
-        public DirectorReference Director;
+        public ExposedReference<PlayableDirector> Director;
         public PlayableAsset PlayableAsset;
         private bool playing;
 
@@ -16,16 +17,7 @@ namespace Shiroi.Cutscenes.Tokens {
             }
 
             director.Play();
-            Action<PlayableDirector> listener = null;
-            listener = delegate(PlayableDirector playableDirector) {
-                OnPlayed(playableDirector);
-                director.stopped -= listener;
-            };
-            director.stopped += listener;
-            playing = true;
-            while (playing) {
-                yield return null;
-            }
+            yield return new WaitForSeconds((float) PlayableAsset.duration);
         }
 
         private void OnPlayed(PlayableDirector obj) {

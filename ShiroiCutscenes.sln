@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiroiCutscenes-Runtime", "ShiroiCutscenes-Runtime\ShiroiCutscenes-Runtime.csproj", "{4E266F18-4A6F-47AA-BE72-2E2F50F290AE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShiroiCutscenes-Assets", "ShiroiCutscenes-Assets", "{3B96D586-AD30-485F-B05A-3D2080E383EE}"
+ProjectSection(SolutionItems) = preProject
+	ShiroiCutscenes-Assets\Cutscene Icon.png = ShiroiCutscenes-Assets\Cutscene Icon.png
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiroiCutscenes-Editor", "ShiroiCutscenes-Editor\ShiroiCutscenes-Editor.csproj", "{220BA50B-CB84-43D9-B48C-2863E5FEAB21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadMe", "ReadMe", "{114D6FD3-4AB5-4BBB-AD29-CE77D091B037}"
+ProjectSection(SolutionItems) = preProject
+	ReadMe\Images\ShiroiCutscenesLogo.png = ReadMe\Images\ShiroiCutscenesLogo.png
+	.gitignore = .gitignore
+	CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+	CONTRIBUTING.md = CONTRIBUTING.md
+	ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
+	LICENSE.md = LICENSE.md
+	README.md = README.md
+EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E266F18-4A6F-47AA-BE72-2E2F50F290AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E266F18-4A6F-47AA-BE72-2E2F50F290AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E266F18-4A6F-47AA-BE72-2E2F50F290AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E266F18-4A6F-47AA-BE72-2E2F50F290AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{220BA50B-CB84-43D9-B48C-2863E5FEAB21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{220BA50B-CB84-43D9-B48C-2863E5FEAB21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{220BA50B-CB84-43D9-B48C-2863E5FEAB21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{220BA50B-CB84-43D9-B48C-2863E5FEAB21}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
