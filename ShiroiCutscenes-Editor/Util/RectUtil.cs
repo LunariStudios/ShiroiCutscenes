@@ -4,8 +4,7 @@ namespace Shiroi.Cutscenes.Editor.Util {
     public static class RectUtil {
         public static Rect SubRectLine(this Rect rect, uint lines) {
             var toRemove = ShiroiStyles.SingleLineHeight * lines;
-            var newStartY = rect.yMax - toRemove;
-            return new Rect(rect.x, newStartY, rect.width, rect.height - toRemove);
+            return new Rect(rect.x, rect.y, rect.width, rect.height - toRemove);
         }
 
         public static Rect GetLine(

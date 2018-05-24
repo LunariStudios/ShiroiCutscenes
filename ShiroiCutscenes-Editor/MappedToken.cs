@@ -169,15 +169,13 @@ namespace Shiroi.Cutscenes.Editor {
             InvokeOnTokenDrawn(rect, cutscene, player, token, tokenIndex, ref label);
             changed = false;
             currentToken = token;
-            //Start at 1 because label
-            var currentLine = 1;
+            var currentLine = 0;
             for (var index = 0; index < SerializedFields.Length; index++) {
                 currentField = SerializedFields[index];
                 var fieldType = currentField.FieldType;
                 var drawer = drawers[index];
 
                 var fieldName = currentField.Name;
-                var typeName = fieldType.Name;
                 var totalLines = drawer.GetTotalLines();
                 var r = rect.GetLine((uint) currentLine, totalLines);
                 currentLine += (int) totalLines;

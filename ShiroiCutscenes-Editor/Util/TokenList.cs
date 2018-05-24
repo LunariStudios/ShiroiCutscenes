@@ -71,7 +71,7 @@ namespace Shiroi.Cutscenes.Editor.Util {
 
             var token = Cutscene[tokenIndex];
 
-            return MappedToken.For(token).Height + EditorGUIUtility.singleLineHeight * TotalExtraFields;
+            return MappedToken.For(token).Height + ShiroiStyles.SingleLineHeight * TotalExtraFields;
         }
 
         private float GetElementYOffset(int tokenIndex, int skipIndex = -1) {
@@ -160,11 +160,11 @@ namespace Shiroi.Cutscenes.Editor.Util {
             DrawToken(contentRect1, index, true, true);
         }
 
-        private void DrawToken(Rect rect, int index, bool isactive, bool isfocused) {
-            var token = Cutscene[index];
+        private void DrawToken(Rect rect, int i, bool isactive, bool isfocused) {
+            var token = Cutscene[i];
             var mappedToken = MappedToken.For(token);
             bool changed;
-            var content = new GUIContent(string.Format("#{0} - {1}", index, mappedToken.Label));
+            var content = new GUIContent(string.Format("#{0} - {1}", i, mappedToken.Label));
             var headerRect = rect.GetLine(0);
             var buttonRect = rect.SubRectFarRight(ContextWindow.RemoveTokenContent);
             EditorGUI.LabelField(headerRect, content, ShiroiStyles.Bold);
@@ -173,11 +173,12 @@ namespace Shiroi.Cutscenes.Editor.Util {
             var remove = GUI.Button(buttonRect, ContextWindow.RemoveTokenContent);
             GUI.backgroundColor = initColor;
             token.name = EditorGUI.TextField(rect.GetLine(1), "Token Name", token.name);
-            var subRect = rect.SubRectLine(TotalExtraFields);
-            mappedToken.DrawFields(editor, subRect, index, token, Cutscene, editor.Player, content, out changed);
+            var subRect = rect;
+            subRect.yMin += TotalExtraFields * ShiroiStyles.SingleLineHeight;
+            mappedToken.DrawFields(editor, subRect, i, token, Cutscene, editor.Player, content, out changed);
 
             if (remove) {
-                editor.RemoveToken(index);
+                editor.RemoveToken(i);
             }
 
             if (changed || remove) {
