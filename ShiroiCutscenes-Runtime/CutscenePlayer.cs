@@ -4,13 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Shiroi.Cutscenes.Futures;
 using UnityEngine;
+using UnityEngine.Events;
 using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes {
-    public class CutscenePlayer : MonoBehaviour, IExposedPropertyTable {
-        //Futures
-        private Dictionary<int, Object> providedFutures = new Dictionary<int, Object>();
+    [Serializable]
+    public class CutsceneEvent : UnityEvent<CutsceneExecutor> { }
 
+    public class CutscenePlayer : MonoBehaviour, IExposedPropertyTable {
+        private readonly Dictionary<int, Object> providedFutures = new Dictionary<int, Object>();
+        public CutsceneEvent OnPlay;
+        public CutsceneEvent OnPlayed;
 
         public void ProvideFuture<T>(T future, int id) where T : Object {
             providedFutures[id] = future;
@@ -69,7 +73,10 @@ namespace Shiroi.Cutscenes {
         }
 
         public IEnumerator YieldPlay(Cutscene cutscene) {
-            yield return new CutsceneExecutor(cutscene, this).Execute();
+            var executor = new CutsceneExecutor(cutscene, this);
+            OnPlay.Invoke(executor);
+            yield return executor.Execute();
+            OnPlayed.Invoke(executor);
         }
 
         [SerializeField, HideInInspector]
