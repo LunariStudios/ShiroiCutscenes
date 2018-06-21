@@ -8,7 +8,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public ExposedReference<GameObject> Object;
         public ExposedReference<GameObject> NewParent;
 
-        public override IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
             var obj = Object.Resolve(player);
             var p = NewParent.Resolve(player);
             if (!obj) {

@@ -16,8 +16,9 @@ namespace Shiroi.Cutscenes.Tokens {
         /// <a href="https://docs.unity3d.com/Manual/Coroutines.html">Click here for an article about coroutines</a>
         /// </summary>
         /// <param name="player">The <see cref="CutscenePlayer"/> that the cutscene is being executed in.</param>
+        /// <param name="executor"></param>
         /// <returns>The enumerator that is executed by the <see cref="player"/> inside a coroutine.</returns>
-        public abstract IEnumerator Execute(CutscenePlayer player);
+        public abstract IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor);
     }
 
     /// <summary>

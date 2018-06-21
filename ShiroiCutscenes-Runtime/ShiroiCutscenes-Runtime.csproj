@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cutscene.cs" />
+    <Compile Include="CutsceneExecutor.cs" />
     <Compile Include="CutscenePlayer.cs" />
     <Compile Include="Exception\NotLoadedException.cs" />
     <Compile Include="Futures\FutureManager.cs" />

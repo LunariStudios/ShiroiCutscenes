@@ -12,7 +12,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public Vector3 Position;
         public Quaternion Rotation;
 
-        public override IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
             var obj = Object.Instantiate(Obj, Position, Rotation);
             player.ProvideFuture(obj, futureId);
             yield break;

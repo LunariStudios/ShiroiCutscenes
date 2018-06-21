@@ -6,7 +6,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public ExposedReference<GameObject> Target;
         public bool Active;
 
-        public override IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
             var go = Target.Resolve(player);
             if (go != null) {
                 go.SetActive(Active);

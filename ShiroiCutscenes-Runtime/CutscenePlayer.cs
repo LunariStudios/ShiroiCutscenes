@@ -69,9 +69,7 @@ namespace Shiroi.Cutscenes {
         }
 
         public IEnumerator YieldPlay(Cutscene cutscene) {
-            foreach (var token in cutscene) {
-                yield return token.Execute(this);
-            }
+            yield return new CutsceneExecutor(cutscene, this).Execute();
         }
 
         [SerializeField, HideInInspector]

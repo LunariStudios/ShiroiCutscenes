@@ -14,7 +14,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public string Text;
         public DebugType Type = DebugType.Info;
 
-        public override IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
             Debug.Log(Text);
             yield break;
         }

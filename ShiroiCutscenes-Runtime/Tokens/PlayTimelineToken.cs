@@ -10,7 +10,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public PlayableAsset PlayableAsset;
         private bool playing;
 
-        public override IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
             var director = Director.Resolve(player);
             if (director.playableAsset != PlayableAsset) {
                 director.playableAsset = PlayableAsset;

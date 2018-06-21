@@ -8,7 +8,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public float Duration;
         public bool Realtime;
 
-        public override IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
             if (Realtime) {
                 yield return new WaitForSecondsRealtime(Duration);
             } else {

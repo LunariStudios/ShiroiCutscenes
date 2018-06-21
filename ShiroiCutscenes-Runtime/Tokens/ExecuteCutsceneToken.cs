@@ -4,7 +4,7 @@ namespace Shiroi.Cutscenes.Tokens {
     public class ExecuteCutsceneToken : Token {
         public Cutscene Cutscene;
 
-        public override IEnumerator Execute(CutscenePlayer player) {
+        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
             yield break;
         }
     }
