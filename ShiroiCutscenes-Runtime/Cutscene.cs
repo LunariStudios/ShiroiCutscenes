@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Tokens;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes {
     /// <summary>
@@ -15,9 +13,6 @@ namespace Shiroi.Cutscenes {
         [SerializeField, HideInInspector]
         private List<Token> tokens = new List<Token>();
 
-
-
-
         public bool IsEmpty {
             get {
                 return tokens.Count == 0;
@@ -26,18 +21,11 @@ namespace Shiroi.Cutscenes {
 
         public void Add(int index, Token token) {
             tokens.Insert(index, token);
-            CheckFutureProvider(token);
+            CheckAndRegisterFutureProvider(token);
         }
 
-        private void CheckFutureProvider(Token token) {
-            var provider = token as IFutureProvider;
-            if (provider != null) {
-                provider.RegisterFutures(this);
-            }
-        }
 
         public void RemoveToken(int tokenIndex) {
-            var token = tokens[tokenIndex];
             tokens.RemoveAt(tokenIndex);
         }
 
@@ -64,7 +52,7 @@ namespace Shiroi.Cutscenes {
 
         public void Add(Token item) {
             tokens.Add(item);
-            CheckFutureProvider(item);
+            CheckAndRegisterFutureProvider(item);
         }
 
         public void Clear() {

@@ -17,6 +17,13 @@ namespace Shiroi.Cutscenes {
             return BitConverter.ToInt32(data, 0);
         }
 
+        private void CheckAndRegisterFutureProvider(Token token) {
+            var provider = token as IFutureProvider;
+            if (provider != null) {
+                provider.RegisterFutures(this);
+            }
+        }
+
         public const string DefaultFutureName = "unnamed_future";
 
         [SerializeField]

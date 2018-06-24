@@ -66,10 +66,8 @@
     <Compile Include="Triggers\CutsceneTrigger.cs" />
     <Compile Include="Triggers\StartCutsceneTrigger.cs" />
     <Compile Include="Util\Attributes.cs" />
-    <Compile Include="Util\Base64Util.cs" />
     <Compile Include="Util\ColorUtil.cs" />
     <Compile Include="Util\ListUtil.cs" />
-    <Compile Include="Util\Preconditions.cs" />
     <Compile Include="Util\Reference.cs" />
     <Compile Include="Util\ReferenceUtility.cs" />
     <Compile Include="Util\TypeUtil.cs" />

@@ -8,7 +8,6 @@ namespace Shiroi.Cutscenes.Tokens {
     public class PlayTimelineToken : Token {
         public ExposedReference<PlayableDirector> Director;
         public PlayableAsset PlayableAsset;
-        private bool playing;
 
         public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
             var director = Director.Resolve(player);
@@ -17,11 +16,9 @@ namespace Shiroi.Cutscenes.Tokens {
             }
 
             director.Play();
-            yield return new WaitForSeconds((float) PlayableAsset.duration);
-        }
-
-        private void OnPlayed(PlayableDirector obj) {
-            playing = false;
+            while (director.state == PlayState.Playing) {
+                yield return null;
+            }
         }
     }
 }

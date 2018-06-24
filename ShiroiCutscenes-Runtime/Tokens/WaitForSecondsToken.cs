@@ -25,7 +25,7 @@ namespace Shiroi.Cutscenes.Tokens {
         private float timeLeft;
         private readonly bool realtime;
         public Waiter(float duration, bool realtime) {
-            this.timeLeft = duration;
+            timeLeft = duration;
             this.realtime = realtime;
         }
 

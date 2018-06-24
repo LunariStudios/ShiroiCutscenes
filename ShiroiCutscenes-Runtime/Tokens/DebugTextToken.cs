@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -15,7 +16,20 @@ namespace Shiroi.Cutscenes.Tokens {
         public DebugType Type = DebugType.Info;
 
         public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
-            Debug.Log(Text);
+            switch (Type) {
+                case DebugType.Info:
+                    Debug.Log(Text, this);
+                    break;
+                case DebugType.Warning:
+                    Debug.LogWarning(Text, this);
+                    break;
+                case DebugType.Error:
+                    Debug.LogError(Text, this);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             yield break;
         }
     }

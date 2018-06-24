@@ -1,5 +1,6 @@
 ﻿using System;
 using Shiroi.Cutscenes.Editor.Util;
+using Shiroi.Cutscenes.Util;
 
 namespace Shiroi.Cutscenes.Editor.Drawers {
     public class GenericDrawerProvider : TypeDrawerProvider {

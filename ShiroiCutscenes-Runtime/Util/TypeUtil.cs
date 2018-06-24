@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Shiroi.Cutscenes.Editor.Util {
+namespace Shiroi.Cutscenes.Util {
     public static class TypeUtil {
         public static bool IsInstanceOfGenericType(Type genericType, Type type) {
             while (type != null) {

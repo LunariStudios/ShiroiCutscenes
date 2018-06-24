@@ -11,7 +11,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
             var obj = Object.Resolve(player);
             if (obj != null) {
-                UnityEngine.Object.Destroy(obj);
+                Destroy(obj);
             }
             yield break;
         }
