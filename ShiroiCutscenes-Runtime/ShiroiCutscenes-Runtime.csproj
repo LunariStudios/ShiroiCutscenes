@@ -40,11 +40,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cutscene.Futures.cs" />
     <Compile Include="Cutscene.cs" />
     <Compile Include="CutsceneExecutor.cs" />
     <Compile Include="CutscenePlayer.cs" />
     <Compile Include="Exception\NotLoadedException.cs" />
-    <Compile Include="Futures\FutureManager.cs" />
+    <Compile Include="Futures\ExpectedFuture.cs" />
     <Compile Include="Futures\FutureReference.cs" />
     <Compile Include="Futures\IFutureReferenceSolver.cs" />
     <Compile Include="Futures\UnityFutureReferences.cs" />
@@ -68,13 +69,11 @@
     <Compile Include="Util\Base64Util.cs" />
     <Compile Include="Util\ColorUtil.cs" />
     <Compile Include="Util\ListUtil.cs" />
+    <Compile Include="Util\Preconditions.cs" />
     <Compile Include="Util\Reference.cs" />
     <Compile Include="Util\ReferenceUtility.cs" />
     <Compile Include="Util\TypeUtil.cs" />
     <Compile Include="Util\UnityReferences.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Gizmos\Cutscene Icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

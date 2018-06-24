@@ -19,6 +19,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (dict.ContainsKey(generic)) {
                 return dict[generic];
             }
+
             var info = ExposedReferenceType.MakeGenericType(generic).GetField(fieldName);
             return dict[generic] = info;
         }
@@ -42,10 +43,12 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (Attribute.GetCustomAttribute(info, typeof(NullSupportedAttribute)) != null) {
                 return;
             }
+
             var fieldType = info.FieldType;
             if (!fieldType.IsGenericType || fieldType.GetGenericTypeDefinition() != ExposedReferenceType) {
                 return;
             }
+
             var generic = fieldType.GetGenericArguments()[0];
             var propertyNameInfo = GetPropertyNameInfo(generic);
             var defaultValueInfo = GetDefaultValueInfo(generic);
@@ -54,6 +57,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (MimicExposedResolve(editor.Player, propertyName, defaultObject) != null) {
                 return;
             }
+
             var msg = string.Format(
                 "Couldn't resolve exposed reference of id {0} in field {1}.",
                 propertyName,
@@ -68,6 +72,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (resolver == null) {
                 return defaultValue;
             }
+
             bool idValid;
             var referenceValue = resolver.GetReferenceValue(exposedName, out idValid);
             return idValid ? referenceValue : defaultValue;
@@ -86,14 +91,17 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (Attribute.GetCustomAttribute(info, typeof(NullSupportedAttribute)) != null) {
                 return;
             }
+
             var reference = value as FutureReference;
             if (reference == null) {
                 return;
             }
+
             var id = reference.Id;
-            if (editor.Cutscene.FutureManager.GetFuture(id) != null) {
+            if (editor.Cutscene.GetFuture(id) != null) {
                 return;
             }
+
             var msg = string.Format("Couldn't find future of id {0} in field {1}.", id, info.Name);
             manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, ShiroiStyles.NullSupportedMessage);
         }
@@ -114,10 +122,12 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (reference == null || player == null) {
                 return;
             }
+
             var id = reference.Id;
             if (Resolve(reference, editor.Cutscene, player)) {
                 return;
             }
+
             var msg = string.Format("Couldn't resolve reference of id {0} in field {1}.", id, info.Name);
             manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, ShiroiStyles.NullSupportedMessage);
         }
@@ -125,7 +135,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
         private bool Resolve(Reference reference, Cutscene cutscene, CutscenePlayer player) {
             switch (reference.Type) {
                 case Reference.ReferenceType.Future:
-                    return cutscene.FutureManager.GetFuture(reference.Id) != null;
+                    return cutscene.GetFuture(reference.Id) != null;
                 case Reference.ReferenceType.Exposed:
                     return reference.Resolve(player) != null;
                 default:
@@ -146,9 +156,11 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (Attribute.GetCustomAttribute(info, typeof(NullSupportedAttribute)) != null) {
                 return;
             }
+
             if (value != null) {
                 return;
             }
+
             var msg = string.Format("Field {0} is null!", info.Name);
             manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg, ShiroiStyles.NullSupportedMessage);
         }
@@ -166,13 +178,16 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (Attribute.GetCustomAttribute(info, typeof(EmptyStringSupportedAttribute)) != null) {
                 return;
             }
+
             var s = value as string;
             if (s == null) {
                 return;
             }
+
             if (!string.IsNullOrEmpty(s)) {
                 return;
             }
+
             var msg = string.Format("Field {0} has an empty string.", info.Name);
             manager.NotifyError(
                 tokenIndex,
@@ -184,12 +199,13 @@ namespace Shiroi.Cutscenes.Editor.Errors {
     }
 
     public class InvalidFutureProviderChecker : ErrorChecker {
-        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, Token token, object value, int fieldIndex, FieldInfo info) {
+        public override void Check(CutsceneEditor editor, ErrorManager manager, int tokenIndex, Token token,
+            object value, int fieldIndex, FieldInfo info) {
             var cutscene = editor.Cutscene;
-            foreach (var future in cutscene.FutureManager.Futures) {
-                var provider = future.Provider;
-                if (provider >= cutscene.Count || provider < 0) {
-                    var msg = string.Format("Future {0}'s provider ({1}) doesn't exist!", future, provider);
+            foreach (var future in cutscene.Futures) {
+                var index = cutscene.IndexOf(future.Provider);
+                if (index >= cutscene.Count || index < 0) {
+                    var msg = string.Format("Future {0}'s provider ({1}) doesn't exist!", future, index);
                     manager.NotifyError(tokenIndex, fieldIndex, ErrorLevel.High, msg);
                 }
             }
@@ -210,6 +226,7 @@ namespace Shiroi.Cutscenes.Editor.Errors {
             if (!(value is Reference) && !(value is FutureReference)) {
                 return;
             }
+
             Increment(ReferenceUtility.GetID(value));
         }
 
@@ -228,16 +245,17 @@ namespace Shiroi.Cutscenes.Editor.Errors {
 
         public void OnEnd(ErrorManager obj, CutsceneEditor editor) {
             var cutscene = editor.Cutscene;
-            foreach (var future in cutscene.FutureManager.Futures) {
-                var pIndex = future.Provider;
+            foreach (var future in cutscene.Futures) {
+                var pIndex = cutscene.IndexOf(future.Provider);
                 if (pIndex >= cutscene.Count) {
                     continue;
                 }
-                var provider = cutscene[pIndex];
+
                 var id = future.Id;
                 if (GetUses(id) > 0) {
                     continue;
                 }
+
                 var msg = string.Format("Future {0} ({1}) is never used!", future.Name, id);
                 obj.NotifyError(pIndex, -1, ErrorLevel.Medium, msg);
             }

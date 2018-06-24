@@ -1,5 +1,4 @@
-﻿namespace Shiroi.Cutscenes.Futures {
-   
+﻿namespace Shiroi.Cutscenes.Futures {   
 
     public interface IFutureProvider {
         void RegisterFutures(Cutscene cutscene);

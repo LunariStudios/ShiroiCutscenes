@@ -96,7 +96,7 @@ namespace Shiroi.Cutscenes.Editor {
             DrawPlayerSettings();
             GUILayout.Space(ShiroiStyles.SpaceHeight);
             //Reserve futures rect
-            var totalFutures = Cutscene.FutureManager.TotalFutures;
+            var totalFutures = Cutscene.TotalFutures;
             var hasFutures = totalFutures > 0;
             var futuresRect = default(Rect);
             if (hasFutures) {
@@ -155,14 +155,13 @@ namespace Shiroi.Cutscenes.Editor {
 
         private void DrawFutures(Rect rect) {
             GUI.Box(rect, GUIContent.none, ShiroiStyles.DefaultBackground);
-            var futures = Cutscene.FutureManager.GetFutures();
+            var futures = Cutscene.Futures;
             var totalFutures = futures.Count;
             EditorGUI.LabelField(rect.GetLine(0), ShiroiStyles.FuturesStats, ShiroiStyles.Header);
             var labelRect = rect.GetLine(1);
             if (totalFutures == 0) {
                 EditorGUI.LabelField(labelRect, "No futures registered.");
             } else {
-                futures.Sort();
                 EditorGUI.LabelField(
                     labelRect,
                     totalFutures + " futures found!",
@@ -173,30 +172,22 @@ namespace Shiroi.Cutscenes.Editor {
                 var totalTokens = Cutscene.Count;
                 for (var i = 0; i < futures.Count; i++) {
                     var future = futures[i];
-                    var index = future.Provider;
-                    string msg;
-                    Color color;
+                    var token = future.Provider;
+                    var index = Cutscene.IndexOf(token);
                     var futureRect = rect.GetLine(
                         (uint) i,
                         collumHeight: iconSize,
                         yOffset: yOffset);
-                    if (index < 0 || index >= totalTokens) {
-                        msg = string.Format("{0} #{1} (Error! Owner not found)", future.Name, index);
-                        EditorGUI.LabelField(futureRect, msg);
-                        color = ShiroiStyles.ErrorBackgroundColor;
-                    } else {
-                        var token = Cutscene[index];
-                        var tokenName = MappedToken.For(token).Label;
-                        msg = string.Format(
-                            "{0} @ {3} (Owner: {1} @ #{2})",
-                            future.Name,
-                            tokenName,
-                            index,
-                            future.Id);
-                        var mappedToken = MappedToken.For(token);
-                        color = TokenList.index == index ? mappedToken.SelectedColor : mappedToken.Color;
-                    }
 
+                    var tokenName = MappedToken.For(token).Label;
+                    var msg = string.Format(
+                        "{0} @ {3} (Owner: {1} @ #{2})",
+                        future.Name,
+                        tokenName,
+                        index,
+                        future.Id);
+                    var mappedToken = MappedToken.For(token);
+                    var color = TokenList.index == index ? mappedToken.SelectedColor : mappedToken.Color;
                     var content = EditorGUIUtility.ObjectContent(null, future.Type);
 
                     Rect iconRect;

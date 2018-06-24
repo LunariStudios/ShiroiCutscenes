@@ -35,6 +35,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             if (value == null) {
                 value = new Reference<T>();
             }
+
             GUIContent label;
             var found = player == null ? null : value.Resolve(player);
             switch (value.Type) {
@@ -47,6 +48,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
                 default:
                     return;
             }
+
             var labelWidth = GUIStyle.none.CalcSize(new GUIContent(label)).x;
             var r2 = rect.SubRect(TypeWidth, rect.height, labelWidth + LabelOffset);
             value.Type = (Reference.ReferenceType) EditorGUI.EnumPopup(r2, value.Type);
@@ -58,6 +60,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
                     value.Id = DrawFuture(value, cutscene, rect, name, tokenIndex);
                     break;
             }
+
             setter(value);
         }
 
@@ -79,14 +82,15 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             if (value == null) {
                 value = new FutureReference<T>();
             }
+
             value.Id = DrawFuture(cutscene, tokenIndex, rect, name, value.Id);
             setter(value);
         }
 
         public static int DrawFuture(Cutscene cutscene, int tokenIndex, Rect rect, GUIContent name, int id) {
-            var futures = cutscene.FutureManager.Futures.ToList();
+            var futures = cutscene.Futures.ToList();
             futures.RemoveAll(future => !FutureType.IsAssignableFrom(future.Type));
-            futures.RemoveAll(future => future.Provider >= tokenIndex);
+            futures.RemoveAll(future => cutscene.IndexOf(future.Provider) >= tokenIndex);
             var optionNames = futures.Select(future => new GUIContent(future.Name)).ToArray();
             var possibleOptions = futures.Select(future => future.Id).ToArray();
 

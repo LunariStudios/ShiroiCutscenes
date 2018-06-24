@@ -11,16 +11,11 @@ namespace Shiroi.Cutscenes {
     /// A collection of <see cref="Token"/>s executed in sequence in order to create a cinematic effect.
     /// </summary>
     [Serializable]
-    public class Cutscene : ScriptableObject, IList<Token> {
+    public partial class Cutscene : ScriptableObject, IList<Token> {
         [SerializeField, HideInInspector]
         private List<Token> tokens = new List<Token>();
 
 
-        public FutureManager FutureManager = new FutureManager();
-
-        public int NotifyFuture<T>(IFutureProvider provider, string futureName) where T : Object {
-            return FutureManager.NotifyFuture<T>(this, provider, futureName);
-        }
 
 
         public bool IsEmpty {
@@ -30,7 +25,6 @@ namespace Shiroi.Cutscenes {
         }
 
         public void Add(int index, Token token) {
-            FutureManager.OnReorder(index, tokens.Count);
             tokens.Insert(index, token);
             CheckFutureProvider(token);
         }
@@ -43,7 +37,6 @@ namespace Shiroi.Cutscenes {
         }
 
         public void RemoveToken(int tokenIndex) {
-            FutureManager.ReorderFutures(tokenIndex);
             var token = tokens[tokenIndex];
             tokens.RemoveAt(tokenIndex);
         }
@@ -75,7 +68,7 @@ namespace Shiroi.Cutscenes {
         }
 
         public void Clear() {
-            FutureManager.Clear();
+            futures.Clear();
             tokens.Clear();
         }
 
@@ -122,7 +115,6 @@ namespace Shiroi.Cutscenes {
             }
 
             tokens[b] = element;
-            FutureManager.OnReorder(b, a);
         }
 
         public IEnumerator<Token> GetEnumerator() {

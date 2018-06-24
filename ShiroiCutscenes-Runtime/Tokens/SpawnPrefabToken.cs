@@ -22,11 +22,11 @@ namespace Shiroi.Cutscenes.Tokens {
         private int futureId;
 
         public void RegisterFutures(Cutscene manager) {
-            futureId = manager.NotifyFuture<GameObject>(this, FutureName);
+            futureId = manager.AddFuture<GameObject>(this, FutureName).Id;
         }
 
         public void OnChanged(Cutscene cutscene) {
-            cutscene.FutureManager.GetFuture(futureId).Name = FutureName;
+            cutscene.GetFuture(futureId).Name = FutureName;
         }
 
         public void OnPreview(ISceneHandle handle) {
