@@ -55,7 +55,11 @@
     <Compile Include="Tokens\DeleteToken.cs" />
     <Compile Include="Tokens\ExecuteCutsceneToken.cs" />
     <Compile Include="Tokens\PlayTimelineToken.cs" />
+    <Compile Include="Tokens\SetBooleanToken.cs" />
+    <Compile Include="Tokens\SetFloatToken.cs" />
     <Compile Include="Tokens\SetGameObjectActiveToken.cs" />
+    <Compile Include="Tokens\SetIntegerToken.cs" />
+    <Compile Include="Tokens\SetStringToken.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\SetParentToken.cs" />
     <Compile Include="Tokens\SpawnPrefabToken.cs" />

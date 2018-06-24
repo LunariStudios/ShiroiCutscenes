@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Shiroi.Cutscenes {
     public interface ISkippable {
@@ -9,6 +10,7 @@ namespace Shiroi.Cutscenes {
         private bool shouldSkip;
         private readonly Cutscene cutscene;
         private readonly CutscenePlayer player;
+        private Dictionary<string, object> metadata = new Dictionary<string, object>();
 
         public Cutscene Cutscene {
             get {
@@ -52,6 +54,17 @@ namespace Shiroi.Cutscenes {
             }
         }
 
+        public void SetMeta(string key, object value) {
+            metadata[key] = value;
+        }
+
+        public T GetMeta<T>(string key) where T : class {
+            return GetMeta(key) as T;
+        }
+
+        public object GetMeta(string key) {
+            return metadata.ContainsKey(key) ? key : null;
+        }
 
         public void Skip() {
             shouldSkip = true;
