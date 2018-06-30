@@ -17,7 +17,7 @@ namespace Shiroi.Cutscenes.Triggers {
 
         protected void Trigger() {
             if (!Player) {
-                Debug.LogWarning("[ShiroiCutscenes] Couldn't find an active instance of CutscenePlayer!");
+                ShiroiCutscenesConstants.Logger.LogWarning("Couldn't find an active instance of CutscenePlayer!");
                 return;
             }
 

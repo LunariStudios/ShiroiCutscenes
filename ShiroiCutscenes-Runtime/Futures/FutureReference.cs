@@ -18,10 +18,8 @@ namespace Shiroi.Cutscenes.Futures {
             }
 
             var typeName = typeof(T).Name;
-            Debug.LogErrorFormat(
-                "[ShiroiCutscenes] Future with id '{0}' ({1}) has not yet been provided!",
-                Id,
-                typeName);
+            ShiroiCutscenesConstants.Logger.LogError(
+                string.Format("Future with id '{0}' ({1}) has not yet been provided!", Id, typeName));
             return null;
         }
     }

@@ -55,6 +55,7 @@
     <Compile Include="Futures\UnityFutureReferences.cs" />
     <Compile Include="Preview\IScenePreviewable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShiroiCutscenesConstants.cs" />
     <Compile Include="Tokens\DebugTextToken.cs" />
     <Compile Include="Tokens\DeleteToken.cs" />
     <Compile Include="Tokens\ExecuteCutsceneToken.cs" />

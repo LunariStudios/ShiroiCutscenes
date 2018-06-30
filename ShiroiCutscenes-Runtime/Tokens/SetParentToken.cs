@@ -12,10 +12,10 @@ namespace Shiroi.Cutscenes.Tokens {
             var obj = Object.Resolve(player);
             var p = NewParent.Resolve(player);
             if (!obj) {
-                Debug.LogError("Couldn't find object to set parent");
+                ShiroiCutscenesConstants.Logger.LogError("Couldn't find object to set parent");
             }
             if (!p) {
-                Debug.LogError("Couldn't find parent object");
+                ShiroiCutscenesConstants.Logger.LogError("Couldn't find parent object");
             }
             obj.transform.SetParent(p.transform);
             yield break;
