@@ -62,10 +62,9 @@ namespace Shiroi.Cutscenes.Editor.Util {
 
         private float GetTokenHeight(int tokenIndex) {
             if (tokenIndex >= Cutscene.Count) {
-                Debug.LogWarningFormat(
-                    "[ShiroiCutscenes] Token index '{0}' is out of range in cutscenes {1}!",
-                    tokenIndex,
-                    Cutscene.name);
+                ShiroiCutscenesConstants.Logger.LogWarning(
+                    string.Format("Token index '{0}' is out of range in cutscenes {1}!", tokenIndex, Cutscene.name)
+                    );
                 return ShiroiStyles.SingleLineHeight;
             }
 

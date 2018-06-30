@@ -33,7 +33,7 @@ namespace Shiroi.Cutscenes.Editor.Drawers {
             } else {
                 var msg = string.Format("[{2}] Expected an object of type {0} but got {1}! Using default value...",
                     supportedType, value, GetType().Name);
-                Debug.LogWarning(msg);
+                ShiroiCutscenesConstants.Logger.LogWarning(msg);
                 finalV = default(T);
             }
             Draw(editor, player, cutscene, rect, tokenIndex, name, finalV, valueType, fieldInfo, setter);
