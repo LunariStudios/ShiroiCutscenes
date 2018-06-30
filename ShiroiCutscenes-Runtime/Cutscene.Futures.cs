@@ -24,8 +24,6 @@ namespace Shiroi.Cutscenes {
             }
         }
 
-        public const string DefaultFutureName = "unnamed_future";
-
         [SerializeField]
         private List<ExpectedFuture> futures = new List<ExpectedFuture>();
 

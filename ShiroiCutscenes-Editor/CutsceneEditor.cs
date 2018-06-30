@@ -9,6 +9,7 @@ using Shiroi.Cutscenes.Preview;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
 using UnityEngine;
+using UnityUtilities.Editor;
 using Random = UnityEngine.Random;
 
 namespace Shiroi.Cutscenes.Editor {
@@ -243,26 +244,17 @@ namespace Shiroi.Cutscenes.Editor {
         }
 
         public void AddToken(Type type) {
-            var instance = (Token) CreateInstance(type);
+            var instance = (Token) Cutscene.AddToAssetFile(type);
             instance.name = type.Name;
             if (Cutscene.IsEmpty || TokenList.index < 0) {
                 Cutscene.Add(instance);
             } else {
                 Cutscene.Add(TokenList.index, instance);
             }
-
-            AssetDatabase.AddObjectToAsset(instance, Cutscene);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
             EditorUtility.SetDirty(this);
-            SetCutsceneDirty();
-            //tokenList.GrabKeyboardFocus();
             TokenList.index = Cutscene.Count - 1;
         }
 
-        private void SetCutsceneDirty() {
-            EditorUtility.SetDirty(Cutscene);
-        }
 
         public void RemoveToken(int lastSelected) {
             var t = Cutscene[lastSelected];
