@@ -56,9 +56,12 @@ namespace Shiroi.Cutscenes.Editor.Config {
         }
 
         private static void RepaintEditors() {
-            foreach (var editor in CutsceneEditor.Editors) {
+            /*
+             TODO: Fix
+             foreach (var editor in CutsceneEditor.Editors) {
                 editor.Repaint();
             }
+            */
         }
     }
 }

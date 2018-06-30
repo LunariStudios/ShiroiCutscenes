@@ -76,10 +76,7 @@
     <Compile Include="TokenLoader.cs" />
     <Compile Include="Util\RectUtil.cs" />
     <Compile Include="Util\SlideGroup.cs" />
-    <Compile Include="Util\TokenList.cs" />
     <Compile Include="Windows\ConfigWindow.cs" />
-    <Compile Include="Windows\ContextWindow.cs" />
-    <Compile Include="Windows\TokenSelectorWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShiroiCutscenes-Runtime\ShiroiCutscenes-Runtime.csproj">
