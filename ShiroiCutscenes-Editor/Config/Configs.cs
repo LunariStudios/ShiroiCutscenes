@@ -25,19 +25,22 @@ namespace Shiroi.Cutscenes.Editor.Config {
             "editor.colorfulTokens",
             "Colorful Tokens",
             "Whether or not to generate different colors for tokens based on their name, or just use plain grey.",
-            true);
-        public static readonly BooleanConfig ShowDebug = new BooleanConfig(
-            "editor.showDebug",
-            "Show Debug",
-            "Whether or not to show debug messages, like how many tokens are loaded.",
-            true);
+            true
+        );
+
+        public static readonly IntegerConfig TokensPerPage = new IntegerConfig(
+            "editor.tokensPerPage",
+            "Tokens Per Page",
+            "The max number of tokens to display per page",
+            10
+        );
 
         public static readonly Config[] AllConfigs = {
             CheckErrors,
             ColorfulTokens,
             ErrorColors,
             ErrorIcons,
-            ShowDebug
+            TokensPerPage
         };
 
         static Configs() {

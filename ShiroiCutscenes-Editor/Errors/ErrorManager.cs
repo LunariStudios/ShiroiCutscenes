@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Shiroi.Cutscenes.Editor.Config;
+using Shiroi.Cutscenes.Editor.Cutscenes;
 using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Tokens;
 using UnityEngine;

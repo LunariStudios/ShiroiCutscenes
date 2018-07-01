@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Shiroi.Cutscenes.Editor.Cutscenes;
 using Shiroi.Cutscenes.Tokens;
 
 namespace Shiroi.Cutscenes.Editor.Errors {

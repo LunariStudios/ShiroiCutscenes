@@ -53,8 +53,12 @@
   <ItemGroup>
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\Configs.cs" />
-    <Compile Include="CutsceneEditor.cs" />
     <Compile Include="CutscenePlayerEditor.cs" />
+    <Compile Include="Cutscenes\CutsceneEditor.cs" />
+    <Compile Include="Cutscenes\CutsceneEditor.Header.cs" />
+    <Compile Include="Cutscenes\CutsceneEditor.Tokens.cs" />
+    <Compile Include="Cutscenes\CutscenePlayerEditor.cs" />
+    <Compile Include="Cutscenes\CutscenePlayerEditor.Drawing.cs" />
     <Compile Include="Drawers\PrimitiveDrawers.cs" />
     <Compile Include="Drawers\ShiroiDrawers.cs" />
     <Compile Include="Drawers\TypeDrawer.cs" />
@@ -70,12 +74,13 @@
     <Compile Include="MappedToken.cs" />
     <Compile Include="Preview\EditorSceneHandle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShiroiCutscenesEditorConstants.cs" />
     <Compile Include="ShiroiCutscenesMenus.cs" />
     <Compile Include="ShiroiEditorUtil.cs" />
     <Compile Include="ShiroiStyles.cs" />
     <Compile Include="TokenLoader.cs" />
+    <Compile Include="Util\GUIProperties.cs" />
     <Compile Include="Util\RectUtil.cs" />
-    <Compile Include="Util\SlideGroup.cs" />
     <Compile Include="Windows\ConfigWindow.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Shiroi.Cutscenes.Editor.Cutscenes;
 using UnityEditor;
 
 namespace Shiroi.Cutscenes.Editor.Errors {

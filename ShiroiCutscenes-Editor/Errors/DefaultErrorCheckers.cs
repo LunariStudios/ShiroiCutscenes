@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Shiroi.Cutscenes.Editor.Cutscenes;
 using Shiroi.Cutscenes.Futures;
 using Shiroi.Cutscenes.Tokens;
 using Shiroi.Cutscenes.Util;

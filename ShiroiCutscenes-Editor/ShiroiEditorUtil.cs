@@ -31,9 +31,6 @@ namespace Shiroi.Cutscenes.Editor {
                 var msgRect = futureRect.SubRect(futureRect.width - iconSize, iconSize, iconSize);
                 GUI.Box(iconRect, content);
                 var msg = string.Format("{0} @ {1}", obj.name, reference.Id);
-#if UNITY_EDITOR
-                msg = string.Format("{1} ({0} uses)", msg, reference.TotalUses);
-#endif
                 EditorGUI.LabelField(msgRect, msg);
             }
         }

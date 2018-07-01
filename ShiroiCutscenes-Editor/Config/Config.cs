@@ -1,4 +1,5 @@
 ﻿using System;
+using Shiroi.Cutscenes.Editor.Util;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,12 +26,11 @@ namespace Shiroi.Cutscenes.Editor.Config {
             private set;
         }
 
-        public void DrawGUI() {
-            EditorGUILayout.BeginVertical(ShiroiStyles.DefaultBackground);
-            EditorGUILayout.LabelField(Label, ShiroiStyles.Bold);
+        public void DrawGUI(GUISkin skin) {
+            EditorGUILayout.BeginVertical(skin.box);
+            EditorGUILayout.LabelField(Label, skin.GetStyle(GUISkinProperties.HeaderLabel));
             EditorGUILayout.LabelField(Description);
             DoFieldGUI();
-            GUILayout.Space(ShiroiStyles.SpaceHeight);
             EditorGUILayout.EndVertical();
         }
 
