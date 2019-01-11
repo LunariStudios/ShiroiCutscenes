@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using JetBrains.Annotations;
+using Shiroi.Cutscenes.Attributes;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
+    [TokenCategory(ShiroiCutscenesConstants.DebugCategory)]
     public class DebugTextToken : Token {
         public enum DebugType {
             Info,
@@ -15,7 +17,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public string Text;
         public DebugType Type = DebugType.Info;
 
-        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
+        public override IEnumerator Execute(CutsceneExecutor executor) {
             switch (Type) {
                 case DebugType.Info:
                     Debug.Log(Text, this);

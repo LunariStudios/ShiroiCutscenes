@@ -1,41 +1,29 @@
 ﻿using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Editor.Windows;
-using Shiroi.Cutscenes.Futures;
 using UnityEditor;
 using UnityEngine;
-using UnityUtilities;
 
 namespace Shiroi.Cutscenes.Editor.Cutscenes {
     public partial class CutsceneEditor {
+        public static readonly GUIContent NoPlayerBoundContent = new GUIContent(
+            "When a CutscenePlayer becomes bound, it's meta will be displayed here"
+        );
+
+        public static readonly GUIContent CutsceneEditorTokensHeader = new GUIContent(
+            "Tokens",
+            "All information about the tokens that structure this cutscenes"
+        );
+
+        public static readonly GUIContent SettingsButtonContent = new GUIContent(
+            "Settings",
+            "Open settings for the ShiroiCutscenes Editor"
+        );
+
         private void DrawCutsceneHeader(GUISkin skin) {
             EditorGUILayout.BeginVertical(skin.box);
             DrawMainHeader(skin);
-            DrawFutures(skin);
             EditorGUILayout.EndVertical();
         }
-
-        private void DrawFutures(GUISkin skin) {
-            EditorGUILayout.LabelField(
-                ShiroiCutscenesEditorConstants.FuturesHeaderContent,
-                skin.GetStyle(GUISkinProperties.HeaderLabel)
-            );
-            DrawFuturesList(skin);
-        }
-
-        private void DrawFuturesList(GUISkin skin) {
-            var futures = Cutscene.Futures;
-            if (futures.IsEmpty()) {
-                EditorGUILayout.LabelField(
-                    ShiroiCutscenesEditorConstants.EmptyFuturesContent
-                );
-            } else {
-                foreach (var future in futures) {
-                    DrawFuture(future, skin);
-                }
-            }
-        }
-
-        private void DrawFuture(ExpectedFuture future, GUISkin skin) { }
 
         private void DrawMainHeader(GUISkin skin) {
             EditorGUILayout.BeginHorizontal();
@@ -54,39 +42,16 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
 
         private bool DrawSettingsButton(GUISkin skin) {
             return GUILayout.Button(
-                ShiroiCutscenesEditorConstants.SettingsButtonContent,
+                SettingsButtonContent,
                 skin.GetStyle(GUISkinProperties.minibuttonright)
             );
         }
 
         private void DrawLeftCutsceneHeader(GUISkin skin) {
             EditorGUILayout.LabelField(
-                ShiroiCutscenesEditorConstants.CutsceneEditorHeader,
+                CutsceneEditorHeader,
                 skin.GetStyle(GUISkinProperties.HeaderLabel)
             );
-            DrawPlayerInfo(skin);
-        }
-
-
-        private void DrawPlayerInfo(GUISkin skin) {
-            Player = (CutscenePlayer) EditorGUILayout.ObjectField(
-                ShiroiCutscenesEditorConstants.EditorBoundPlayer,
-                Player,
-                typeof(CutscenePlayer),
-                true
-            );
-            DrawPlayer(Player, skin);
-        }
-
-        private void DrawPlayer(CutscenePlayer player, GUISkin skin) {
-            if (player != null) {
-                CutscenePlayerEditor.DrawLayout(player, skin);
-            } else {
-                EditorGUILayout.LabelField(
-                    ShiroiCutscenesEditorConstants.NoPlayerBoundContent,
-                    skin.GetStyle(GUISkinProperties.CNStatusWarn)
-                );
-            }
         }
     }
 }

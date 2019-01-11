@@ -15,20 +15,10 @@ namespace Shiroi.Cutscenes.Tokens {
         /// <br/>
         /// <a href="https://docs.unity3d.com/Manual/Coroutines.html">Click here for an article about coroutines</a>
         /// </summary>
-        /// <param name="player">The <see cref="CutscenePlayer"/> that the cutscene is being executed in.</param>
         /// <param name="executor"></param>
         /// <returns>The enumerator that is executed by the <see cref="player"/> inside a coroutine.</returns>
-        public abstract IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor);
+        public abstract IEnumerator Execute(CutsceneExecutor executor);
     }
 
-    /// <summary>
-    /// Represents a <see cref="Token"/> that can react to changes made to itself by the inspector.
-    /// </summary>
-    public interface ITokenChangedListener {
-        /// <summary>
-        /// Called when a token is changed in the inspector
-        /// </summary>
-        /// <param name="cutscene"></param>
-        void OnChanged(Cutscene cutscene);
-    }
+
 }

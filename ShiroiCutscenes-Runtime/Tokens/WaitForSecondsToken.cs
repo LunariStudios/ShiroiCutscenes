@@ -1,16 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Shiroi.Cutscenes.Attributes;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    public class WaitForSecondsToken : Token, ISkippable {
+    [TokenCategory(ShiroiCutscenesConstants.CommonCategory)]
+    public class WaitForSecondsToken : Token {
         public float Duration;
         public bool Realtime;
         private readonly Dictionary<CutsceneExecutor, Waiter> cache = new Dictionary<CutsceneExecutor, Waiter>();
 
-        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
+        public override IEnumerator Execute(CutsceneExecutor executor) {
             var w = new Waiter(Duration, Realtime);
             cache[executor] = w;
             while (w.Tick()) {
@@ -18,7 +20,6 @@ namespace Shiroi.Cutscenes.Tokens {
             }
         }
 
-        public void Skip(CutscenePlayer player, CutsceneExecutor executor) { }
     }
 
     public class Waiter {

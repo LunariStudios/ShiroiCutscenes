@@ -42,29 +42,5 @@ namespace Shiroi.Cutscenes.Editor.Config {
             ErrorIcons,
             TokensPerPage
         };
-
-        static Configs() {
-            ColorfulTokens.OnChanged += delegate {
-                MappedToken.Clear();
-                RepaintEditors();
-            };
-            ErrorColors.OnChanged += delegate {
-                ShiroiStyles.Reload();
-                RepaintEditors();
-            };
-            ErrorIcons.OnChanged += delegate {
-                ShiroiStyles.Reload();
-                RepaintEditors();
-            };
-        }
-
-        private static void RepaintEditors() {
-            /*
-             TODO: Fix
-             foreach (var editor in CutsceneEditor.Editors) {
-                editor.Repaint();
-            }
-            */
-        }
     }
 }

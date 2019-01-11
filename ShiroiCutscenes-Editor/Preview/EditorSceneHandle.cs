@@ -1,4 +1,5 @@
-﻿using Shiroi.Cutscenes.Preview;
+﻿using Lunari.Tsuki;
+using Shiroi.Cutscenes.Preview;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace Shiroi.Cutscenes.Editor.Preview {
 
         public static readonly GUIStyle LabelDefaultStyle = new GUIStyle {
             normal = {
-                background = ShiroiStyles.CreateTexture(LabelBackgroundColor),
+                background = TextureUtility.PixelTexture(LabelBackgroundColor),
                 textColor = LabelFontColor
             }
         };

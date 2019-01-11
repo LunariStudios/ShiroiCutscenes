@@ -13,15 +13,12 @@ namespace Shiroi.Cutscenes {
         [SerializeField, HideInInspector]
         private List<Token> tokens = new List<Token>();
 
-        public bool IsEmpty {
-            get {
-                return tokens.Count == 0;
-            }
-        }
+        public IList<Token> Tokens => tokens;
+
+        public bool IsEmpty => tokens.Count == 0;
 
         public void Add(int index, Token token) {
             tokens.Insert(index, token);
-            CheckAndRegisterFutureProvider(token);
         }
 
 
@@ -42,21 +39,15 @@ namespace Shiroi.Cutscenes {
         }
 
         public Token this[int index] {
-            get {
-                return tokens[index];
-            }
-            set {
-                tokens[index] = value;
-            }
+            get => tokens[index];
+            set => tokens[index] = value;
         }
 
         public void Add(Token item) {
             tokens.Add(item);
-            CheckAndRegisterFutureProvider(item);
         }
 
         public void Clear() {
-            futures.Clear();
             tokens.Clear();
         }
 
@@ -72,17 +63,9 @@ namespace Shiroi.Cutscenes {
             return tokens.Remove(item);
         }
 
-        public int Count {
-            get {
-                return tokens.Count;
-            }
-        }
+        public int Count => tokens.Count;
 
-        public bool IsReadOnly {
-            get {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
         public void Swap(int a, int b) {
             if (a == b) {
@@ -111,6 +94,10 @@ namespace Shiroi.Cutscenes {
 
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
+        }
+
+        public Token GetToken(int i) {
+            return tokens[i];
         }
     }
 }

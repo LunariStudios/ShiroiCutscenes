@@ -1,15 +1,20 @@
 ﻿using System.Collections;
+using Shiroi.Cutscenes.Attributes;
+using Shiroi.Cutscenes.Communication;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
+    [TokenCategory(ShiroiCutscenesConstants.CommonCategory)]
     public class SetGameObjectActiveToken : Token {
-        public ExposedReference<GameObject> Target;
+        public GameObjectInput Target;
         public bool Active;
 
-        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
-            var go = Target.Resolve(player);
-            if (go != null) {
-                go.SetActive(Active);
+        public override IEnumerator Execute(CutsceneExecutor executor) {
+            GameObject go;
+            if (Target.Get(executor.Context, out go)) {
+                if (go != null) {
+                    go.SetActive(Active);
+                }
             }
 
             yield break;

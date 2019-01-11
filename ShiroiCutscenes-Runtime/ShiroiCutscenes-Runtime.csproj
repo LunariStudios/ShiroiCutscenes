@@ -35,24 +35,24 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tsuki-Runtime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Lunari.Tsuki.1.0.0\lib\net35\Tsuki-Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\Libraries\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityUtilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\UnityUtilities.1.0.0\lib\net35\UnityUtilities.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cutscene.Futures.cs" />
+    <Compile Include="Attributes\TokenCategoryAttribute.cs" />
+    <Compile Include="Communication\Context.cs" />
+    <Compile Include="Communication\Input.cs" />
+    <Compile Include="Communication\Output.cs" />
+    <Compile Include="Communication\PrimitiveCommunicationTypes.cs" />
+    <Compile Include="Communication\UnityCommunicationTypes.cs" />
     <Compile Include="Cutscene.cs" />
     <Compile Include="CutsceneExecutor.cs" />
-    <Compile Include="CutscenePlayer.cs" />
     <Compile Include="Exception\NotLoadedException.cs" />
-    <Compile Include="Futures\ExpectedFuture.cs" />
-    <Compile Include="Futures\FutureReference.cs" />
-    <Compile Include="Futures\IFutureReferenceSolver.cs" />
-    <Compile Include="Futures\UnityFutureReferences.cs" />
     <Compile Include="Preview\IScenePreviewable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShiroiCutscenesConstants.cs" />
@@ -60,11 +60,7 @@
     <Compile Include="Tokens\DeleteToken.cs" />
     <Compile Include="Tokens\ExecuteCutsceneToken.cs" />
     <Compile Include="Tokens\PlayTimelineToken.cs" />
-    <Compile Include="Tokens\SetBooleanToken.cs" />
-    <Compile Include="Tokens\SetFloatToken.cs" />
     <Compile Include="Tokens\SetGameObjectActiveToken.cs" />
-    <Compile Include="Tokens\SetIntegerToken.cs" />
-    <Compile Include="Tokens\SetStringToken.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\SetParentToken.cs" />
     <Compile Include="Tokens\SpawnPrefabToken.cs" />
@@ -75,20 +71,10 @@
     <Compile Include="Triggers\CutsceneTrigger.cs" />
     <Compile Include="Triggers\StartCutsceneTrigger.cs" />
     <Compile Include="Util\Attributes.cs" />
-    <Compile Include="Util\Reference.cs" />
-    <Compile Include="Util\ReferenceUtility.cs" />
     <Compile Include="Util\TypeUtil.cs" />
-    <Compile Include="Util\UnityReferences.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-         Other similar extension points exist, see Microsoft.Common.targets.
-    <Target Name="BeforeBuild">
-    </Target>
-    <Target Name="AfterBuild">
-    </Target>
-    -->
 </Project>

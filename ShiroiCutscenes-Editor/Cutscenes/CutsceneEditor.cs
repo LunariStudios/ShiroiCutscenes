@@ -1,9 +1,8 @@
 ﻿using System;
-using Shiroi.Cutscenes.Editor.Errors;
+using Lunari.Tsuki.Editor;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
 using UnityEngine;
-using UnityUtilities.Editor;
 
 namespace Shiroi.Cutscenes.Editor.Cutscenes {
     [CustomEditor(typeof(Cutscene))]
@@ -11,18 +10,6 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
         public Cutscene Cutscene {
             get;
             private set;
-        }
-
-        public CutscenePlayer Player {
-            get;
-            private set;
-        }
-
-        public ErrorManager ErrorManager {
-            get {
-                //TODO: Fix
-                throw new NotImplementedException();
-            }
         }
 
         private void OnEnable() {
@@ -45,8 +32,23 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
                 Cutscene.Add(TokenList.index, instance);
             }*/
             Cutscene.Add(instance);
-            EditorUtility.SetDirty(this);
+            ReloadSubEditors();
+            Repaint();
             //TokenList.index = Cutscene.Count - 1;
         }
+
+        public static readonly GUIContent EditorBoundPlayer = new GUIContent(
+            "Bound Player",
+            "The bound player is the CutscenePlayer that the references of this cutscene is currently being recorded to"
+        );
+
+        public static readonly GUIContent AddTokenContent = new GUIContent(
+            "Choose your flavour",
+            "Opens a popup to add tokens to this cutscenes");
+
+        public static readonly GUIContent FuturesHeaderContent = new GUIContent(
+            "Futures",
+            "Information about futures will be displayed here"
+        );
     }
 }

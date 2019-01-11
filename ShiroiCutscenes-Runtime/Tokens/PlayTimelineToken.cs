@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Collections;
-using Shiroi.Cutscenes.Util;
-using UnityEngine;
+using Shiroi.Cutscenes.Communication;
 using UnityEngine.Playables;
 
 namespace Shiroi.Cutscenes.Tokens {
+    [Serializable]
+    
+    public class PlayableDirectorInput : Input<PlayableDirector> { }
+
     public class PlayTimelineToken : Token {
-        public ExposedReference<PlayableDirector> Director;
+        public PlayableDirectorInput Director;
         public PlayableAsset PlayableAsset;
 
-        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
-            var director = Director.Resolve(player);
-            if (director.playableAsset != PlayableAsset) {
-                director.playableAsset = PlayableAsset;
-            }
+        public override IEnumerator Execute(CutsceneExecutor executor) {
+            PlayableDirector director;
+            if (Director.Get(executor.Context, out director)) {
+                if (director.playableAsset != PlayableAsset) {
+                    director.playableAsset = PlayableAsset;
+                }
 
-            director.Play();
-            while (director.state == PlayState.Playing) {
-                yield return null;
+                director.Play();
+                while (director.state == PlayState.Playing) {
+                    yield return null;
+                }
             }
         }
     }

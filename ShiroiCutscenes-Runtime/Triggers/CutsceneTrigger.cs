@@ -11,22 +11,16 @@ namespace Shiroi.Cutscenes.Triggers {
         }
 
         public Cutscene Cutscene;
-        public CutscenePlayer Player;
         public PostPlayAction PostAction = PostPlayAction.DestroyGameObject;
         private bool played;
 
         protected void Trigger() {
-            if (!Player) {
-                ShiroiCutscenesConstants.Logger.LogWarning("Couldn't find an active instance of CutscenePlayer!");
-                return;
-            }
-
             if (PostAction != PostPlayAction.None && played) {
                 return;
             }
 
             played = true;
-            Player.Play(Cutscene);
+            //Player.Play(Cutscene);
             switch (PostAction) {
                 case PostPlayAction.None:
                     break;

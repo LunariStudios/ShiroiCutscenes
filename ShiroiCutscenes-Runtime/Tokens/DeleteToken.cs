@@ -1,18 +1,21 @@
 ﻿using System.Collections;
 using JetBrains.Annotations;
-using Shiroi.Cutscenes.Util;
+using Shiroi.Cutscenes.Attributes;
+using Shiroi.Cutscenes.Communication;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
+    [TokenCategory(ShiroiCutscenesConstants.CommonCategory)]
     public class DeleteToken : Token {
-        public Reference<Object> Object;
+        public ObjectInput Object;
 
-        public override IEnumerator Execute(CutscenePlayer player, CutsceneExecutor executor) {
-            var obj = Object.Resolve(player);
-            if (obj != null) {
+        public override IEnumerator Execute(CutsceneExecutor executor) {
+            Object obj;
+            if (Object.Get(executor.Context, out obj)) {
                 Destroy(obj);
             }
+
             yield break;
         }
     }
