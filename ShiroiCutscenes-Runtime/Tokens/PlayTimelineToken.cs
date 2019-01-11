@@ -13,8 +13,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public PlayableAsset PlayableAsset;
 
         public override IEnumerator Execute(CutsceneExecutor executor) {
-            PlayableDirector director;
-            if (Director.Get(executor.Context, out director)) {
+            if (Director.Get(executor.Context, out var director)) {
                 if (director.playableAsset != PlayableAsset) {
                     director.playableAsset = PlayableAsset;
                 }

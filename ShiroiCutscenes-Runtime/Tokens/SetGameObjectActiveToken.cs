@@ -10,8 +10,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public bool Active;
 
         public override IEnumerator Execute(CutsceneExecutor executor) {
-            GameObject go;
-            if (Target.Get(executor.Context, out go)) {
+            if (Target.Get(executor.Context, out var go)) {
                 if (go != null) {
                     go.SetActive(Active);
                 }

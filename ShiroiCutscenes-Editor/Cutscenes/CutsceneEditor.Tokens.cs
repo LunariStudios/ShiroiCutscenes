@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Lunari.Tsuki;
+using Lunari.Tsuki.Editor;
 using Shiroi.Cutscenes.Attributes;
 using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Tokens;
@@ -134,6 +135,9 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
                 ClearCutsceneContent,
                 GUISkinProperties.LargeButtonMid
             )) {
+                foreach (var token in Cutscene) {
+                    DestroyImmediate(token, true);
+                }
                 Cutscene.Clear();
                 ReloadSubEditors();
             }
@@ -143,7 +147,9 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
 
         private void TokensOnEnable() {
             tokenPopUpContent = new CutsceneTokenSelectorPopupContent(() => 200, type => {
-                Cutscene.Add((Token) CreateInstance(type));
+                var t =(Token) Cutscene.AddToAssetFile(type);
+                t.name = type.Name;
+                Cutscene.Add(t);
                 ReloadSubEditors();
             });
             ReloadSubEditors();
@@ -312,7 +318,8 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
             rootGroup = new TypeSelectorGroup("Root");
             var types = TypeUtility.GetAllTypesOf<Token>().Where(type => !type.IsAbstract);
             foreach (var type in types) {
-                var a = (TokenCategoryAttribute) type.GetCustomAttributes(typeof(TokenCategoryAttribute), true).FirstOrDefault();
+                var a = (TokenCategoryAttribute) type.GetCustomAttributes(typeof(TokenCategoryAttribute), true)
+                    .FirstOrDefault();
                 var group = a == null ? rootGroup : rootGroup.FindSubGroup(a.Category);
                 group.GroupTypes.Add(type);
             }

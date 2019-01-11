@@ -12,8 +12,7 @@ namespace Shiroi.Cutscenes.Tokens {
         public GameObjectInput NewParent;
 
         public override IEnumerator Execute(CutsceneExecutor executor) {
-            GameObject obj, p;
-            if (Object.Get(executor.Context, out obj) && NewParent.Get(executor.Context, out p)) {
+            if (Object.Get(executor.Context, out var obj) && NewParent.Get(executor.Context, out var p)) {
                 obj.transform.SetParent(p.transform);
             }
 

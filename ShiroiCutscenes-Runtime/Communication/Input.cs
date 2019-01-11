@@ -2,7 +2,10 @@ using System;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Communication {
-    public abstract class Input {
+    [Serializable]
+    public abstract class Input : ICommunicationDevice {
+        public const string NameProperty = nameof(name);
+
         [SerializeField]
         private string name;
 
@@ -17,6 +20,7 @@ namespace Shiroi.Cutscenes.Communication {
 
         public abstract bool IsCompatibleWith(Output output);
         public abstract bool Get(Context context, out object result);
+        public abstract Type GetInputType();
     }
 
     public abstract class Input<T> : Input {
@@ -42,6 +46,9 @@ namespace Shiroi.Cutscenes.Communication {
             result = default(T);
             return false;
         }
-    }
 
+        public override Type GetInputType() {
+            return typeof(T);
+        }
+    }
 }

@@ -51,6 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\InputDrawer.cs" />
+    <Compile Include="Communication\OutputDrawer.cs" />
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\Configs.cs" />
     <Compile Include="Cutscenes\CutsceneEditor.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="Util\GUIProperties.cs" />
     <Compile Include="Util\Lazy.cs" />
     <Compile Include="Util\RectUtil.cs" />
+    <Compile Include="Util\SerializedPropertyUtility.cs" />
     <Compile Include="Windows\ConfigWindow.cs" />
   </ItemGroup>
   <ItemGroup>

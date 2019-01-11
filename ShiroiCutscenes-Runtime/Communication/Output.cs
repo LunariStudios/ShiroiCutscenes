@@ -5,9 +5,13 @@ namespace Shiroi.Cutscenes.Communication {
     /// <summary>
     /// An object that can expose objects to a <see cref="Context"/> using a <see cref="Exposed"/>.
     /// </summary>
-    public abstract class Output {
+    [Serializable]
+    public abstract class Output : ICommunicationDevice {
+        public const string NameProperty = nameof(name);
+
         [SerializeField]
         private string name;
+
 
         public string Name {
             get {

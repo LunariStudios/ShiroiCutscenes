@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Shiroi.Cutscenes.Attributes;
 using Shiroi.Cutscenes.Communication;
@@ -8,7 +9,7 @@ using UnityEngine;
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
     [TokenCategory(ShiroiCutscenesConstants.CommonCategory)]
-    public class SpawnPrefabToken : Token, IScenePreviewable {
+    public class SpawnPrefabToken : Token, IScenePreviewable, IOutputContext {
         public GameObject Obj;
         public GameObjectOutput Output;
         public Vector3 Position;
@@ -20,13 +21,14 @@ namespace Shiroi.Cutscenes.Tokens {
             yield break;
         }
 
-        [SerializeField]
-        private int futureId;
-
         public void OnPreview(ISceneHandle handle) {
             handle.Label(Position, string.Format("Prefab Spawn Position ({0})", Output.Name));
             Position = handle.PositionHandle(Position);
             Rotation = handle.RotationHandle(Position, Rotation);
+        }
+
+        public IEnumerable<Output> GetOutputs() {
+            yield return Output;
         }
     }
 }

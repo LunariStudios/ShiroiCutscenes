@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Attributes\TokenCategoryAttribute.cs" />
     <Compile Include="Communication\Context.cs" />
+    <Compile Include="Communication\CommunicationContexts.cs" />
     <Compile Include="Communication\Input.cs" />
     <Compile Include="Communication\Output.cs" />
     <Compile Include="Communication\PrimitiveCommunicationTypes.cs" />
