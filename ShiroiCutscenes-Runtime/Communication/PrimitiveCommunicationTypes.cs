@@ -32,6 +32,9 @@ namespace Shiroi.Cutscenes.Communication {
     public sealed class UInt64Input : Input<ulong> { }
 
     [Serializable]
+    public sealed class NumberInput : Input<IConvertible> { }
+
+    [Serializable]
     public sealed class FloatInput : Input<float> { }
 
     [Serializable]

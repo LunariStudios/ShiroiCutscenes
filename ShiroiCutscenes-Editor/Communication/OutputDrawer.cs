@@ -25,7 +25,8 @@ namespace Shiroi.Cutscenes.Editor.Communication {
 
 
         public static void Draw(GUIContent label, ref string name, Rect position, Type type) {
-            label.text += $" (Output of: {type.GetNiceName()})";
+            var tName = type == null ? "unknown" : type.GetNiceName();
+            label.text += $" (Output of: {tName})";
             name = EditorGUI.TextField(position, label, name);
             var iconRect = position;
             iconRect.xMin += EditorGUIUtility.labelWidth + EditorStyles.label.CalcSize(new GUIContent(name)).x;
@@ -33,7 +34,7 @@ namespace Shiroi.Cutscenes.Editor.Communication {
             
             GUI.DrawTexture(iconRect.Padding(IconPadding), ShiroiEditorUtil.GetIconFor(type));
             if (name.IsNullOrEmpty()) {
-                name = $"{type.Name}_output";
+                name = $"{tName}_output";
             }
 
             var xOffset = EditorStyles.label.CalcSize(label).x;

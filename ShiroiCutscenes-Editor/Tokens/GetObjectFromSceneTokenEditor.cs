@@ -37,24 +37,34 @@ namespace Shiroi.Cutscenes.Editor.Tokens {
         }
 
         public override void OnInspectorGUI() {
+            var t = token.Type;
             using (new EditorGUILayout.HorizontalScope()) {
                 EditorGUILayout.LabelField("Object Type", GUILayout.Width(EditorGUIUtility.labelWidth));
+                var content = t != null
+                    ? new GUIContent(t.Name, ShiroiEditorUtil.GetIconFor(t))
+                    : new GUIContent("Selects which kind of object you wish to use");
+
                 var r = EditorGUILayout.DropdownButton(
-                    new GUIContent(token.Type.Name, ShiroiEditorUtil.GetIconFor(token.Type)),
+                    content,
                     FocusType.Passive
                 );
                 if (Event.current.type == EventType.Repaint) {
                     lastButtonRect = GUILayoutUtility.GetLastRect();
                 }
+
                 if (r) {
                     PopupWindow.Show(lastButtonRect, components);
                 }
             }
 
             var on = token.OutputName;
-            OutputDrawer.Draw(new GUIContent("Output"), ref on, EditorGUILayout.GetControlRect(), token.Type);
+            OutputDrawer.Draw(new GUIContent("Output"), ref on, EditorGUILayout.GetControlRect(), t);
             token.OutputName = on;
-            token.ActiveObject = EditorGUILayout.ObjectField("Scene Object", token.ActiveObject, token.Type, true);
+            if (t != null) {
+                token.ActiveObject = EditorGUILayout.ObjectField("Scene Object", token.ActiveObject, t, true);
+            } else {
+                EditorGUILayout.HelpBox("Please select an object type before selecting an object.", MessageType.Error);
+            }
         }
     }
 }
