@@ -93,8 +93,19 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
                         if (token == null) {
                             EditorGUILayout.LabelField("Null token, please delete");
                         } else {
-                            EditorGUILayout.LabelField(string.Format("#{0} - {1}", i, token.name),
-                                EditorStyles.boldLabel);
+                            using (new EditorGUILayout.HorizontalScope()) {
+                                EditorGUILayout.LabelField($"#{i} - {token.name}",
+                                    EditorStyles.boldLabel);
+                                var hidden = (token.hideFlags & HideFlags.HideInHierarchy) == HideFlags.HideInHierarchy;
+                                var img = GUIIcons.GetIcon(hidden
+                                    ? GUIIcons.animationvisibilitytoggleoff
+                                    : GUIIcons.animationvisibilitytoggleon);
+                                if (GUILayout.Button(img, GUIStyle.none, GUILayout.Width(EditorGUIUtility.singleLineHeight))) {
+                                    token.hideFlags ^= HideFlags.HideInHierarchy;
+                                    AssetDatabase.SaveAssets();
+                                }
+                            }
+
                             token.name = EditorGUILayout.TextField(TokenNameContent, token.name);
                             editor.OnInspectorGUI();
                         }
@@ -154,6 +165,7 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
             tokenPopUpContent = new TypeSelectorPopupContent<Token>(() => lastTokenRect.width, type => {
                 var t = (Token) Cutscene.AddToAssetFile(type);
                 t.name = type.Name;
+                t.hideFlags = HideFlags.HideInHierarchy;
                 Cutscene.Add(t);
                 ReloadSubEditors();
             });
@@ -165,6 +177,7 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
             foreach (var token in Cutscene.Tokens) {
                 subEditors.Add(CreateEditor(token));
             }
+            AssetDatabase.SaveAssets();
         }
     }
 }

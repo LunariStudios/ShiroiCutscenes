@@ -44,7 +44,7 @@ namespace Shiroi.Cutscenes.Editor.Cutscenes {
         private bool DrawSettingsButton(GUISkin skin) {
             return GUILayout.Button(
                 SettingsButtonContent,
-                skin.GetStyle(GUISkinProperties.minibuttonright)
+                skin.GetStyle(GUISkinProperties.IconButton)
             );
         }
 
