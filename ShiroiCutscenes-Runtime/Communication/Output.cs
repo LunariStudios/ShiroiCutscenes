@@ -14,12 +14,8 @@ namespace Shiroi.Cutscenes.Communication {
 
 
         public string Name {
-            get {
-                return name;
-            }
-            set {
-                name = value;
-            }
+            get => name;
+            set => name = value;
         }
 
         public abstract Type GetOutputType();

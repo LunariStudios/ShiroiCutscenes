@@ -31,13 +31,16 @@ namespace Shiroi.Cutscenes.Editor.Communication {
                     MessageType.Error);
                 return;
             }
+
             var label = new GUIContent(l);
 
             label.text += $" (Input of: {variable.GetInputType().GetNiceName()})";
-
+            label.image = ShiroiEditorUtil.GetIconFor(variable.GetInputType());
             if (card == null) {
                 EditorGUI.LabelField(position, label);
-                EditorGUI.HelpBox(position.AddXMin(EditorGUIUtility.labelWidth), $"Cutscene not found! Tokens need to exist inside a Cutscene asset file! (Searched at path '{path}')", MessageType.Error);
+                EditorGUI.HelpBox(position.AddXMin(EditorGUIUtility.labelWidth),
+                    $"Cutscene not found! Tokens need to exist inside a Cutscene asset file! (Searched at path '{path}')",
+                    MessageType.Error);
                 return;
             }
 
@@ -70,25 +73,25 @@ namespace Shiroi.Cutscenes.Editor.Communication {
 
 
             if (compatibleFutures.Count <= 0) {
-                EditorGUI.LabelField(position, label,
-                    new GUIContent(
-                        $"There are no compatible futures! ({allOutput.Count} futures searched.)"),
-                    EditorGUIUtility.GetBuiltinSkin(EditorSkin.Inspector).GetStyle(GUISkinProperties.ErrorLabel)
-                );
+                var content = new GUIContent(
+                    EditorGUIUtility.IconContent("console.erroricon")
+                ) {
+                    text = $"There are no compatible outputs! ({allOutput.Count} outputs searched.)"
+                };
+                EditorGUI.LabelField(position, label, content, EditorStyles.helpBox);
             } else {
                 var names = from future in compatibleFutures select new GUIContent(future.Name);
-                position.xMin += position.height;
-                var selected = EditorGUI.Popup(position, l, selectedIndex, names.ToArray());
+                //position.xMin += position.height;
+                var selected = EditorGUI.Popup(position, label, selectedIndex, names.ToArray());
                 var selectedFuture = compatibleFutures[selected];
                 variable.Name = selectedFuture.Name;
-                
+
                 var xOffset = EditorStyles.label.CalcSize(label).x;
                 var colorRect = position;
                 colorRect.xMin += xOffset;
                 colorRect.size = OutputDrawer.ColorSquareSize;
-                EditorGUI.DrawRect(colorRect, variable.GetColorFromName());
+                EditorGUI.DrawRect(colorRect.Padding(OutputDrawer.IconPadding), variable.GetColorFromName());
             }
-            
         }
     }
 }

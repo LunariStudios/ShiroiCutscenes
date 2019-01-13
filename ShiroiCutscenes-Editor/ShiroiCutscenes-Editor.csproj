@@ -65,10 +65,11 @@
     <Compile Include="ShiroiEditorUtil.cs" />
     <Compile Include="ShiroiStyles.cs" />
     <Compile Include="TokenLoader.cs" />
+    <Compile Include="Tokens\GetObjectFromSceneTokenEditor.cs" />
     <Compile Include="Util\GUIProperties.cs" />
     <Compile Include="Util\Lazy.cs" />
-    <Compile Include="Util\RectUtil.cs" />
     <Compile Include="Util\SerializedPropertyUtility.cs" />
+    <Compile Include="Util\TypeSelectorPopupContent.cs" />
     <Compile Include="Windows\ConfigWindow.cs" />
   </ItemGroup>
   <ItemGroup>

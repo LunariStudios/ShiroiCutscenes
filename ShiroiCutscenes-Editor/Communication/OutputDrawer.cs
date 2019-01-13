@@ -1,3 +1,4 @@
+using System;
 using Lunari.Tsuki;
 using Shiroi.Cutscenes.Communication;
 using Shiroi.Cutscenes.Editor.Util;
@@ -10,19 +11,9 @@ namespace Shiroi.Cutscenes.Editor.Communication {
     public class OutputDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent l) {
             var output = property.FindInstanceWithin<Output>();
-            var label = new GUIContent(l);
-            label.text += $" (Output of: {output.GetOutputType().GetNiceName()})";
-
-            output.Name = EditorGUI.TextField(position, label, output.Name);
-            if (output.Name.IsNullOrEmpty()) {
-                output.Name = $"{output.GetOutputType().Name}_output";
-            }
-
-            var xOffset = EditorStyles.label.CalcSize(label).x;
-            var colorRect = position;
-            colorRect.xMin += xOffset;
-            colorRect.size = ColorSquareSize;
-            EditorGUI.DrawRect(colorRect, output.GetColorFromName());
+            var value = output.Name;
+            Draw(l, ref value, position, output.GetOutputType());
+            output.Name = value;
         }
 
         public const float ColorSquareWidth = 16f;
@@ -31,5 +22,27 @@ namespace Shiroi.Cutscenes.Editor.Communication {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
             return EditorGUIUtility.singleLineHeight;
         }
+
+
+        public static void Draw(GUIContent label, ref string name, Rect position, Type type) {
+            label.text += $" (Output of: {type.GetNiceName()})";
+            name = EditorGUI.TextField(position, label, name);
+            var iconRect = position;
+            iconRect.xMin += EditorGUIUtility.labelWidth + EditorStyles.label.CalcSize(new GUIContent(name)).x;
+            iconRect.width = iconRect.height;
+            
+            GUI.DrawTexture(iconRect.Padding(IconPadding), ShiroiEditorUtil.GetIconFor(type));
+            if (name.IsNullOrEmpty()) {
+                name = $"{type.Name}_output";
+            }
+
+            var xOffset = EditorStyles.label.CalcSize(label).x;
+            var colorRect = position;
+            colorRect.xMin += xOffset;
+            colorRect.size = ColorSquareSize;
+            EditorGUI.DrawRect(colorRect.Padding(IconPadding), CommunicationDeviceUtility.GetColorFromName(name));
+        }
+
+        public static float IconPadding = 2;
     }
 }

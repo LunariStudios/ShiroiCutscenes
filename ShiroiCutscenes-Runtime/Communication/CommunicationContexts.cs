@@ -12,7 +12,11 @@ namespace Shiroi.Cutscenes.Communication {
 
     public static class CommunicationDeviceUtility {
         public static Color32 GetColorFromName(this ICommunicationDevice device) {
-            var prop = new PropertyName(device.Name).GetHashCode();
+            return GetColorFromName(device.Name);
+        }
+
+        public static Color32 GetColorFromName(string device) {
+            var prop = new PropertyName(device).GetHashCode();
             var bytes = BitConverter.GetBytes(prop);
             return new Color32(bytes[0], bytes[1], bytes[2], bytes[3]);
         }

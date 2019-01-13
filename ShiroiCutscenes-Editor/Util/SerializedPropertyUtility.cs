@@ -16,7 +16,7 @@ namespace Shiroi.Cutscenes.Editor.Util {
         private static object ExtractFromField(string fieldName, object owner) {
             var field = owner.GetType().GetField(fieldName,
                 BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            return field == null ? null : field.GetValue(owner);
+            return field?.GetValue(owner);
         }
 
         public static object FindInstanceAt(this SerializedProperty property, Object obj) {

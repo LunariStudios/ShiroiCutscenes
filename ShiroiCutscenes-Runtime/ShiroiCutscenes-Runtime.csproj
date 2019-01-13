@@ -60,6 +60,7 @@
     <Compile Include="Tokens\DebugTextToken.cs" />
     <Compile Include="Tokens\DeleteToken.cs" />
     <Compile Include="Tokens\ExecuteCutsceneToken.cs" />
+    <Compile Include="Tokens\GetObjectFromSceneToken.cs" />
     <Compile Include="Tokens\PlayTimelineToken.cs" />
     <Compile Include="Tokens\SetGameObjectActiveToken.cs" />
     <Compile Include="Tokens\Token.cs" />
