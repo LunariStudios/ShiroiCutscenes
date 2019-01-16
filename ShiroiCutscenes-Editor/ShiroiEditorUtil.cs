@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Resources;
 using Lunari.Tsuki.Exceptions;
-using Shiroi.Cutscenes.Editor.Util;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;

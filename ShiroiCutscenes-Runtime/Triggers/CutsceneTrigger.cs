@@ -20,7 +20,7 @@ namespace Shiroi.Cutscenes.Triggers {
             }
 
             played = true;
-            //Player.Play(Cutscene);
+            new CutsceneExecutor(Cutscene, this).Play();
             switch (PostAction) {
                 case PostPlayAction.None:
                     break;

@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using JetBrains.Annotations;
-using Shiroi.Cutscenes.Attributes;
+using System.ComponentModel;
 using Shiroi.Cutscenes.Communication;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    [TokenCategory(ShiroiCutscenesConstants.CommonCategory)]
+    [Category(ShiroiCutscenesConstants.CommonCategory)]
     public class DeleteToken : Token {
         public ObjectInput Object;
 

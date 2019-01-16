@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Lunari.Tsuki;
+﻿using System.Collections.Generic;
 using Lunari.Tsuki.Editor;
-using Shiroi.Cutscenes.Attributes;
 using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Tokens;
 using UnityEditor;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Editor.Cutscenes {

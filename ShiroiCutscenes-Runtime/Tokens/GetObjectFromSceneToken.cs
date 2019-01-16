@@ -131,7 +131,7 @@ namespace Shiroi.Cutscenes.Tokens {
             var found = FindObjectsOfType(Type);
             foreach (var o in found) {
                 if (o.GetInstanceID() == instanceId) {
-                    Output.Apply(found, executor.Context);
+                    Output.Apply(o, executor.Context);
                     yield break;
                 }
             }

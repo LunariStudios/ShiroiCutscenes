@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using JetBrains.Annotations;
-using Shiroi.Cutscenes.Attributes;
+using System.ComponentModel;
 using Shiroi.Cutscenes.Communication;
-using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    [TokenCategory(ShiroiCutscenesConstants.CommonCategory)]
+    [Category(ShiroiCutscenesConstants.CommonCategory)]
     public class SetParentToken : Token {
         public GameObjectInput Object;
         public GameObjectInput NewParent;

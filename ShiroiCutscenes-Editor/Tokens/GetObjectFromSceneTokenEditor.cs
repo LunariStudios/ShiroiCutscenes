@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Lunari.Tsuki;
-using Shiroi.Cutscenes.Communication;
 using Shiroi.Cutscenes.Editor.Communication;
 using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Tokens;
-using Shiroi.Cutscenes.Util;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Shiroi.Cutscenes.Editor.Tokens {
     [CustomEditor(typeof(GetObjectFromSceneToken))]

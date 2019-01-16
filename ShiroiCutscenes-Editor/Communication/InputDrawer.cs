@@ -7,7 +7,6 @@ using Shiroi.Cutscenes.Tokens;
 using Shiroi.Cutscenes.Util;
 using UnityEditor;
 using UnityEngine;
-using GUISkinProperties = Lunari.Tsuki.Editor.GUISkinProperties;
 using Input = Shiroi.Cutscenes.Communication.Input;
 
 namespace Shiroi.Cutscenes.Editor.Communication {

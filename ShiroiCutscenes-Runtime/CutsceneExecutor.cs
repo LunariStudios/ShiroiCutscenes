@@ -1,21 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using Lunari.Tsuki;
 using Shiroi.Cutscenes.Communication;
+using UnityEngine;
 
 namespace Shiroi.Cutscenes {
-    public class CutsceneExecutor {
-        private readonly Cutscene cutscene;
-        private readonly Context context;
-        public Cutscene Cutscene {
-            get {
-                return cutscene;
-            }
+    public class CutsceneExecutor : IDisposable {
+        public CutsceneExecutor(Cutscene cutscene, MonoBehaviour host) {
+            Cutscene = cutscene;
+            Host = host;
+        }
+
+        public MonoBehaviour Host {
+            get;
+        }
+
+        public int CurrentToken {
+            get;
+            set;
         }
 
         public Context Context {
-            get {
-                return context;
+            get;
+        } = new Context();
+
+        public Coroutine Coroutine {
+            get;
+            private set;
+        }
+
+        public Cutscene Cutscene {
+            get;
+        }
+
+        public Coroutine Play() {
+            return Coroutine = Host.StartCoroutine(Execute());
+        }
+
+        private IEnumerator Execute() {
+            for (; CurrentToken < Cutscene.Tokens.Count; CurrentToken++) {
+                yield return Cutscene.Tokens[CurrentToken].Execute(this);
             }
+        }
+
+
+        public void Dispose() {
+            Coroutine.StopIfNotNull(Host);
         }
     }
 }

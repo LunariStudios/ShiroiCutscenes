@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using JetBrains.Annotations;
-using Shiroi.Cutscenes.Attributes;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    [TokenCategory(ShiroiCutscenesConstants.DebugCategory)]
+    [Category(ShiroiCutscenesConstants.DebugCategory)]
     public class DebugTextToken : Token {
         public enum DebugType {
             Info,

@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Lunari.Tsuki;
 using Lunari.Tsuki.Editor;
-using Shiroi.Cutscenes.Attributes;
-using Shiroi.Cutscenes.Tokens;
+using System.ComponentModel;
 using Shiroi.Cutscenes.Util;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -205,7 +203,7 @@ namespace Shiroi.Cutscenes.Editor.Util {
             rootGroup = new TypeSelectorGroup("Root");
             var types = TypeUtility.GetAllTypesOf<T>().Where(type => !type.IsAbstract).ToList();
             foreach (var type in types) {
-                var a = (TokenCategoryAttribute) type.GetCustomAttributes(typeof(TokenCategoryAttribute), true)
+                var a = (CategoryAttribute) type.GetCustomAttributes(typeof(CategoryAttribute), true)
                     .FirstOrDefault();
                 TypeSelectorGroup group = null;
                 if (a == null) {

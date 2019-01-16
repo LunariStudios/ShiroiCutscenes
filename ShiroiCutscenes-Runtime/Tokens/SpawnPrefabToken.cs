@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Shiroi.Cutscenes.Attributes;
+using System.ComponentModel;
 using Shiroi.Cutscenes.Communication;
 using Shiroi.Cutscenes.Preview;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    [TokenCategory(ShiroiCutscenesConstants.CommonCategory)]
+    [Category(ShiroiCutscenesConstants.CommonCategory)]
     public class SpawnPrefabToken : Token, IScenePreviewable, IOutputContext {
         public GameObject Obj;
         public GameObjectOutput Output;

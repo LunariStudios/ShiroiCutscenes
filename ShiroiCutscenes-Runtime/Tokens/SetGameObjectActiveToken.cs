@@ -1,10 +1,9 @@
 ﻿using System.Collections;
-using Shiroi.Cutscenes.Attributes;
+using System.ComponentModel;
 using Shiroi.Cutscenes.Communication;
-using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
-    [TokenCategory(ShiroiCutscenesConstants.CommonCategory)]
+    [Category(ShiroiCutscenesConstants.CommonCategory)]
     public class SetGameObjectActiveToken : Token {
         public GameObjectInput Target;
         public bool Active;

@@ -1,5 +1,4 @@
 ﻿using Lunari.Tsuki.Editor;
-using Shiroi.Cutscenes.Editor.Util;
 using Shiroi.Cutscenes.Editor.Windows;
 using UnityEditor;
 using UnityEngine;

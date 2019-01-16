@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Shiroi.Cutscenes.Attributes;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace Shiroi.Cutscenes.Tokens {
     [UsedImplicitly]
-    [TokenCategory(ShiroiCutscenesConstants.CommonCategory)]
+    [Category(ShiroiCutscenesConstants.CommonCategory)]
     public class WaitForSecondsToken : Token {
         public float Duration;
         public bool Realtime;

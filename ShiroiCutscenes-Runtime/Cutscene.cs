@@ -99,5 +99,6 @@ namespace Shiroi.Cutscenes {
         public Token GetToken(int i) {
             return tokens[i];
         }
+
     }
 }
